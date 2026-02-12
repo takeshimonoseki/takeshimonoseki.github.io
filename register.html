@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>協力ドライバー登録フォーム｜drivers-site（山口県）</title>
+  <meta name="description" content="山口県エリアの協力ドライバー登録フォーム。ニックネーム・基本情報・公開プロフィール・稼働時間帯などをフォーマット化して登録できます。" />
+  <link rel="stylesheet" href="./assets/drivers.css" />
+  <script src="./config.js"></script>
+  <script src="./assets/drivers.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="header-left">
+        <div class="region-badge" aria-label="対応地域">
+          <div class="region-en" id="regionEn">YAMAGUCHI</div>
+          <div class="region-ja" id="regionJa">山口県</div>
+        </div>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+          </div>
+          <div>
+            <div class="company-name" id="companyName">軽貨物TAKE</div>
+            <div class="brand-text-sub">協力ドライバー登録フォーム</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="contact-strip" aria-label="連絡先">
+          <div class="contact-item">
+            <span class="contact-label">LINE</span>
+            <span class="contact-value"><a href="#" id="headerLineLink">相談する</a></span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">MAIL</span>
+            <span class="contact-value"><a href="#" id="headerMailLink">takeshimonoseki@gmail.com</a></span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">TEL</span>
+            <span class="contact-value"><a href="#" id="headerTelLink">090-XXXX-XXXX</a></span>
+          </div>
+        </div>
+        <nav class="nav" aria-label="メイン">
+          <a href="./index.html" class="nav-link">トップ</a>
+          <a href="./vehicle.html" class="nav-link">車両の相談</a>
+          <span class="nav-link nav-link-primary" aria-current="page">登録</span>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="page form-card">
+    <article class="card fade-in">
+      <div class="card-inner">
+        <div class="badge badge-soft">求人ではなく「登録プール」です</div>
+        <h1 class="hero-title" style="font-size:24px;margin-top:10px;">協力ドライバー登録フォーム</h1>
+        <p class="hero-lead" style="margin-bottom:10px;">
+          お客さまとドライバーさんを<strong>直接つながず</strong>、代表たけが間に入る前提の登録フォームです。<br />
+          顔写真や本名は不要で、公開情報は<strong>ニックネーム＋市町村＋プロフィールなどの文章のみ</strong>です。
+        </p>
+        <p class="hero-note">
+          ※本人確認・黒ナンバー・任意保険などの書類は、<strong>実際にお仕事をお願いするタイミング</strong>で別途ご相談します。<br />
+          ※ここでは「どんな方か」「どの時間帯・どんな案件が合いそうか」を把握する目的です。
+        </p>
+
+        <section class="section">
+          <h2 class="section-title" style="font-size:15px;">事前にご用意いただくもの（Step1）</h2>
+          <ul class="list">
+            <li>ニックネーム（公開名）</li>
+            <li>本名（非公開）</li>
+            <li>住所（非公開：都道府県＋市町村＋番地など）</li>
+            <li>連絡先（非公開：電話番号／メールアドレス／LINE表示名など）</li>
+            <li>拠点の市町村（公開）</li>
+            <li>車種・稼働時間帯・得意な案件タイプ（公開）</li>
+            <li>プロフィール文章（公開：200〜600字）</li>
+          </ul>
+          <p class="small mt-sm">
+            Step2 の「書類アップロード」（免許証・ナンバー画像）は、登録後や後日でも提出できます。
+          </p>
+        </section>
+
+        <form id="registerForm" class="mt-md" novalidate>
+          <h2 class="section-title" style="font-size:15px;">Step1：基本情報の登録</h2>
+
+          <div class="form-grid">
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">ニックネーム</span>
+                <span class="field-label-sub">
+                  <span class="badge-public">公開</span>
+                  <span class="badge-required">必須</span>
+                </span>
+              </div>
+              <input type="text" id="nickname" name="nickname" autocomplete="off" placeholder="例：たけバン さん・やまぐち便 さん など" />
+              <div class="field-help">本名でなくてOKです。公開時の呼び名として使います。</div>
+            </div>
+
+            <div>
+              <div class="field-label">
+                <span class="field-label-main">本名</span>
+                <span class="field-label-sub">
+                  <span class="badge-private">非公開</span>
+                  <span class="badge-required">必須</span>
+                </span>
+              </div>
+              <input type="text" id="fullName" name="fullName" autocomplete="name" placeholder="例：山田 太郎" />
+            </div>
+
+            <div class="form-row-full address-block">
+              <h3 class="h3-sub" style="margin-top:0;">現住所（入力住所）</h3>
+              <div class="form-grid">
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">郵便番号</span>
+                    <span class="field-label-sub"><span class="badge-private">非公開</span><span class="badge-required">必須</span></span>
+                  </div>
+                  <input type="text" id="address_zip" name="address_zip" autocomplete="postal-code" placeholder="例：751-0841（7桁・ハイフン可）" maxlength="8" />
+                  <div id="addressZipError" class="field-error" style="display:none;"></div>
+                </div>
+                <div>
+                  <div class="field-label"><span class="field-label-main">都道府県</span><span class="field-label-sub"><span class="badge-required">必須</span></span></div>
+                  <input type="text" id="address_pref" name="address_pref" placeholder="郵便番号で自動入力" readonly />
+                </div>
+                <div>
+                  <div class="field-label"><span class="field-label-main">市区町村</span><span class="field-label-sub"><span class="badge-required">必須</span></span></div>
+                  <input type="text" id="address_city" name="address_city" placeholder="郵便番号で自動入力" readonly />
+                </div>
+              </div>
+              <div class="form-row-full mt-sm">
+                <div class="field-label"><span class="field-label-main">町名・番地</span><span class="field-label-sub"><span class="badge-required">必須</span></span></div>
+                <input type="text" id="address_line1" name="address_line1" placeholder="番地など（自動入力の続き＋手入力可）" />
+              </div>
+              <div class="form-row-full">
+                <div class="field-label"><span class="field-label-main">建物名・部屋番号</span><span class="field-label-sub small">任意</span></div>
+                <input type="text" id="address_line2" name="address_line2" placeholder="例：〇〇マンション 101" />
+              </div>
+            </div>
+
+            <div class="form-row-full address-block mt-md">
+              <h3 class="h3-sub">免許証記載住所（必須・現住所と一致すること）</h3>
+              <div class="form-grid">
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">免許証の郵便番号</span>
+                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                  </div>
+                  <input type="text" id="license_addr_zip" name="license_addr_zip" placeholder="例：751-0841" maxlength="8" />
+                  <div id="licenseZipError" class="field-error" style="display:none;"></div>
+                </div>
+                <div>
+                  <div class="field-label"><span class="field-label-main">都道府県</span></div>
+                  <input type="text" id="license_addr_pref" name="license_addr_pref" placeholder="郵便番号で自動入力" readonly />
+                </div>
+                <div>
+                  <div class="field-label"><span class="field-label-main">市区町村</span></div>
+                  <input type="text" id="license_addr_city" name="license_addr_city" placeholder="郵便番号で自動入力" readonly />
+                </div>
+              </div>
+              <div class="form-row-full mt-sm">
+                <div class="field-label"><span class="field-label-main">町名・番地</span><span class="field-label-sub"><span class="badge-required">必須</span></span></div>
+                <input type="text" id="license_addr_line1" name="license_addr_line1" placeholder="免許証に記載のとおり" />
+              </div>
+              <div class="form-row-full">
+                <div class="field-label"><span class="field-label-main">建物名</span><span class="field-label-sub small">任意</span></div>
+                <input type="text" id="license_addr_line2" name="license_addr_line2" placeholder="あれば" />
+              </div>
+              <p class="field-help">免許証の住所と現住所は<strong>同一である必要があります</strong>。変更届がまだの場合は住所変更後に登録してください。</p>
+            </div>
+
+            <div id="addressMismatchBox" class="error-banner mt-sm" style="display:none;">
+              <strong>免許証の住所と入力住所が一致しません。</strong>
+              <p class="mt-sm">住所変更後に登録してください（不明点はLINEで相談）。</p>
+              <div class="mt-sm">
+                <button type="button" class="btn btn-line btn-sm" id="btnLineAddressMismatch">LINEで相談する</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="field-label">
+                <span class="field-label-main">拠点の市町村</span>
+                <span class="field-label-sub">
+                  <span class="badge-public">公開</span>
+                  <span class="badge-required">必須</span>
+                </span>
+              </div>
+              <select id="city" name="city">
+                <option value="">選択してください</option>
+                <option value="下関市">下関市</option>
+                <option value="山口市">山口市</option>
+                <option value="宇部市">宇部市</option>
+                <option value="防府市">防府市</option>
+                <option value="周南市">周南市</option>
+                <option value="岩国市">岩国市</option>
+                <option value="光市">光市</option>
+                <option value="山陽小野田市">山陽小野田市</option>
+                <option value="萩市">萩市</option>
+                <option value="長門市">長門市</option>
+                <option value="美祢市">美祢市</option>
+                <option value="柳井市">柳井市</option>
+                <option value="田布施町">田布施町</option>
+                <option value="平生町">平生町</option>
+                <option value="その他">その他（自由入力）</option>
+              </select>
+              <div class="field-help">メインで動けるエリアの市町村を1つ選んでください。</div>
+            </div>
+
+            <div id="cityOtherRow" style="display:none;">
+              <div class="field-label">
+                <span class="field-label-main">その他の市町村名</span>
+                <span class="field-label-sub small">公開／簡単な表記でOK</span>
+              </div>
+              <input type="text" id="cityOther" placeholder="例：山口県 ○○郡 △△町 など" />
+            </div>
+
+            <div>
+              <div class="field-label">
+                <span class="field-label-main">車種</span>
+                <span class="field-label-sub">
+                  <span class="badge-public">公開</span>
+                  <span class="badge-required">必須</span>
+                </span>
+              </div>
+              <select id="vehicle" name="vehicle">
+                <option value="">選択してください</option>
+                <option value="軽バン">軽バン</option>
+                <option value="軽トラ">軽トラ</option>
+                <option value="その他">その他</option>
+              </select>
+              <div class="field-help">「その他」の場合は下に簡単にご記入ください。</div>
+            </div>
+
+            <div id="vehicleOtherRow" style="display:none;">
+              <div class="field-label">
+                <span class="field-label-main">その他の車種</span>
+                <span class="field-label-sub small">公開／例：ハイエース・1tバン など</span>
+              </div>
+              <input type="text" id="vehicleOther" placeholder="例：ハイエース・1tバン など" />
+            </div>
+
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">稼働しやすい時間帯</span>
+                <span class="field-label-sub">
+                  <span class="badge-public">公開</span>
+                  <span class="badge-required">必須</span>
+                </span>
+              </div>
+              <div class="choice-row">
+                <label class="choice"><input type="checkbox" name="availability" value="平日昼" />平日昼</label>
+                <label class="choice"><input type="checkbox" name="availability" value="平日夜" />平日夜</label>
+                <label class="choice"><input type="checkbox" name="availability" value="土日" />土日</label>
+                <label class="choice"><input type="checkbox" name="availability" value="緊急" />緊急（急ぎにも可能な範囲で対応）</label>
+                <label class="choice"><input type="checkbox" name="availability" value="長距離可" />長距離可</label>
+              </div>
+              <div class="field-help">ざっくりで構いません。複数チェックOKです。</div>
+            </div>
+
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">得意な案件タイプ</span>
+                <span class="field-label-sub">
+                  <span class="badge-public">公開</span>
+                  <span class="badge-required">必須</span>
+                </span>
+              </div>
+              <div class="choice-row">
+                <label class="choice"><input type="checkbox" name="specialties" value="引越" />引越</label>
+                <label class="choice"><input type="checkbox" name="specialties" value="チャーター" />チャーター</label>
+                <label class="choice"><input type="checkbox" name="specialties" value="スポット" />スポット</label>
+                <label class="choice"><input type="checkbox" name="specialties" value="定期" />定期</label>
+                <label class="choice"><input type="checkbox" name="specialties" value="宅配" />宅配</label>
+                <label class="choice"><input type="checkbox" name="specialties" value="その他" />その他（プロフィール欄に記載）</label>
+              </div>
+              <div class="field-help">「やってみたい」レベルでもOKです。</div>
+            </div>
+
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">プロフィール（自己紹介）</span>
+                <span class="field-label-sub">
+                  <span class="badge-public">公開</span>
+                  <span class="badge-required">必須｜200〜600字</span>
+                </span>
+              </div>
+              <textarea id="profile" name="profile" placeholder="例：これまでの経験・得意なこと・大事にしていること・できる範囲／NGな範囲 などを書いてください。"></textarea>
+              <div class="profile-counter" id="profileCounter">0 文字（200〜600文字を目安）</div>
+            </div>
+
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">配車希望（任意）</span>
+                <span class="field-label-sub">
+                  <span class="badge-private">非公開</span>
+                  <span class="small">任意</span>
+                </span>
+              </div>
+              <textarea id="dispatchHope" name="dispatchHope" placeholder="例：平日午前中が多いと助かります など"></textarea>
+              <div class="field-help">※希望は参考にすることがありますが、確約はしません。</div>
+            </div>
+
+            <div>
+              <div class="field-label">
+                <span class="field-label-main">経験年数（任意）</span>
+                <span class="field-label-sub">
+                  <span class="badge-public">内部のみ</span>
+                </span>
+              </div>
+              <select id="expYears" name="expYears">
+                <option value="">選択しない（任意）</option>
+                <option value="未経験">未経験</option>
+                <option value="半年未満">半年未満</option>
+                <option value="1年未満">1年未満</option>
+                <option value="1〜3年">1〜3年</option>
+                <option value="3〜5年">3〜5年</option>
+                <option value="5年以上">5年以上</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="field-label">
+                <span class="field-label-main">希望単価帯（任意）</span>
+                <span class="field-label-sub">
+                  <span class="badge-private">非公開</span>
+                </span>
+              </div>
+              <select id="rateBand" name="rateBand">
+                <option value="">選択しない（任意）</option>
+                <option value="控えめでOK">控えめでOK（まずは経験を積みたい）</option>
+                <option value="標準イメージ">標準イメージ（相場くらいを希望）</option>
+                <option value="やや高め希望">やや高め希望（条件しだいで調整）</option>
+              </select>
+              <div class="field-help">数字の料金表は使わず、あくまで「感覚のメモ」として管理します。</div>
+            </div>
+
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">NG条件（任意）</span>
+                <span class="field-label-sub">
+                  <span class="badge-private">非公開</span>
+                </span>
+              </div>
+              <textarea id="ngText" name="ngText" placeholder="例：深夜帯はNG／長距離は○kmまで／重い荷物の階段上げ下げNG など"></textarea>
+            </div>
+
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">連絡先（電話番号 / メール / LINE表示名）</span>
+                <span class="field-label-sub">
+                  <span class="badge-private">非公開</span>
+                  <span class="badge-required">いずれか必須</span>
+                </span>
+              </div>
+              <div class="form-grid">
+                <div>
+                  <input type="text" id="contactPhone" name="contactPhone" autocomplete="tel" placeholder="電話番号（例：090-xxxx-xxxx）" />
+                </div>
+                <div>
+                  <input type="email" id="contactEmail" name="contactEmail" autocomplete="email" placeholder="メールアドレス（任意）" />
+                </div>
+                <div class="form-row-full">
+                  <input type="text" id="contactLineName" name="contactLineName" autocomplete="off" placeholder="LINE表示名（例：たけ さん など）" />
+                </div>
+              </div>
+              <div class="field-help">
+                少なくとも1つはご入力ください。サイト上には一切公開せず、<strong>代表たけのみが控えとして保持</strong>します。
+              </div>
+            </div>
+          </div>
+
+          <div class="section mt-md">
+            <h2 class="section-title" style="font-size:15px;">登録前の確認事項</h2>
+            <ul class="list">
+              <li>このサイトは<strong>協力ドライバー登録プール</strong>であり、求人広告・マッチングサイトではありません。</li>
+              <li>お客さまとドライバーを<strong>直接つなぐことはせず</strong>、連絡はすべて代表たけ経由で行います。</li>
+              <li>運賃計算ロジック・料金式・見積計算機は<strong>このサイト上には一切表示しません</strong>。</li>
+              <li>本人確認書類・黒ナンバー・各種保険などは、実際に案件をお願いする前に別途確認します。</li>
+              <li>登録内容は後から変更・削除の依頼が可能です（LINE からご連絡ください）。</li>
+            </ul>
+
+            <label class="choice mt-sm">
+              <input type="checkbox" id="agreeTerms" />
+              上記の内容を読み、協力ドライバー登録に同意します。
+            </label>
+          </div>
+
+          <div class="mt-md align-right">
+            <button type="submit" class="btn btn-primary" id="submitBtn">上記に同意して登録する</button>
+          </div>
+        </form>
+
+        <div id="errorBox" class="error-banner" style="display:none;">
+          <strong>送信できませんでした。</strong>
+          <div class="mt-sm">赤字の項目をご確認ください。それでも解消しない場合は、下の「LINEで問い合わせ」からご連絡ください。</div>
+          <ul id="errorList" class="list" style="margin-top:6px;"></ul>
+        </div>
+
+        <div id="networkErrorBox" class="error-banner" style="display:none;">
+          <strong>送信エラーが発生しました。</strong>
+          <div class="mt-sm">
+            通信状況や設定の影響で、サーバーに届いていない可能性があります。<br />
+            取りこぼし防止のため、<strong>LINEで「登録内容を送信したがエラーになった」旨をお知らせください。</strong>
+          </div>
+          <div class="mt-sm">
+            <button type="button" class="btn btn-line btn-sm" id="btnLineFallback">LINEで問い合わせる</button>
+          </div>
+        </div>
+
+        <div id="successBox" class="success-banner" style="display:none;">
+          <strong>登録を受け付けました。</strong>
+          <div class="mt-sm">
+            受付番号：
+            <span id="receiptId" class="text-mono"></span><br />
+            ステータス：<span class="text-mono">仮</span>（承認前）
+          </div>
+
+          <div class="summary-grid mt-sm">
+            <div class="summary-block">
+              <div class="summary-block-title">公開イメージ（お客さま側）</div>
+              <ul id="publicSummary" class="summary-list"></ul>
+            </div>
+            <div class="summary-block">
+              <div class="summary-block-title">内部メモ（非公開）</div>
+              <ul id="privateSummary" class="summary-list"></ul>
+            </div>
+          </div>
+
+          <div class="mt-sm">
+            <button type="button" class="btn btn-line btn-sm" id="btnLineShare">LINEで控えを送る（自動文面）</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btnResetForm">もう一度登録フォームを開く</button>
+          </div>
+
+          <p class="small mt-sm">
+            ※この時点では「仮登録」です。実際に案件をお願いする際は、別途ご連絡のうえ、必要な書類の確認や条件のすり合わせを行います。
+          </p>
+        </div>
+
+        <section id="filesSection" class="section mt-md" style="display:none;">
+          <h2 class="section-title" style="font-size:15px;">Step2：書類アップロード（任意・後日でも可）</h2>
+          <p class="section-subtitle">
+            免許証やナンバー画像などの書類は、<strong>ここからアップロードいただくか、後日LINE/メールでの提出</strong>でも構いません。
+          </p>
+          <div class="form-grid">
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">免許証写真（表）</span>
+                <span class="field-label-sub">
+                  <span class="badge-private">非公開</span>
+                  <span class="small">任意</span>
+                </span>
+              </div>
+              <input type="file" id="licenseFile" accept=".jpg,.jpeg,.png,.pdf" />
+              <div class="field-help">jpg / png / pdf、各ファイル最大 <span id="maxFileSizeLabel">5</span>MB まで。</div>
+            </div>
+            <div class="form-row-full">
+              <div class="field-label">
+                <span class="field-label-main">車両ナンバー写真</span>
+                <span class="field-label-sub">
+                  <span class="badge-private">非公開</span>
+                  <span class="small">任意</span>
+                </span>
+              </div>
+              <input type="file" id="plateFile" accept=".jpg,.jpeg,.png,.pdf" />
+              <div class="field-help">番号が読み取れる程度の写真で構いません。</div>
+            </div>
+          </div>
+          <div class="mt-md">
+            <button type="button" class="btn btn-primary btn-sm" id="btnUploadFiles">書類をアップロードする</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btnSkipFiles">今回はスキップする（後日提出）</button>
+          </div>
+          <div id="filesMessage" class="small mt-sm"></div>
+        </section>
+      </div>
+    </article>
+
+    <footer class="site-footer">
+      <div id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
+      <div>フォームからの登録に加え、LINE経由での登録内容修正・削除依頼も受け付けます。</div>
+    </footer>
+  </main>
+
+  <script>
+    // CONFIG からヘッダー・フッター情報を反映
+    (function applyConfig() {
+      if (!window.CONFIG) return;
+      var regionJa = document.getElementById("regionJa");
+      var regionEn = document.getElementById("regionEn");
+      var companyName = document.getElementById("companyName");
+      var footerCompany = document.getElementById("footerCompany");
+      var maxFileSizeLabel = document.getElementById("maxFileSizeLabel");
+
+      if (regionJa) regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
+      if (regionEn) regionEn.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
+      if (companyName) companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+      if (footerCompany) {
+        footerCompany.textContent = (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
+      }
+      if (maxFileSizeLabel && typeof window.CONFIG.MAX_FILE_MB === "number") {
+        maxFileSizeLabel.textContent = String(window.CONFIG.MAX_FILE_MB);
+      }
+
+      var lineLink = document.getElementById("headerLineLink");
+      var mailLink = document.getElementById("headerMailLink");
+      var telLink = document.getElementById("headerTelLink");
+
+      var lineUrl = window.CONFIG.LINE_URL || "";
+      var email = window.CONFIG.EMAIL_TO || "";
+      var tel = window.CONFIG.TEL || "";
+
+      if (lineLink && lineUrl) lineLink.href = lineUrl;
+      if (mailLink && email) {
+        mailLink.href = "mailto:" + email;
+        mailLink.textContent = email;
+      }
+      if (telLink && tel) {
+        telLink.href = "tel:" + tel.replace(/[^0-9+]/g, "");
+        telLink.textContent = tel;
+      }
+    })();
+
+    // LINE問い合わせ（ヘッダーなど）
+    function openSupportLine() {
+      const url = (window.CONFIG && window.CONFIG.LINE_URL) || "";
+      if (!url) {
+        alert("LINEの問い合わせリンクは、config.js 内の CONFIG.LINE_URL を設定してください。");
+        return;
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    document.querySelectorAll("[data-line-contact]").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        openSupportLine();
+      });
+    });
+
+    const nicknameEl = document.getElementById("nickname");
+    const fullNameEl = document.getElementById("fullName");
+    const addressZipEl = document.getElementById("address_zip");
+    const addressPrefEl = document.getElementById("address_pref");
+    const addressCityEl = document.getElementById("address_city");
+    const addressLine1El = document.getElementById("address_line1");
+    const addressLine2El = document.getElementById("address_line2");
+    const licenseZipEl = document.getElementById("license_addr_zip");
+    const licensePrefEl = document.getElementById("license_addr_pref");
+    const licenseCityEl = document.getElementById("license_addr_city");
+    const licenseLine1El = document.getElementById("license_addr_line1");
+    const licenseLine2El = document.getElementById("license_addr_line2");
+    const addressZipErrorEl = document.getElementById("addressZipError");
+    const licenseZipErrorEl = document.getElementById("licenseZipError");
+    const addressMismatchBox = document.getElementById("addressMismatchBox");
+    const btnLineAddressMismatch = document.getElementById("btnLineAddressMismatch");
+    const cityEl = document.getElementById("city");
+    const cityOtherRow = document.getElementById("cityOtherRow");
+    const cityOtherEl = document.getElementById("cityOther");
+    const vehicleEl = document.getElementById("vehicle");
+    const vehicleOtherRow = document.getElementById("vehicleOtherRow");
+    const vehicleOtherEl = document.getElementById("vehicleOther");
+    const profileEl = document.getElementById("profile");
+    const profileCounterEl = document.getElementById("profileCounter");
+    const contactPhoneEl = document.getElementById("contactPhone");
+    const contactEmailEl = document.getElementById("contactEmail");
+    const contactLineNameEl = document.getElementById("contactLineName");
+    const agreeTermsEl = document.getElementById("agreeTerms");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const errorBox = document.getElementById("errorBox");
+    const errorListEl = document.getElementById("errorList");
+    const networkErrorBox = document.getElementById("networkErrorBox");
+    const btnLineFallback = document.getElementById("btnLineFallback");
+
+    const successBox = document.getElementById("successBox");
+    const receiptIdEl = document.getElementById("receiptId");
+    const publicSummaryEl = document.getElementById("publicSummary");
+    const privateSummaryEl = document.getElementById("privateSummary");
+    const btnLineShare = document.getElementById("btnLineShare");
+    const btnResetForm = document.getElementById("btnResetForm");
+    const filesSection = document.getElementById("filesSection");
+    const licenseFileInput = document.getElementById("licenseFile");
+    const plateFileInput = document.getElementById("plateFile");
+    const btnUploadFiles = document.getElementById("btnUploadFiles");
+    const btnSkipFiles = document.getElementById("btnSkipFiles");
+    const filesMessage = document.getElementById("filesMessage");
+
+    let lastReceiptId = "";
+    let lastPayload = null;
+
+    cityEl.addEventListener("change", function () {
+      if (cityEl.value === "その他") {
+        cityOtherRow.style.display = "";
+      } else {
+        cityOtherRow.style.display = "none";
+        cityOtherEl.value = "";
+      }
+    });
+
+    vehicleEl.addEventListener("change", function () {
+      if (vehicleEl.value === "その他") {
+        vehicleOtherRow.style.display = "";
+      } else {
+        vehicleOtherRow.style.display = "none";
+        vehicleOtherEl.value = "";
+      }
+    });
+
+    var DriversRegister = window.DriversRegister || {};
+    function fillAddressFromZip(zipEl, prefEl, cityEl, line1El, errorEl) {
+      var zip = (zipEl && zipEl.value) ? DriversRegister.normalizeZip(zipEl.value) : "";
+      if (zip.length !== 7) {
+        if (prefEl) prefEl.value = "";
+        if (cityEl) cityEl.value = "";
+        if (line1El) line1El.value = "";
+        if (errorEl) { errorEl.style.display = "none"; errorEl.textContent = ""; }
+        return;
+      }
+      DriversRegister.fetchAddressByZip(zip).then(function (addr) {
+        if (errorEl) errorEl.style.display = "none";
+        if (!addr) {
+          if (prefEl) prefEl.value = "";
+          if (cityEl) cityEl.value = "";
+          if (line1El) line1El.value = "";
+          if (errorEl) {
+            errorEl.textContent = "該当する住所が見つかりません。郵便番号を確認してください。";
+            errorEl.style.display = "block";
+          }
+          return;
+        }
+        if (prefEl) prefEl.value = addr.pref || "";
+        if (cityEl) cityEl.value = addr.city || "";
+        if (line1El) line1El.value = addr.line1 || "";
+      });
+    }
+    if (addressZipEl) {
+      addressZipEl.addEventListener("input", function () {
+        var v = DriversRegister.formatZipDisplay(addressZipEl.value);
+        if (v !== addressZipEl.value) addressZipEl.value = v;
+      });
+      addressZipEl.addEventListener("blur", function () { fillAddressFromZip(addressZipEl, addressPrefEl, addressCityEl, addressLine1El, addressZipErrorEl); });
+    }
+    if (licenseZipEl) {
+      licenseZipEl.addEventListener("input", function () {
+        var v = DriversRegister.formatZipDisplay(licenseZipEl.value);
+        if (v !== licenseZipEl.value) licenseZipEl.value = v;
+      });
+      licenseZipEl.addEventListener("blur", function () { fillAddressFromZip(licenseZipEl, licensePrefEl, licenseCityEl, licenseLine1El, licenseZipErrorEl); });
+    }
+    if (btnLineAddressMismatch) {
+      btnLineAddressMismatch.addEventListener("click", function () { openSupportLine(); });
+    }
+
+    profileEl.addEventListener("input", function () {
+      const len = profileEl.value.length;
+      profileCounterEl.textContent = len + " 文字（200〜600文字を目安）";
+    });
+
+    function getCheckedValues(name) {
+      return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(function (el) {
+        return el.value;
+      });
+    }
+
+    function buildPayload() {
+      const errors = [];
+
+      const nickname = nicknameEl.value.trim();
+      if (!nickname) {
+        errors.push("ニックネームを入力してください。");
+      }
+
+      const fullName = fullNameEl.value.trim();
+      if (!fullName) {
+        errors.push("本名を入力してください。");
+      }
+
+      const zip7 = DriversRegister.normalizeZip(addressZipEl ? addressZipEl.value : "");
+      if (zip7.length !== 7) {
+        errors.push("現住所の郵便番号を7桁で入力してください。");
+      }
+      const address_pref = addressPrefEl ? addressPrefEl.value.trim() : "";
+      const address_city = addressCityEl ? addressCityEl.value.trim() : "";
+      const address_line1 = addressLine1El ? addressLine1El.value.trim() : "";
+      if (!address_pref || !address_city || !address_line1) {
+        errors.push("現住所（都道府県・市区町村・町名番地）を入力してください。郵便番号で自動入力されます。");
+      }
+      const address_line2 = addressLine2El ? addressLine2El.value.trim() : "";
+
+      const license_zip7 = DriversRegister.normalizeZip(licenseZipEl ? licenseZipEl.value : "");
+      if (license_zip7.length !== 7) {
+        errors.push("免許証の郵便番号を7桁で入力してください。");
+      }
+      const license_addr_pref = licensePrefEl ? licensePrefEl.value.trim() : "";
+      const license_addr_city = licenseCityEl ? licenseCityEl.value.trim() : "";
+      const license_addr_line1 = licenseLine1El ? licenseLine1El.value.trim() : "";
+      if (!license_addr_pref || !license_addr_city || !license_addr_line1) {
+        errors.push("免許証の住所（都道府県・市区町村・町名番地）を入力してください。");
+      }
+      const license_addr_line2 = licenseLine2El ? licenseLine2El.value.trim() : "";
+
+      if (addressMismatchBox) addressMismatchBox.style.display = "none";
+      const addrObj = { pref: address_pref, city: address_city, line1: address_line1, line2: address_line2 };
+      const licenseAddrObj = { pref: license_addr_pref, city: license_addr_city, line1: license_addr_line1, line2: license_addr_line2 };
+      if (!DriversRegister.addressesMatch(addrObj, licenseAddrObj)) {
+        errors.push("免許証の住所と現住所が一致しません。住所変更後に登録するか、LINEでご相談ください。");
+        if (addressMismatchBox) addressMismatchBox.style.display = "block";
+      }
+
+      const address = [address_pref, address_city, address_line1, address_line2].filter(Boolean).join(" ");
+
+      let city = cityEl.value;
+      if (!city) {
+        errors.push("拠点の市町村を選択してください。");
+      } else if (city === "その他") {
+        const other = cityOtherEl.value.trim();
+        if (!other) {
+          errors.push("「その他の市町村名」を入力してください。");
+        } else {
+          city = "その他：" + other;
+        }
+      }
+
+      let vehicle = vehicleEl.value;
+      if (!vehicle) {
+        errors.push("車種を選択してください。");
+      } else if (vehicle === "その他") {
+        const otherV = vehicleOtherEl.value.trim();
+        if (!otherV) {
+          errors.push("「その他の車種」を入力してください。");
+        } else {
+          vehicle = "その他：" + otherV;
+        }
+      }
+
+      const availability = getCheckedValues("availability");
+      if (availability.length === 0) {
+        errors.push("稼働しやすい時間帯を1つ以上選択してください。");
+      }
+
+      const specialties = getCheckedValues("specialties");
+      if (specialties.length === 0) {
+        errors.push("得意な案件タイプを1つ以上選択してください。");
+      }
+
+      const profile = profileEl.value.trim();
+      const profileLen = profile.length;
+      if (!profile) {
+        errors.push("プロフィール（自己紹介）を入力してください。");
+      } else if (profileLen < 200 || profileLen > 600) {
+        errors.push("プロフィールは200〜600文字を目安にご記入ください。（現在 " + profileLen + " 文字）");
+      }
+
+      const dispatchHope = document.getElementById("dispatchHope") && document.getElementById("dispatchHope").value.trim();
+      const expYears = document.getElementById("expYears").value;
+      const rateBand = document.getElementById("rateBand").value;
+      const ngText = document.getElementById("ngText").value.trim();
+
+      const contactPhone = contactPhoneEl.value.trim();
+      const contactEmail = contactEmailEl.value.trim();
+      const contactLineName = contactLineNameEl.value.trim();
+      if (!contactPhone && !contactEmail && !contactLineName) {
+        errors.push("連絡先（電話番号／メール／LINE表示名）のいずれか1つ以上を入力してください。");
+      }
+
+      if (!agreeTermsEl.checked) {
+        errors.push("登録前の確認事項への同意にチェックを入れてください。");
+      }
+
+      const payload = {
+        nickname: nickname,
+        fullName: fullName,
+        address: address,
+        address_zip: zip7,
+        address_pref: address_pref,
+        address_city: address_city,
+        address_line1: address_line1,
+        address_line2: address_line2,
+        license_addr_zip: license_zip7,
+        license_addr_pref: license_addr_pref,
+        license_addr_city: license_addr_city,
+        license_addr_line1: license_addr_line1,
+        license_addr_line2: license_addr_line2,
+        phone: contactPhone,
+        email: contactEmail,
+        lineName: contactLineName,
+        city: city,
+        vehicle: vehicle,
+        vehicle_type: vehicle,
+        availability: availability,
+        specialties: specialties,
+        profile: profile,
+        note: dispatchHope,
+        dispatchHope: dispatchHope,
+        contactPhone: contactPhone,
+        contactEmail: contactEmail,
+        contactLineName: contactLineName,
+        expYears: expYears,
+        rateBand: rateBand,
+        ngText: ngText,
+        userAgent: navigator.userAgent || "",
+        source: "drivers-site",
+        createdAt: new Date().toISOString()
+      };
+
+      return { payload: payload, errors: errors };
+    }
+
+    function renderSummary(payload) {
+      publicSummaryEl.innerHTML = "";
+      privateSummaryEl.innerHTML = "";
+
+      var pub = [];
+      pub.push("ニックネーム：" + payload.nickname);
+      pub.push("市町村：" + payload.city);
+      pub.push("車種：" + payload.vehicle);
+      pub.push("稼働時間帯：" + (payload.availability.join("・") || "未設定"));
+      pub.push("得意分野：" + (payload.specialties.join("・") || "未設定"));
+      pub.push("プロフィール：" + (payload.profile || "未設定"));
+
+      pub.forEach(function (line) {
+        var li = document.createElement("li");
+        li.textContent = line;
+        publicSummaryEl.appendChild(li);
+      });
+
+      var priv = [];
+      priv.push("本名：" + (payload.fullName || ""));
+      priv.push("住所：" + (payload.address || "（未入力）"));
+      if (payload.dispatchHope) priv.push("配車希望：" + payload.dispatchHope);
+      if (payload.expYears) priv.push("経験年数：" + payload.expYears);
+      if (payload.rateBand) priv.push("希望単価帯：" + payload.rateBand);
+      if (payload.ngText) priv.push("NG条件：" + payload.ngText);
+      priv.push("電話：" + (payload.contactPhone || "(未入力)"));
+      priv.push("メール：" + (payload.contactEmail || "(未入力)"));
+      priv.push("LINE表示名：" + (payload.contactLineName || "(未入力)"));
+
+      priv.forEach(function (line) {
+        var li2 = document.createElement("li");
+        li2.textContent = line;
+        privateSummaryEl.appendChild(li2);
+      });
+    }
+
+    function buildLineMessage(receiptId, payload) {
+      var lines = [];
+      lines.push("【協力ドライバー登録控え】");
+      if (receiptId) {
+        lines.push("受付番号：" + receiptId);
+      }
+      lines.push("ニックネーム：" + payload.nickname);
+      lines.push("本名：" + (payload.fullName || ""));
+      lines.push("住所：" + (payload.address || "（未入力）"));
+      lines.push("市町村：" + payload.city);
+      lines.push("車種：" + payload.vehicle);
+      lines.push("稼働時間帯：" + (payload.availability.join("・") || "未設定"));
+      lines.push("得意分野：" + (payload.specialties.join("・") || "未設定"));
+      lines.push("プロフィール：" + (payload.profile || "未設定"));
+      if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);
+      if (payload.expYears) lines.push("経験年数：" + payload.expYears);
+      if (payload.rateBand) lines.push("希望単価帯：" + payload.rateBand);
+      if (payload.ngText) lines.push("NG条件：" + payload.ngText);
+      lines.push("連絡先：");
+      if (payload.contactPhone) lines.push("・電話：" + payload.contactPhone);
+      if (payload.contactEmail) lines.push("・メール：" + payload.contactEmail);
+      if (payload.contactLineName) lines.push("・LINE表示名：" + payload.contactLineName);
+      lines.push("—");
+      lines.push("※このメッセージは、ご自身の控え用です。");
+      return lines.join("\n");
+    }
+
+    function openLineShareWithText(text) {
+      var shareUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(text.slice(0, 5000));
+      window.open(shareUrl, "_blank", "noopener,noreferrer");
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      errorBox.style.display = "none";
+      errorListEl.innerHTML = "";
+      networkErrorBox.style.display = "none";
+
+      var result = buildPayload();
+      if (result.errors.length > 0) {
+        result.errors.forEach(function (msg) {
+          var li = document.createElement("li");
+          li.textContent = msg;
+          errorListEl.appendChild(li);
+        });
+        errorBox.style.display = "";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      var endpoint = (window.CONFIG && window.CONFIG.GAS_ENDPOINT) || "";
+      if (!endpoint || endpoint === "あとで貼る") {
+        networkErrorBox.style.display = "";
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "送信中…";
+
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          type: "driver_register",
+          data: result.payload
+        })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("network");
+          return res.json().catch(function () {
+            return {};
+          });
+        })
+        .then(function (json) {
+          if (!json || json.ok !== true || !json.receiptId) {
+            throw new Error("invalid_response");
+          }
+
+          lastReceiptId = json.receiptId;
+          lastPayload = result.payload;
+          receiptIdEl.textContent = json.receiptId;
+          renderSummary(result.payload);
+          successBox.style.display = "";
+          if (filesSection) {
+            filesSection.style.display = "";
+          }
+          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        })
+        .catch(function () {
+          networkErrorBox.style.display = "";
+          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "上記に同意して登録する";
+        });
+    });
+
+    btnLineShare.addEventListener("click", function () {
+      if (!lastPayload) {
+        alert("先に登録を送信してください。");
+        return;
+      }
+      var text = buildLineMessage(lastReceiptId, lastPayload);
+      openLineShareWithText(text);
+    });
+
+    btnResetForm.addEventListener("click", function () {
+      document.getElementById("registerForm").reset();
+      profileCounterEl.textContent = "0 文字（200〜600文字を目安）";
+      cityOtherRow.style.display = "none";
+      vehicleOtherRow.style.display = "none";
+      errorBox.style.display = "none";
+      networkErrorBox.style.display = "none";
+      successBox.style.display = "none";
+      if (addressMismatchBox) addressMismatchBox.style.display = "none";
+      if (addressZipErrorEl) addressZipErrorEl.style.display = "none";
+      if (licenseZipErrorEl) licenseZipErrorEl.style.display = "none";
+      if (filesSection) filesSection.style.display = "none";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    btnLineFallback.addEventListener("click", function () {
+      var payloadInfo = buildPayload().payload;
+      var lines = [];
+      lines.push("【フォーム送信エラーのご連絡】");
+      lines.push("協力ドライバー登録フォームから送信しようとしましたが、エラーになりました。");
+      lines.push("お手数ですが、下記内容で登録をお願いできますでしょうか。");
+      lines.push("—");
+      lines.push("ニックネーム：" + (payloadInfo.nickname || ""));
+      lines.push("本名：" + (payloadInfo.fullName || ""));
+      lines.push("住所：" + (payloadInfo.address || "（未入力）"));
+      lines.push("市町村：" + (payloadInfo.city || ""));
+      lines.push("車種：" + (payloadInfo.vehicle || ""));
+      lines.push("稼働時間帯：" + (payloadInfo.availability || []).join("・"));
+      lines.push("得意分野：" + (payloadInfo.specialties || []).join("・"));
+      lines.push("プロフィール：" + (payloadInfo.profile || ""));
+      if (payloadInfo.dispatchHope) lines.push("配車希望：" + payloadInfo.dispatchHope);
+      if (payloadInfo.expYears) lines.push("経験年数：" + payloadInfo.expYears);
+      if (payloadInfo.rateBand) lines.push("希望単価帯：" + payloadInfo.rateBand);
+      if (payloadInfo.ngText) lines.push("NG条件：" + payloadInfo.ngText);
+      lines.push("連絡先：");
+      if (payloadInfo.contactPhone) lines.push("・電話：" + payloadInfo.contactPhone);
+      if (payloadInfo.contactEmail) lines.push("・メール：" + payloadInfo.contactEmail);
+      if (payloadInfo.contactLineName) lines.push("・LINE表示名：" + payloadInfo.contactLineName);
+      lines.push("—");
+      lines.push("このメッセージは、送信エラー時の控えから作成しています。");
+
+      var text = lines.join("\n");
+      openLineShareWithText(text);
+    });
+
+    // Step2：書類アップロード
+    function fileToBase64(file) {
+      return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var result = e.target.result || "";
+          var idx = result.indexOf("base64,");
+          if (idx === -1) return resolve(null);
+          resolve(result.slice(idx + 7));
+        };
+        reader.onerror = function () {
+          reject(new Error("file_read_error"));
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadFiles() {
+      if (!lastReceiptId) {
+        filesMessage.textContent = "先に Step1 の登録を完了してください。";
+        return;
+      }
+      filesMessage.textContent = "";
+
+      var licenseFile = licenseFileInput.files[0] || null;
+      var plateFile = plateFileInput.files[0] || null;
+
+      if (!licenseFile && !plateFile) {
+        filesMessage.textContent = "ファイルが選択されていません（後日LINEやメールでの提出も可能です）。";
+        return;
+      }
+
+      var maxMb = (window.CONFIG && typeof window.CONFIG.MAX_FILE_MB === "number") ? window.CONFIG.MAX_FILE_MB : 5;
+      var maxBytes = maxMb * 1024 * 1024;
+      if ((licenseFile && licenseFile.size > maxBytes) || (plateFile && plateFile.size > maxBytes)) {
+        filesMessage.textContent = "ファイルサイズが大きすぎます。1ファイルあたり最大 " + maxMb + "MB までにしてください。";
+        return;
+      }
+
+      var endpoint = (window.CONFIG && window.CONFIG.GAS_ENDPOINT) || "";
+      if (!endpoint || endpoint === "あとで貼る") {
+        filesMessage.textContent = "GAS_ENDPOINT が未設定のため、書類アップロードはまだ利用できません。";
+        return;
+      }
+
+      btnUploadFiles.disabled = true;
+      btnUploadFiles.textContent = "アップロード中…";
+
+      try {
+        var licensePayload = null;
+        var platePayload = null;
+        if (licenseFile) {
+          var data1 = await fileToBase64(licenseFile);
+          licensePayload = {
+            name: licenseFile.name,
+            contentType: licenseFile.type || "application/octet-stream",
+            data: data1
+          };
+        }
+        if (plateFile) {
+          var data2 = await fileToBase64(plateFile);
+          platePayload = {
+            name: plateFile.name,
+            contentType: plateFile.type || "application/octet-stream",
+            data: data2
+          };
+        }
+
+        var res = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            type: "driver_files",
+            receiptId: lastReceiptId,
+            licenseFile: licensePayload,
+            plateFile: platePayload
+          })
+        });
+        if (!res.ok) throw new Error("network");
+        var json = {};
+        try {
+          json = await res.json();
+        } catch (_) {}
+        if (!json || json.ok !== true) {
+          throw new Error("invalid_response");
+        }
+        filesMessage.textContent = "書類アップロードを受け付けました。内容を確認し、必要に応じてご連絡いたします。";
+      } catch (err) {
+        filesMessage.textContent = "書類アップロード中にエラーが発生しました。後日LINEやメールでの提出も可能です。";
+      } finally {
+        btnUploadFiles.disabled = false;
+        btnUploadFiles.textContent = "書類をアップロードする";
+      }
+    }
+
+    if (btnUploadFiles) {
+      btnUploadFiles.addEventListener("click", function () {
+        uploadFiles();
+      });
+    }
+
+    if (btnSkipFiles) {
+      btnSkipFiles.addEventListener("click", function () {
+        filesMessage.textContent = "今回は書類アップロードをスキップしました。後日LINEやメールから提出いただけます。";
+      });
+    }
+  </script>
+</body>
+</html>
+

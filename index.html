@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>協力ドライバー登録｜drivers-site（山口県）</title>
+  <meta name="description" content="山口県エリアの協力ドライバー登録ページ。求人ではなく“登録プール”。お客さまとドライバーを直接つながず、運営が窓口となって安全な配送を支えます。" />
+  <link rel="stylesheet" href="./assets/drivers.css" />
+  <script src="./config.js"></script>
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="site-header-inner">
+      <div class="header-left">
+        <div class="region-badge" aria-label="対応地域">
+          <div class="region-en" id="regionEn">YAMAGUCHI</div>
+          <div class="region-ja" id="regionJa">山口県</div>
+        </div>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+          </div>
+          <div>
+            <div class="company-name" id="companyName">軽貨物TAKE</div>
+            <div class="brand-text-sub">協力ドライバー登録サイト</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="contact-strip" aria-label="連絡先">
+          <div class="contact-item">
+            <span class="contact-label">LINE</span>
+            <span class="contact-value"><a href="#" id="headerLineLink">相談する</a></span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">MAIL</span>
+            <span class="contact-value"><a href="#" id="headerMailLink">takeshimonoseki@gmail.com</a></span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">TEL</span>
+            <span class="contact-value"><a href="#" id="headerTelLink">090-XXXX-XXXX</a></span>
+          </div>
+        </div>
+        <nav class="nav" aria-label="メイン">
+          <a href="#top" class="nav-link">トップ</a>
+          <a href="./vehicle.html" class="nav-link">車両の相談</a>
+          <a href="./register.html" class="nav-link nav-link-primary">登録</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero section-reveal">
+      <article class="card">
+        <div class="card-inner">
+          <div class="kicker">
+            <span id="regionKicker">山口県エリア</span>
+            <span>協力ドライバー登録プール</span>
+          </div>
+          <h1 class="hero-title">協力ドライバー登録</h1>
+          <div class="hero-summary">
+            <p class="hero-summary-line">・お客さまと直接やり取りしません。運営が窓口です。</p>
+            <p class="hero-summary-line">・顔写真・本名は不要。ニックネームと市町村だけ公開します。</p>
+            <p class="hero-summary-line">・登録＝即稼働ではなく、合うタイミングのときだけ声をかけます。</p>
+          </div>
+
+          <div class="chip-row">
+            <span class="chip">求人ではなく「登録プール」</span>
+            <span class="chip">お客⇄ドライバーを直接つなげない</span>
+            <span class="chip">指名不可（希望は参考・確約しない）</span>
+            <span class="chip">クレームは運営が一次窓口</span>
+          </div>
+
+          <div class="hero-actions hero-actions-grid">
+            <a class="btn btn-line" id="heroLineBtn" href="#" target="_blank" rel="noopener noreferrer">LINEで事前に質問</a>
+            <a class="btn btn-tel" id="heroTelBtn" href="#">電話で相談</a>
+            <a class="btn btn-mail" id="heroMailBtn" href="#">メールで問い合わせ</a>
+            <a class="btn btn-primary" href="./register.html">登録に進む</a>
+          </div>
+
+          <div class="starter-inline section-anchor starter-impact" id="starter">
+            <h2 class="starter-title">今から軽貨物を始めたい人へ</h2>
+            <p class="starter-lead">車両・黒ナンバー・保険・確定申告…最初の壁を一緒に整理します。</p>
+            <ul class="list list-compact starter-list">
+              <li>車両／黒ナンバー／保険／確定申告の相談ができます</li>
+              <li>開業トータル相談で内容を選んでLINE送信できます</li>
+            </ul>
+            <div class="hero-actions hero-actions-grid starter-actions">
+              <a class="btn btn-line" id="starterLineBtn" href="#" target="_blank" rel="noopener noreferrer">開業トータル相談（LINE）</a>
+              <a class="btn btn-primary" href="./vehicle.html">車両の相談を見る</a>
+              <a class="btn btn-primary" href="./register.html">登録に進む</a>
+            </div>
+          </div>
+
+          <p class="hero-note">
+            ※本人確認・黒ナンバー・任意保険などの書類は、登録後にお願いするタイミングでご相談します。ドライバー同士のグループは原則作らず、運営主導で連絡します。
+          </p>
+        </div>
+      </article>
+
+      <aside class="card">
+        <div class="card-inner">
+          <details class="accordion-block" open id="merits">
+            <summary class="accordion-title">登録メリット・登録条件（クリックで開閉）</summary>
+            <div class="accordion-body">
+              <h3 class="h3-sub">登録メリット</h3>
+              <ul class="list">
+                <li>山口県エリアの案件で、自分に合いそうなものだけ事前に相談できる</li>
+                <li>顔写真・本名は公開せず、ニックネームとエリアだけが外向きに見える</li>
+                <li>タイミングが合うときだけ声をかけてもらえる</li>
+                <li>「こんな案件なら」「ここまでは行ける」などを登録時に書いておける</li>
+              </ul>
+              <h3 class="h3-sub">登録条件（必要最低限）</h3>
+              <ul class="list">
+                <li>山口県を中心に動ける方</li>
+                <li>軽バン or 軽トラ or それに準ずる車両をお持ちの方</li>
+                <li>荷物の取り扱い・時間厳守などのマナーを守れる方</li>
+                <li>本人確認・黒ナンバー・保険はお願い前に書類で確認</li>
+              </ul>
+              <p class="accordion-note">※登録段階では「検討中」でもOK。後日お話ししながら決めていきます。</p>
+            </div>
+          </details>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section section-anchor" id="info">
+      <h2 class="section-title">公開される情報 / 非公開の情報</h2>
+      <p class="section-subtitle">登録時に入力いただく情報のうち、「どこまでが外に見えるか」をはっきり分けています。</p>
+      <details class="accordion-block">
+        <summary class="accordion-title">詳細を見る（クリックで開閉）</summary>
+      <div class="columns accordion-body">
+        <div>
+          <div class="badge badge-outline">公開される情報（お客さま側に見える想定）</div>
+          <table class="info-table">
+            <tr>
+              <th>ニックネーム</th>
+              <td>本名でなくてOK。呼びやすい名前で構いません。</td>
+            </tr>
+            <tr>
+              <th>市町村</th>
+              <td>「下関市」「山口市」などのざっくりエリアのみ。</td>
+            </tr>
+            <tr>
+              <th>車種</th>
+              <td>軽バン / 軽トラ / その他（例：ハイエース など）</td>
+            </tr>
+            <tr>
+              <th>稼働しやすい時間帯</th>
+              <td>平日昼 / 平日夜 / 土日 / 緊急 / 長距離可 などのチェックのみ。</td>
+            </tr>
+            <tr>
+              <th>得意分野</th>
+              <td>引越・チャーター・スポット・定期・宅配・その他 など。</td>
+            </tr>
+            <tr>
+              <th>プロフィール</th>
+              <td>200〜600字程度の自己紹介文（文章のみ / 顔写真なし）。</td>
+            </tr>
+          </table>
+        </div>
+
+        <div>
+          <div class="badge badge-soft">非公開（代表たけのみが確認）</div>
+          <table class="info-table">
+            <tr>
+              <th>連絡手段</th>
+              <td>電話かLINEかの選択。<strong>番号/IDはサイト上には一切出しません。</strong></td>
+            </tr>
+            <tr>
+              <th>連絡先</th>
+              <td>電話番号 or LINEアカウント情報（内部メモのみ）。</td>
+            </tr>
+            <tr>
+              <th>経験年数</th>
+              <td>「未経験〜5年以上」などのざっくり区分。</td>
+            </tr>
+            <tr>
+              <th>希望単価帯</th>
+              <td>「控えめでOK」「標準イメージ」「やや高め希望」など、<strong>数字ではなく感覚レベル</strong>で管理します。</td>
+            </tr>
+            <tr>
+              <th>NG条件</th>
+              <td>「深夜×」「長距離×」「階段重い荷物×」など、避けたい条件。</td>
+            </tr>
+            <tr>
+              <th>本人確認・黒ナンバー等</th>
+              <td>
+                書類は<strong>承認後に別途やり取り</strong>します。<br />
+                登録時点では「持っている / 準備予定」くらいの確認のみ。
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      </details>
+    </section>
+
+    <section class="section section-anchor" id="no-selection">
+      <h2 class="section-title">指名について</h2>
+      <p class="section-subtitle">
+        <strong>希望は参考にする場合があります（確約しない）</strong>。
+      </p>
+    </section>
+
+    <section class="section section-anchor" id="support">
+      <h2 class="section-title">開業サポート（特典）</h2>
+      <p class="section-subtitle">
+        黒ナンバー・保険・確定申告など、開業まわりの<strong>相談・案内</strong>を行います。
+      </p>
+      <ul class="list">
+        <li>黒ナンバー取得の相談（必要書類チェック・記入例・窓口同行サポートなど）</li>
+        <li>保険の相談・案内</li>
+        <li>確定申告の相談・案内</li>
+      </ul>
+      <p class="small mt-sm">
+        必要に応じ提携先をご案内する場合があります。詳細はLINE・電話・メールでお尋ねください。
+      </p>
+    </section>
+
+    <section class="section section-anchor" id="vehicle">
+      <h2 class="section-title">車両の相談（購入・修理・車検・開業トータル）</h2>
+      <p class="section-subtitle">
+        協力ドライバーとして稼働するうえで欠かせない、<strong>車両まわりの準備</strong>についても相談できます。
+      </p>
+      <ul class="list">
+        <li>車両購入の相談</li>
+        <li>修理・整備の相談</li>
+        <li>車検の相談</li>
+        <li>開業トータル相談（黒ナンバー・保険・確定申告など）</li>
+      </ul>
+      <div class="hero-actions mt-sm">
+        <a class="btn btn-primary" href="./vehicle.html">車両の相談ページへ</a>
+      </div>
+    </section>
+
+    <section class="section section-anchor" id="policy">
+      <h2 class="section-title">運営方針と個人情報の取扱い</h2>
+      <details class="accordion-block">
+        <summary class="accordion-title">詳細を見る（クリックで開閉）</summary>
+      <div class="columns accordion-body">
+        <div>
+          <div class="summary-block">
+            <div class="summary-block-title">運営方針</div>
+            <ul class="summary-list">
+              <li>お客さまとドライバーを<strong>直接つなげず</strong>、運営（たけ）が窓口になること</li>
+              <li>クレームやトラブルは、まず<strong>運営が一次窓口として受け止める</strong>こと</li>
+              <li>指名はできず、希望はあくまで<strong>参考情報として扱う</strong>こと</li>
+              <li>ドライバー同士の横のグループは原則つくらず、<strong>運営主導の連絡のみ</strong>とすること</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="summary-block">
+            <div class="summary-block-title">個人情報の取扱い</div>
+            <ul class="summary-list">
+              <li><strong>目的</strong>：協力ドライバー登録・案件紹介・支払い・クレーム対応のため</li>
+              <li><strong>閲覧者</strong>：運営（たけ）のみ。お客さまには公開プロフィール（ニックネーム／市町村／車種／稼働帯／得意／プロフィール）のみ提供</li>
+              <li><strong>保管</strong>：スプレッドシート・Drive 等で管理。本名・住所・連絡先・免許・ナンバー画像は<strong>公開しません</strong></li>
+              <li><strong>削除方針</strong>：登録内容の修正・削除依頼はいつでもLINEやメールで受け付けます</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      </details>
+    </section>
+
+    <section class="section section-anchor" id="faq">
+      <h2 class="section-title">よくある質問</h2>
+      <div class="stack">
+        <details class="faq">
+          <summary>登録したら必ず仕事が流れてきますか？</summary>
+          <div class="faq-body">
+            お約束はできませんが、エリアやタイミングが合えば声をかけさせていただきます。<br />
+            「登録だけ」でも大歓迎で、<strong>合う案件があったときだけご相談</strong>するスタイルです。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>本名や顔写真は必要ですか？</summary>
+          <div class="faq-body">
+            このサイト上では<strong>本名も顔写真も不要</strong>です。<br />
+            公開されるのはニックネーム・市町村・車種・得意分野・プロフィール文章だけです。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>運賃の決め方や料金表はどこにありますか？</summary>
+          <div class="faq-body">
+            このドライバー登録サイトには、<strong>運賃計算ロジック・見積計算機・料金式などは一切載せません。</strong><br />
+            具体的な条件のご相談は、案件ごとに代表たけ側で行います。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>お客さまと直接やり取りしてもいいですか？</summary>
+          <div class="faq-body">
+            原則として、<strong>お客さまとドライバーさんを直接つなぐことはしません</strong>。<br />
+            連絡・調整はすべて代表たけ経由で行います。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>クレームやトラブルがあった場合はどうなりますか？</summary>
+          <div class="faq-body">
+            クレーム・トラブル・問い合わせは、<strong>すべて運営（たけ）が一次窓口として対応</strong>します。<br />
+            ドライバーさん個人に直接クレームが飛ぶ形にならないよう運用します。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>指名や「前回と同じドライバー指定」はできますか？</summary>
+          <div class="faq-body">
+            指名はできません。<strong>希望は参考情報としてお伺いしますが、確約はしません。</strong><br />
+            案件内容・距離・スケジュールを見て、運営側でバランスよくお願いする方針です。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>ドライバー同士でグループを作ったりしてもいいですか？</summary>
+          <div class="faq-body">
+            原則として、<strong>ドライバー同士の横のグループはつくらず</strong>、運営主導の連絡のみとしています。<br />
+            情報の偏りやトラブルを防ぐための方針です。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>書類（免許証・ナンバー画像など）はいつ提出しますか？</summary>
+          <div class="faq-body">
+            書類の提出は<strong>登録後でもOK</strong>です。実際に案件をお願いする前に、必要に応じてご案内します。<br />
+            先にフォームだけ登録しておき、後日LINEやメールで提出していただく流れも可能です。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>車両の相談はできますか？</summary>
+          <div class="faq-body">
+            車両の相談ができます（購入／修理／車検／開業トータル）。<br />
+            <a href="./vehicle.html">車両の相談ページ</a>から内容を選んでLINE送信も可能です。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>黒ナンバー取得のサポート内容は？</summary>
+          <div class="faq-body">
+            黒ナンバーは<strong>本人申請が原則</strong>です。当方では「必要書類のチェック・記入例の提供・窓口同行でのサポート」を行います。必要に応じ提携先をご案内する場合があります（代行申請の表現は避けています）。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>登録内容を後から変更したい場合は？</summary>
+          <div class="faq-body">
+            稼働時間帯やNG条件などは、後からいくらでも変更OKです。<br />
+            LINEで「登録内容の変更希望」とメッセージいただければ、内部の控えを更新します。
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>心配なことがあるので、まずは相談だけしたいです。</summary>
+          <div class="faq-body">
+            もちろんOKです。<strong>ページ下部のLINEボタン</strong>からお気軽にご相談ください。LINEの公式リンクのみ使用しています。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section section-anchor" id="contact">
+      <h2 class="section-title">問い合わせ</h2>
+      <p class="section-subtitle">登録前に不安があれば、<strong>ページ下部のボタン</strong>からLINE・メール・電話でご相談ください。登録は同じボタン群からできます。</p>
+    </section>
+
+    <footer class="site-footer">
+      <div class="hero-actions footer-actions">
+        <a class="btn btn-line btn-footer" id="footerLineBtn" href="#" target="_blank" rel="noopener noreferrer">LINEで質問</a>
+        <a class="btn btn-mail btn-footer" id="footerMailBtn" href="#">メール</a>
+        <a class="btn btn-tel btn-footer" id="footerTelBtn" href="#">電話</a>
+        <a class="btn btn-primary btn-footer" href="./register.html">登録に進む</a>
+      </div>
+      <div id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
+      <div>ドライバーさん向けの登録専用です。お客さま向けの受注フォームはありません。</div>
+    </footer>
+  </main>
+
+  <script>
+    // CONFIG からヘッダー・フッター情報を反映
+    (function applyConfig() {
+      if (!window.CONFIG) return;
+      var regionJa = document.getElementById("regionJa");
+      var regionEn = document.getElementById("regionEn");
+      var regionKicker = document.getElementById("regionKicker");
+      var companyName = document.getElementById("companyName");
+      var footerCompany = document.getElementById("footerCompany");
+
+      if (regionJa) regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
+      if (regionEn) regionEn.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
+      if (regionKicker) regionKicker.textContent = (window.CONFIG.REGION_LABEL || "山口県") + "エリア";
+      if (companyName) companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+      if (footerCompany) {
+        footerCompany.textContent = (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
+      }
+
+      var lineLink = document.getElementById("headerLineLink");
+      var mailLink = document.getElementById("headerMailLink");
+      var telLink = document.getElementById("headerTelLink");
+      var lineUrl = window.CONFIG.LINE_URL || "";
+      var email = window.CONFIG.EMAIL_TO || "";
+      var tel = window.CONFIG.TEL || "";
+
+      if (lineLink && lineUrl) lineLink.href = lineUrl;
+      if (mailLink && email) {
+        mailLink.href = "mailto:" + email;
+        mailLink.textContent = email;
+      }
+      if (telLink && tel) {
+        telLink.href = "tel:" + tel.replace(/[^0-9+]/g, "");
+        telLink.textContent = tel.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+      }
+      var heroLineBtn = document.getElementById("heroLineBtn");
+      var heroTelBtn = document.getElementById("heroTelBtn");
+      var heroMailBtn = document.getElementById("heroMailBtn");
+      var footerLineBtn = document.getElementById("footerLineBtn");
+      var footerMailBtn = document.getElementById("footerMailBtn");
+      var footerTelBtn = document.getElementById("footerTelBtn");
+      if (heroLineBtn && lineUrl) heroLineBtn.href = lineUrl;
+      if (heroTelBtn && tel) heroTelBtn.href = "tel:" + tel.replace(/[^0-9+]/g, "");
+      if (heroMailBtn && email) heroMailBtn.href = "mailto:" + email + "?subject=" + encodeURIComponent("【協力ドライバー登録】問い合わせ");
+      if (footerLineBtn && lineUrl) footerLineBtn.href = lineUrl;
+      if (footerMailBtn && email) footerMailBtn.href = "mailto:" + email;
+      if (footerTelBtn && tel) footerTelBtn.href = "tel:" + tel.replace(/[^0-9+]/g, "");
+      var starterLineBtn = document.getElementById("starterLineBtn");
+      if (starterLineBtn && lineUrl) starterLineBtn.href = lineUrl;
+    })();
+
+    // 固定ヘッダーを考慮したスムーススクロール
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        const href = a.getAttribute("href");
+        if (!href || href === "#") return;
+        const target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        const header = document.querySelector(".site-header");
+        const offset = (header ? header.offsetHeight : 0) + 10;
+        const rect = target.getBoundingClientRect();
+        const top = window.pageYOffset + rect.top - offset;
+        window.scrollTo({ top, behavior: "smooth" });
+      });
+    });
+
+    // セクション表示時のフェードイン
+    (function () {
+      var root = document.querySelector(".page");
+      if (!root) return;
+      var els = root.querySelectorAll(".hero, .section");
+      var io = typeof IntersectionObserver !== "undefined" ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) e.target.classList.add("section-reveal");
+        });
+      }, { rootMargin: "0px 0px -40px 0px", threshold: 0.01 }) : null;
+      els.forEach(function (el) {
+        if (io) io.observe(el); else el.classList.add("section-reveal");
+      });
+    })();
+  </script>
+</body>
+</html>
+
