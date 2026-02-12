@@ -143,8 +143,6 @@
 
   /**
    * メーカー選択に応じて車種 datalist の option を差し替える
-   * @param {HTMLSelectElement} makerSelect - メーカー選択の select
-   * @param {HTMLDataListElement} datalistEl - 車種の datalist 要素
    */
   function updatePurchaseModelDatalist(makerSelect, datalistEl) {
     if (!datalistEl) return;
@@ -160,6 +158,28 @@
     }
   }
 
+  /**
+   * メーカー選択に応じて車種 select の option を再生成（select方式・端末互換性重視）
+   * @param {HTMLSelectElement} makerSelect - メーカー選択の select
+   * @param {HTMLSelectElement} modelSelect - 車種の select 要素
+   */
+  function updatePurchaseModelSelect(makerSelect, modelSelect) {
+    if (!modelSelect) return;
+    var maker = (makerSelect && makerSelect.value) ? String(makerSelect.value).trim() : "";
+    var models = VEHICLE_DB[maker] || [];
+    modelSelect.innerHTML = "";
+    var opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = models.length ? "選択してください" : "メーカーを選択すると車種が出ます";
+    modelSelect.appendChild(opt0);
+    models.forEach(function (m) {
+      var opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = m;
+      modelSelect.appendChild(opt);
+    });
+  }
+
   // 公開API
   global.DriversRegister = {
     formatZipDisplay: formatZipDisplay,
@@ -169,6 +189,7 @@
     buildAddressString: buildAddressString,
     addressesMatch: addressesMatch,
     VEHICLE_DB: VEHICLE_DB,
-    updatePurchaseModelDatalist: updatePurchaseModelDatalist
+    updatePurchaseModelDatalist: updatePurchaseModelDatalist,
+    updatePurchaseModelSelect: updatePurchaseModelSelect
   };
 })(typeof window !== "undefined" ? window : this);

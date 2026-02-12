@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>車両の相談｜drivers-site（山口県）</title>
   <meta name="description" content="車両購入・修理・車検・開業トータル相談。協力ドライバー登録サイト。" />
-  <link rel="stylesheet" href="./assets/drivers.css" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/vehicle.html" />
+  <meta property="og:title" content="車両の相談｜drivers-site（山口県）" />
+  <meta property="og:url" content="https://takeshimonoseki.github.io/vehicle.html" />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="./drivers.css" />
   <script src="./config.js"></script>
-  <script src="./assets/drivers.js"></script>
+  <script src="./drivers.js" defer></script>
 </head>
 <body>
   <header class="site-header" id="top">
@@ -131,8 +135,9 @@
       </div>
       <div class="form-row-full">
         <label class="field-label">車種（モデル）</label>
-        <input type="text" id="purchaseModel" list="purchaseModelList" placeholder="メーカー選択で候補表示、それ以外は手入力可" autocomplete="off" />
-        <datalist id="purchaseModelList"></datalist>
+        <select id="purchaseModel">
+          <option value="">メーカーを選択すると車種が出ます</option>
+        </select>
       </div>
       <div class="form-row-full">
         <label class="field-label">希望納期</label>
@@ -299,11 +304,12 @@
         <a class="btn btn-primary btn-footer" href="./register.html">登録に進む</a>
       </div>
       <div id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
+      <p class="mt-sm"><a href="./privacy.html">プライバシー・個人情報の取扱い</a></p>
     </footer>
   </main>
 
   <script>
-    (function () {
+    document.addEventListener("DOMContentLoaded", function () {
       var C = window.CONFIG || {};
       var lineUrl = C.LINE_URL || "";
       var email = C.EMAIL_TO || "";
@@ -347,19 +353,19 @@
         return Array.prototype.map.call(nodes, function (n) { return n.value; });
       }
 
-      // A) 車両購入（メーカー→車種連動）
+      // A) 車両購入（メーカー→車種連動・select方式）
       var purchaseMakerEl = document.getElementById("purchaseMaker");
-      var purchaseModelListEl = document.getElementById("purchaseModelList");
-      if (purchaseMakerEl && purchaseModelListEl && window.DriversRegister && DriversRegister.updatePurchaseModelDatalist) {
-        purchaseMakerEl.addEventListener("change", function () { DriversRegister.updatePurchaseModelDatalist(purchaseMakerEl, purchaseModelListEl); });
-        DriversRegister.updatePurchaseModelDatalist(purchaseMakerEl, purchaseModelListEl);
+      var purchaseModelEl = document.getElementById("purchaseModel");
+      if (purchaseMakerEl && purchaseModelEl && window.DriversRegister && DriversRegister.updatePurchaseModelSelect) {
+        purchaseMakerEl.addEventListener("change", function () { DriversRegister.updatePurchaseModelSelect(purchaseMakerEl, purchaseModelEl); });
+        DriversRegister.updatePurchaseModelSelect(purchaseMakerEl, purchaseModelEl);
       }
       document.getElementById("btnLinePurchase").addEventListener("click", function () {
         var lines = ["【車両購入の相談】"];
         var use = document.getElementById("purchaseUse").value;
         var budget = document.getElementById("purchaseBudget").value;
         var maker = document.getElementById("purchaseMaker").value;
-        var model = document.getElementById("purchaseModel").value.trim();
+        var model = (document.getElementById("purchaseModel") && document.getElementById("purchaseModel").value) ? document.getElementById("purchaseModel").value.trim() : "";
         var delivery = document.getElementById("purchaseDelivery").value;
         var contact = document.getElementById("purchaseContact").value;
         if (use) lines.push("用途：" + use);
@@ -469,7 +475,7 @@
           if (io) io.observe(el); else el.classList.add("section-reveal");
         });
       })();
-    })();
+    });
   </script>
 </body>
 </html>

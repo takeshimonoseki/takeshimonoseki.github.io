@@ -4,9 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>協力ドライバー登録｜drivers-site（山口県）</title>
-  <meta name="description" content="山口県エリアの協力ドライバー登録ページ。求人ではなく“登録プール”。お客さまとドライバーを直接つながず、運営が窓口となって安全な配送を支えます。" />
-  <link rel="stylesheet" href="./assets/drivers.css" />
+  <meta name="description" content="山口県エリアの協力ドライバー登録ページ。求人ではなく&quot;登録プール&quot;。お客さまとドライバーを直接つながず、運営が窓口となって安全な配送を支えます。" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/" />
+  <meta property="og:title" content="協力ドライバー登録｜drivers-site（山口県）" />
+  <meta property="og:description" content="山口県エリアの協力ドライバー登録。登録プール方式で運営が窓口となります。" />
+  <meta property="og:url" content="https://takeshimonoseki.github.io/" />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="./drivers.css" />
   <script src="./config.js"></script>
+  <script src="./drivers.js" defer></script>
 </head>
 <body>
   <header class="site-header" id="top">
@@ -42,7 +48,7 @@
           </div>
         </div>
         <nav class="nav" aria-label="メイン">
-          <a href="#top" class="nav-link">トップ</a>
+          <a href="./index.html" class="nav-link">トップ</a>
           <a href="./vehicle.html" class="nav-link">車両の相談</a>
           <a href="./register.html" class="nav-link nav-link-primary">登録</a>
         </nav>
@@ -365,6 +371,12 @@
       </div>
     </section>
 
+    <section class="section section-anchor" id="news">
+      <h2 class="section-title">お知らせ</h2>
+      <div id="newsList" class="stack"></div>
+      <p class="small" id="newsNone" style="display:none;">お知らせはありません。</p>
+    </section>
+
     <section class="section section-anchor" id="contact">
       <h2 class="section-title">問い合わせ</h2>
       <p class="section-subtitle">登録前に不安があれば、<strong>ページ下部のボタン</strong>からLINE・メール・電話でご相談ください。登録は同じボタン群からできます。</p>
@@ -379,6 +391,7 @@
       </div>
       <div id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
       <div>ドライバーさん向けの登録専用です。お客さま向けの受注フォームはありません。</div>
+      <p class="mt-sm"><a href="./privacy.html">プライバシー・個人情報の取扱い</a></p>
     </footer>
   </main>
 
@@ -462,7 +475,22 @@
         if (io) io.observe(el); else el.classList.add("section-reveal");
       });
     })();
+
+    fetch("./news.json").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }).then(function (data) {
+      var list = document.getElementById("newsList");
+      var none = document.getElementById("newsNone");
+      if (!list) return;
+      if (!data || !data.items || data.items.length === 0) {
+        if (none) none.style.display = "block";
+        return;
+      }
+      data.items.slice(0, 5).forEach(function (item) {
+        var div = document.createElement("div");
+        div.className = "small";
+        div.innerHTML = (item.date ? "<strong>" + item.date + "</strong> " : "") + (item.text || "");
+        list.appendChild(div);
+      });
+    });
   </script>
 </body>
 </html>
-

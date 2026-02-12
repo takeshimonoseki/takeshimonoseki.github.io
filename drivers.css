@@ -767,10 +767,13 @@ details.faq summary::-webkit-details-marker {
   line-height: 1.7;
 }
 
-/* フォーム用（register / request 共通） */
+/* フォーム用（register 共通） */
 .form-card {
   max-width: 900px;
   margin: 0 auto;
+}
+.form-card .card-inner > .section:first-of-type {
+  margin-top: 12px;
 }
 
 .form-grid {

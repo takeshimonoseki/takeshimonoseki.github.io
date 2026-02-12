@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://takeshimonoseki.github.io/</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://takeshimonoseki.github.io/register.html</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://takeshimonoseki.github.io/vehicle.html</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://takeshimonoseki.github.io/privacy.html</loc>
+    <changefreq>yearly</changefreq>
+  </url>
+</urlset>

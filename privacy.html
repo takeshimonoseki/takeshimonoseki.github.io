@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>プライバシー・個人情報の取扱い｜drivers-site</title>
+  <meta name="description" content="協力ドライバー登録サイトのプライバシー・個人情報の取扱い方針です。" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/privacy.html" />
+  <meta property="og:title" content="プライバシー・個人情報の取扱い｜drivers-site" />
+  <meta property="og:url" content="https://takeshimonoseki.github.io/privacy.html" />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="./drivers.css" />
+  <script src="./config.js"></script>
+  <script src="./drivers.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="header-left">
+        <div class="region-badge" aria-label="対応地域">
+          <div class="region-en" id="regionEn">YAMAGUCHI</div>
+          <div class="region-ja" id="regionJa">山口県</div>
+        </div>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><span></span></div>
+          <div>
+            <div class="company-name" id="companyName">軽貨物TAKE</div>
+            <div class="brand-text-sub">協力ドライバー登録サイト</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <nav class="nav" aria-label="メイン">
+          <a href="./index.html" class="nav-link">トップ</a>
+          <a href="./vehicle.html" class="nav-link">車両の相談</a>
+          <a href="./register.html" class="nav-link nav-link-primary">登録</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="page form-card">
+    <article class="card">
+      <div class="card-inner">
+        <h1 class="hero-title">プライバシー・個人情報の取扱い</h1>
+        <p class="hero-lead">協力ドライバー登録にあたり収集する個人情報の取扱い方針です。</p>
+
+        <section class="section">
+          <h2 class="section-title">収集する情報</h2>
+          <p>登録フォームから、氏名・住所・連絡先・免許証画像・車両情報・保険情報などを収集します。公開されるのはニックネーム・拠点市町村・車種・稼働時間帯・得意分野・プロフィール文のみです。</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">利用目的</h2>
+          <p>協力ドライバー登録の管理、案件紹介、支払い・クレーム対応に利用します。運営（代表たけ）のみが閲覧し、お客さまには公開プロフィールのみを提供します。</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">保管・共有</h2>
+          <p>データはスプレッドシート・Google Drive 等で管理します。本名・住所・連絡先・免許証画像は第三者に提供しません。修正・削除の依頼はLINE・メールで随時受け付けます。</p>
+        </section>
+
+        <p class="mt-md"><a href="./index.html" class="btn btn-primary">トップへ戻る</a></p>
+      </div>
+    </article>
+
+    <footer class="site-footer">
+      <div id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
+      <p><a href="./index.html">トップ</a>｜<a href="./privacy.html">プライバシー</a></p>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      if (!window.CONFIG) return;
+      var ja = document.getElementById("regionJa");
+      var en = document.getElementById("regionEn");
+      var cn = document.getElementById("companyName");
+      var fc = document.getElementById("footerCompany");
+      if (ja) ja.textContent = window.CONFIG.REGION_LABEL || "山口県";
+      if (en) en.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
+      if (cn) cn.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+      if (fc) fc.textContent = (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
+    })();
+  </script>
+</body>
+</html>
