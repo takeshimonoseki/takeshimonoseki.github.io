@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>協力ドライバー登録規約｜drivers-site</title>
+  <meta name="description" content="協力ドライバー登録に際して同意いただく規約です。" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/terms.html" />
+  <link rel="stylesheet" href="./drivers.css" />
+  <script src="./config.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="header-left">
+        <div class="region-badge" aria-label="対応地域">
+          <div class="region-en" id="regionEn">YAMAGUCHI</div>
+          <div class="region-ja" id="regionJa">山口県</div>
+        </div>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><span></span></div>
+          <div>
+            <div class="company-name" id="companyName">軽貨物TAKE</div>
+            <div class="brand-text-sub">協力ドライバー登録サイト</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <nav class="nav" aria-label="メイン">
+          <a href="./index.html" class="nav-link">トップ</a>
+          <a href="./vehicle.html" class="nav-link">車両の相談</a>
+          <a href="./register.html" class="nav-link nav-link-primary">登録</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="page form-card">
+    <article class="card">
+      <div class="card-inner">
+        <h1 class="hero-title hero-title-register">協力ドライバー登録規約</h1>
+        <p class="hero-note">登録フォーム送信前にご一読いただき、同意のうえでチェックを入れて送信してください。</p>
+
+        <section class="section">
+          <h2 class="section-title">第1条（登録の性格）</h2>
+          <p>本登録は、求人への応募ではなく「協力ドライバー登録プール」への登録である。登録により就労義務や稼働保証は生じず、案件の紹介・依頼は運営の判断により随時行う。</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">第2条（窓口）</h2>
+          <p>お客さまとドライバーを直接つなぐことはせず、連絡・調整はすべて運営（代表たけ）を窓口として行う。登録者とお客様との直接取引・連絡は禁止する。</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">第3条（登録情報の取扱い）</h2>
+          <p>登録内容（氏名・住所・連絡先・口座情報等）は運営が厳重に管理し、お客様や第三者に開示しない。公開されるのはニックネーム・拠点市町村・稼働時間帯・得意分野・プロフィール等、運営が指定する項目に限る。</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">第4条（車両・保険）</h2>
+          <p>登録時点で、事業用（黒ナンバー）であることおよび必要な保険（自動車保険・貨物保険等）に加入していることを申告する。実際に案件をお願いする前に、運営が書類等で確認することがある。</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">第5条（変更・削除）</h2>
+          <p>登録内容の変更・削除は、LINE・メール等で運営に依頼することで随時受け付ける。</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">第6条（規約の変更）</h2>
+          <p>運営は本規約を変更できる。変更後はサイト上で告知し、登録継続をもって同意したものとする。</p>
+        </section>
+
+        <p class="mt-md">
+          <a href="./register.html" class="btn btn-primary">登録フォームに戻る</a>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="./privacy.html">プライバシー・個人情報の取扱い</a></p>
+  </footer>
+
+  <script>
+    (function () {
+      var C = window.CONFIG || {};
+      if (C.REGION_LABEL) {
+        var ja = document.getElementById("regionJa"); if (ja) ja.textContent = C.REGION_LABEL;
+      }
+      if (C.COMPANY_NAME) {
+        var cn = document.getElementById("companyName"); if (cn) cn.textContent = C.COMPANY_NAME;
+      }
+    })();
+  </script>
+</body>
+</html>

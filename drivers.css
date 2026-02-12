@@ -313,6 +313,18 @@ main {
   }
 }
 
+.hero-title-register {
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+@media (min-width: 720px) {
+  .hero-title-register {
+    font-size: 24px;
+  }
+}
+
 .hero-lead {
   margin: 0 0 14px;
   color: var(--muted);
@@ -889,6 +901,16 @@ textarea:focus {
 
 .choice input {
   width: auto;
+}
+
+.choice-required {
+  font-weight: 700;
+}
+
+.insurance-required-warning {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #b91c1c;
 }
 
 .profile-counter {

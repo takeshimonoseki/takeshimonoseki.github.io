@@ -59,7 +59,7 @@
     <article class="card fade-in">
       <div class="card-inner">
         <div class="badge badge-soft">求人ではなく「登録プール」です</div>
-        <h1 class="hero-title" style="font-size:24px;margin-top:0;margin-bottom:8px;">協力ドライバー登録フォーム</h1>
+        <h1 class="hero-title hero-title-register">協力ドライバー登録フォーム</h1>
         <p class="hero-lead" style="margin:0 0 8px 0;">
           お客さまとドライバーさんを<strong>直接つながず</strong>、代表たけが間に入る前提の登録フォームです。<br />
           顔写真や本名は不要で、公開情報は<strong>ニックネーム＋市町村＋プロフィールなどの文章のみ</strong>です。
@@ -75,7 +75,7 @@
             <li>ニックネーム（公開名）・苗字・名前（非公開）</li>
             <li>現住所（非公開）・拠点の市町村（公開）</li>
             <li>免許証の写真（表・裏とも必須）</li>
-            <li>車両情報（車種区分・メーカー・車種・ナンバー・黒ナンバー確認・車両写真）</li>
+            <li>車両情報（車種区分・車検証写真・黒ナンバー誓約・車両写真）</li>
             <li>保険（自動車保険・貨物保険の加入有無は必須）</li>
             <li>稼働時間帯・得意な案件タイプ・プロフィール（200〜600字）</li>
             <li>連絡先（電話／メール／LINEのいずれか）</li>
@@ -226,68 +226,34 @@
               <input type="text" id="vehicleOther" placeholder="例：ハイエース・1tバン など" />
             </div>
 
-            <div>
+            <div class="form-row-full">
               <div class="field-label">
-                <span class="field-label-main">車両メーカー</span>
+                <span class="field-label-main">車検証の写真（必須）</span>
                 <span class="field-label-sub"><span class="badge-required">必須</span></span>
               </div>
-              <select id="registerVehicleMaker" name="registerVehicleMaker">
-                <option value="">選択してください</option>
-                <optgroup label="国産">
-                  <option value="トヨタ">トヨタ</option>
-                  <option value="ホンダ">ホンダ</option>
-                  <option value="日産">日産</option>
-                  <option value="スズキ">スズキ</option>
-                  <option value="ダイハツ">ダイハツ</option>
-                  <option value="マツダ">マツダ</option>
-                  <option value="スバル">スバル</option>
-                  <option value="三菱">三菱</option>
-                  <option value="いすゞ">いすゞ</option>
-                  <option value="その他国産">その他国産</option>
-                </optgroup>
-                <optgroup label="輸入">
-                  <option value="メルセデス・ベンツ">メルセデス・ベンツ</option>
-                  <option value="BMW">BMW</option>
-                  <option value="フォルクスワーゲン">フォルクスワーゲン</option>
-                  <option value="その他輸入">その他輸入</option>
-                </optgroup>
-              </select>
-            </div>
-            <div>
-              <div class="field-label">
-                <span class="field-label-main">車両車種（モデル）</span>
-                <span class="field-label-sub"><span class="badge-required">必須</span></span>
-              </div>
-              <select id="registerVehicleModel" name="registerVehicleModel">
-                <option value="">メーカーを選択すると車種が出ます</option>
-              </select>
-            </div>
-            <div>
-              <div class="field-label">
-                <span class="field-label-main">ナンバー（車両番号）</span>
-                <span class="field-label-sub"><span class="badge-required">必須</span></span>
-              </div>
-              <input type="text" id="plateNumber" name="plateNumber" placeholder="例：山口 300 あ 12-34" maxlength="20" />
+              <p class="field-help">車検証（車検証書または車検証の写し）を1枚撮影してアップロードしてください。車両情報は写真で確認します。</p>
+              <input type="file" id="vehicleInspection" name="vehicleInspection" accept="image/*" capture="environment" required />
             </div>
             <div class="form-row-full">
-              <label class="choice">
-                <input type="checkbox" id="blackPlateConfirm" name="blackPlateConfirm" />
-                黒ナンバー（事業用）であることを確認しました（必須）
+              <label class="choice choice-required">
+                <input type="checkbox" id="blackPlatePledge" name="blackPlatePledge" />
+                事業用（黒ナンバー）であることを誓約する（必須）
               </label>
+              <p id="blackPlateWarning" class="field-error insurance-required-warning" style="display:none;">事業用（黒ナンバー）の誓約にチェックを入れてください。</p>
             </div>
             <div class="form-row-full">
               <div class="field-label">
                 <span class="field-label-main">車両写真（必須）</span>
                 <span class="field-label-sub"><span class="badge-required">必須</span></span>
               </div>
-              <p class="field-help">1) 車の前から撮った写真（ナンバーが写ること） 2) 黒ナンバーが確認できる写真（1枚で両方写っていれば1枚で可）</p>
+              <p class="field-help">車の前から撮った写真（ナンバーが写ること）。黒ナンバーが確認できる写真（1枚で両方写っていれば1枚で可）。</p>
               <div class="form-grid mt-sm">
                 <div>
                   <label class="field-label">車両写真1（前から・ナンバー見える）</label>
                   <input type="file" id="vehiclePhoto1" accept="image/*" capture="environment" />
                 </div>
                 <div>
-                  <label class="field-label">車両写真2（黒ナンバー確認用・必要なら）</label>
+                  <label class="field-label">車両写真2（黒ナンバー確認用・任意）</label>
                   <input type="file" id="vehiclePhoto2" accept="image/*" capture="environment" />
                 </div>
               </div>
@@ -310,6 +276,7 @@
                 <label class="field-label">保険証券画像（任意）</label>
                 <input type="file" id="autoInsuranceFile" accept="image/*,.pdf" />
               </div>
+
               <div class="field-label mt-sm">
                 <span class="field-label-main">貨物保険</span>
                 <span class="field-label-sub"><span class="badge-required">必須</span></span>
@@ -320,9 +287,33 @@
                 <option value="未加入">未加入</option>
                 <option value="検討中">検討中</option>
               </select>
+              <div class="form-row-full mt-xs">
+                <label class="choice choice-required">
+                  <input type="checkbox" id="cargoInsuranceConfirmed" name="cargoInsuranceConfirmed" />
+                  貨物保険：加入済み（必須）
+                </label>
+                <p id="cargoInsuranceWarning" class="field-error insurance-required-warning" style="display:none;">貨物保険への加入は登録必須です。加入済みのうえで上記にチェックを入れてください。</p>
+              </div>
+              <div class="form-grid mt-sm">
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">保険証券：保険会社名</span>
+                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                  </div>
+                  <input type="text" id="insuranceCompany" name="insuranceCompany" autocomplete="off" placeholder="例：○○損保" />
+                </div>
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">保険証券：証券番号</span>
+                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                  </div>
+                  <input type="text" id="insurancePolicyNumber" name="insurancePolicyNumber" autocomplete="off" placeholder="例：ABC-12345678" />
+                </div>
+              </div>
               <div class="mt-xs">
-                <label class="field-label">貨物保険の画像（任意）</label>
+                <label class="field-label">保険証券画像（任意）</label>
                 <input type="file" id="cargoInsuranceFile" accept="image/*,.pdf" />
+                <div class="field-help">貨物保険証券の画像をアップロードできます。Driveに保存し、登録データと紐づけます。</div>
               </div>
             </div>
 
@@ -454,6 +445,55 @@
                 少なくとも1つはご入力ください。サイト上には一切公開せず、<strong>代表たけのみが控えとして保持</strong>します。
               </div>
             </div>
+
+            <div class="form-row-full mt-md">
+              <h3 class="h3-sub">支払先 銀行口座</h3>
+              <p class="field-help">報酬のお振込先です。すべてご入力ください。</p>
+              <div class="form-grid form-grid-bank mt-sm">
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">銀行名</span>
+                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                  </div>
+                  <input type="text" id="bankName" name="bankName" autocomplete="off" placeholder="例：楽天銀行（らくで候補表示）" list="bankList" />
+                  <datalist id="bankList"></datalist>
+                </div>
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">支店名</span>
+                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                  </div>
+                  <input type="text" id="bankBranch" name="bankBranch" autocomplete="off" placeholder="例：○○支店" />
+                </div>
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">口座種別</span>
+                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                  </div>
+                  <select id="bankAccountType" name="bankAccountType" required>
+                    <option value="">選択してください</option>
+                    <option value="普通">普通</option>
+                    <option value="当座">当座</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="field-label">
+                    <span class="field-label-main">口座番号</span>
+                    <span class="field-label-sub"><span class="badge-required">必須・数字のみ</span></span>
+                  </div>
+                  <input type="text" id="bankAccountNumber" name="bankAccountNumber" autocomplete="off" placeholder="例：1234567" maxlength="10" inputmode="numeric" />
+                  <div id="bankAccountNumberError" class="field-error" style="display:none;"></div>
+                </div>
+                <div class="form-row-full">
+                  <div class="field-label">
+                    <span class="field-label-main">口座名義（カナ）</span>
+                    <span class="field-label-sub"><span class="badge-required">必須・カナ・スペースのみ</span></span>
+                  </div>
+                  <input type="text" id="bankAccountHolder" name="bankAccountHolder" autocomplete="off" placeholder="例：ヤマダ タロウ" />
+                  <div id="bankAccountHolderError" class="field-error" style="display:none;"></div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="section mt-md">
@@ -466,14 +506,15 @@
               <li>登録内容は後から変更・削除の依頼が可能です（LINE からご連絡ください）。</li>
             </ul>
 
+            <p class="mt-sm"><a href="./terms.html" target="_blank" rel="noopener noreferrer">協力ドライバー登録規約</a>を必ずお読みください。</p>
             <label class="choice mt-sm">
               <input type="checkbox" id="agreeTerms" />
-              上記の内容を読み、協力ドライバー登録に同意します。
+              規約に同意する（必須）
             </label>
           </div>
 
           <div class="mt-md align-right">
-            <button type="submit" class="btn btn-primary" id="submitBtn">上記に同意して登録する</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>上記に同意して登録する</button>
           </div>
         </form>
 
@@ -485,7 +526,7 @@
 
         <div id="networkErrorBox" class="error-banner" style="display:none;">
           <strong>送信エラーが発生しました。</strong>
-          <div class="mt-sm">
+          <div class="mt-sm" id="networkErrorMessage">
             通信状況や設定の影響で、サーバーに届いていない可能性があります。<br />
             取りこぼし防止のため、<strong>LINEで「登録内容を送信したがエラーになった」旨をお知らせください。</strong>
           </div>
@@ -576,7 +617,7 @@
       var mailLink = document.getElementById("headerMailLink");
       var telLink = document.getElementById("headerTelLink");
 
-      var lineUrl = window.CONFIG.LINE_URL || "";
+      var lineUrl = window.CONFIG.LINE_ADD_FRIEND_URL || window.CONFIG.LINE_URL || "";
       var email = window.CONFIG.EMAIL_TO || "";
       var tel = window.CONFIG.TEL || "";
 
@@ -591,11 +632,11 @@
       }
     })();
 
-    // LINE問い合わせ（ヘッダーなど）
+    // LINE（友だち追加）問い合わせ
     function openSupportLine() {
-      const url = (window.CONFIG && window.CONFIG.LINE_URL) || "";
+      const url = (window.CONFIG && (window.CONFIG.LINE_ADD_FRIEND_URL || window.CONFIG.LINE_URL)) || "";
       if (!url) {
-        alert("LINEの問い合わせリンクは、config.js 内の CONFIG.LINE_URL を設定してください。");
+        alert("LINEの友だち追加URLは、config.js の CONFIG.LINE_ADD_FRIEND_URL を設定してください。");
         return;
       }
       window.open(url, "_blank", "noopener,noreferrer");
@@ -630,6 +671,10 @@
     const contactLineNameEl = document.getElementById("contactLineName");
     const agreeTermsEl = document.getElementById("agreeTerms");
     const submitBtn = document.getElementById("submitBtn");
+    const cargoInsuranceConfirmedEl = document.getElementById("cargoInsuranceConfirmed");
+    const cargoInsuranceWarningEl = document.getElementById("cargoInsuranceWarning");
+    const blackPlatePledgeEl = document.getElementById("blackPlatePledge");
+    const blackPlateWarningEl = document.getElementById("blackPlateWarning");
 
     const errorBox = document.getElementById("errorBox");
     const errorListEl = document.getElementById("errorList");
@@ -647,12 +692,24 @@
     const btnSkipFiles = document.getElementById("btnSkipFiles");
     const filesMessage = document.getElementById("filesMessage");
 
-    var registerVehicleMakerEl = document.getElementById("registerVehicleMaker");
-    var registerVehicleModelEl = document.getElementById("registerVehicleModel");
-    if (registerVehicleMakerEl && registerVehicleModelEl && window.DriversRegister && DriversRegister.updatePurchaseModelSelect) {
-      registerVehicleMakerEl.addEventListener("change", function () { DriversRegister.updatePurchaseModelSelect(registerVehicleMakerEl, registerVehicleModelEl); });
-      DriversRegister.updatePurchaseModelSelect(registerVehicleMakerEl, registerVehicleModelEl);
-    }
+    // 銀行名サジェスト用リスト（datalist に反映）
+    var BANK_LIST = [
+      "三菱UFJ銀行", "三井住友銀行", "みずほ銀行", "ゆうちょ銀行", "楽天銀行", "ソニー銀行",
+      "住信SBIネット銀行", "じぶん銀行", "あおぞら銀行", "セブン銀行", "イオン銀行", "大和ネクスト銀行",
+      "PayPay銀行", "オレンジ銀行", "静岡銀行", "スルガ銀行", "千葉銀行", "横浜銀行", "北海道銀行",
+      "北陸銀行", "広島銀行", "山口銀行", "福岡銀行", "熊本銀行", "百五銀行", "関西みらい銀行",
+      "中京銀行", "埼玉りそな銀行", "大和銀行", "その他"
+    ];
+    (function fillBankDatalist() {
+      var list = document.getElementById("bankList");
+      if (!list) return;
+      list.innerHTML = "";
+      BANK_LIST.forEach(function (name) {
+        var opt = document.createElement("option");
+        opt.value = name;
+        list.appendChild(opt);
+      });
+    })();
 
     let lastReceiptId = "";
     let lastPayload = null;
@@ -674,6 +731,50 @@
         vehicleOtherEl.value = "";
       }
     });
+
+    function updateSubmitButton() {
+      var cargoOk = cargoInsuranceConfirmedEl && cargoInsuranceConfirmedEl.checked;
+      var blackOk = blackPlatePledgeEl && blackPlatePledgeEl.checked;
+      var termsOk = agreeTermsEl && agreeTermsEl.checked;
+      var enabled = cargoOk && blackOk && termsOk;
+      submitBtn.disabled = !enabled;
+      if (cargoInsuranceWarningEl) cargoInsuranceWarningEl.style.display = cargoOk ? "none" : "block";
+      if (blackPlateWarningEl) blackPlateWarningEl.style.display = blackOk ? "none" : "block";
+    }
+    if (cargoInsuranceConfirmedEl) cargoInsuranceConfirmedEl.addEventListener("change", updateSubmitButton);
+    if (blackPlatePledgeEl) blackPlatePledgeEl.addEventListener("change", updateSubmitButton);
+    if (agreeTermsEl) agreeTermsEl.addEventListener("change", updateSubmitButton);
+    updateSubmitButton();
+
+    var bankAccountNumberEl = document.getElementById("bankAccountNumber");
+    var bankAccountHolderEl = document.getElementById("bankAccountHolder");
+    var bankAccountNumberErrorEl = document.getElementById("bankAccountNumberError");
+    var bankAccountHolderErrorEl = document.getElementById("bankAccountHolderError");
+    if (bankAccountNumberEl) {
+      bankAccountNumberEl.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "");
+        if (bankAccountNumberErrorEl) { bankAccountNumberErrorEl.style.display = "none"; bankAccountNumberErrorEl.textContent = ""; }
+      });
+      bankAccountNumberEl.addEventListener("blur", function () {
+        if (!this.value.trim()) return;
+        if (!/^\d+$/.test(this.value) && bankAccountNumberErrorEl) {
+          bankAccountNumberErrorEl.textContent = "口座番号は数字のみで入力してください。";
+          bankAccountNumberErrorEl.style.display = "block";
+        }
+      });
+    }
+    if (bankAccountHolderEl) {
+      bankAccountHolderEl.addEventListener("blur", function () {
+        if (!this.value.trim()) { if (bankAccountHolderErrorEl) { bankAccountHolderErrorEl.style.display = "none"; } return; }
+        if (!/^[\u3040-\u309F\u30A0-\u30FF\uFF65-\uFF9F\s]+$/.test(this.value) && bankAccountHolderErrorEl) {
+          bankAccountHolderErrorEl.textContent = "口座名義はカナ（ひらがな・カタカナ）とスペースのみで入力してください。";
+          bankAccountHolderErrorEl.style.display = "block";
+        } else if (bankAccountHolderErrorEl) bankAccountHolderErrorEl.style.display = "none";
+      });
+      bankAccountHolderEl.addEventListener("input", function () {
+        if (bankAccountHolderErrorEl) { bankAccountHolderErrorEl.style.display = "none"; bankAccountHolderErrorEl.textContent = ""; }
+      });
+    }
 
     var DriversRegister = window.DriversRegister || {};
     function fillAddressFromZip(zipEl, prefEl, cityEl, line1El, errorEl) {
@@ -745,13 +846,15 @@
 
       var licenseFrontEl = document.getElementById("licenseFront");
       var licenseBackEl = document.getElementById("licenseBack");
+      var vehicleInspectionEl = document.getElementById("vehicleInspection");
       var vehiclePhoto1El = document.getElementById("vehiclePhoto1");
       if (!licenseFrontEl || !licenseFrontEl.files || !licenseFrontEl.files[0]) errors.push("免許証の表（写真）を選択してください。");
       if (!licenseBackEl || !licenseBackEl.files || !licenseBackEl.files[0]) errors.push("免許証の裏（写真）を選択してください。");
+      if (!vehicleInspectionEl || !vehicleInspectionEl.files || !vehicleInspectionEl.files[0]) errors.push("車検証の写真を選択してください。");
       if (!vehiclePhoto1El || !vehiclePhoto1El.files || !vehiclePhoto1El.files[0]) errors.push("車両写真1（前から・ナンバーが写る写真）を選択してください。");
 
-      var blackPlateConfirmEl = document.getElementById("blackPlateConfirm");
-      if (!blackPlateConfirmEl || !blackPlateConfirmEl.checked) errors.push("黒ナンバー（事業用）確認にチェックを入れてください。");
+      var blackPlatePledgeEl = document.getElementById("blackPlatePledge");
+      if (!blackPlatePledgeEl || !blackPlatePledgeEl.checked) errors.push("事業用（黒ナンバー）であることを誓約するにチェックを入れてください。");
 
       let city = cityEl.value;
       if (!city) errors.push("拠点の市町村を選択してください。");
@@ -769,21 +872,37 @@
         else vehicle = "その他：" + otherV;
       }
 
-      var registerVehicleMaker = document.getElementById("registerVehicleMaker");
-      var registerVehicleModel = document.getElementById("registerVehicleModel");
-      var vehicleMaker = registerVehicleMaker ? registerVehicleMaker.value.trim() : "";
-      var vehicleModel = registerVehicleModel ? registerVehicleModel.value.trim() : "";
-      if (!vehicleMaker) errors.push("車両メーカーを選択してください。");
-      if (!vehicleModel) errors.push("車両車種（モデル）を選択してください。");
-
-      var plateNumberEl = document.getElementById("plateNumber");
-      var plateNumber = plateNumberEl ? plateNumberEl.value.trim() : "";
-      if (!plateNumber) errors.push("ナンバー（車両番号）を入力してください。");
-
       var autoInsuranceEl = document.getElementById("autoInsurance");
       var cargoInsuranceEl = document.getElementById("cargoInsurance");
       if (!autoInsuranceEl || !autoInsuranceEl.value) errors.push("自動車保険の加入有無を選択してください。");
       if (!cargoInsuranceEl || !cargoInsuranceEl.value) errors.push("貨物保険の加入有無を選択してください。");
+
+      var cargoConfirmedEl = document.getElementById("cargoInsuranceConfirmed");
+      if (!cargoConfirmedEl || !cargoConfirmedEl.checked) errors.push("「貨物保険：加入済み（必須）」にチェックを入れてください。");
+      var insuranceCompanyEl = document.getElementById("insuranceCompany");
+      var insurancePolicyNumberEl = document.getElementById("insurancePolicyNumber");
+      var insuranceCompany = insuranceCompanyEl ? insuranceCompanyEl.value.trim() : "";
+      var insurancePolicyNumber = insurancePolicyNumberEl ? insurancePolicyNumberEl.value.trim() : "";
+      if (!insuranceCompany) errors.push("保険証券の保険会社名を入力してください。");
+      if (!insurancePolicyNumber) errors.push("保険証券の証券番号を入力してください。");
+
+      var bankNameEl = document.getElementById("bankName");
+      var bankBranchEl = document.getElementById("bankBranch");
+      var bankAccountTypeEl = document.getElementById("bankAccountType");
+      var bankAccountNumberEl = document.getElementById("bankAccountNumber");
+      var bankAccountHolderEl = document.getElementById("bankAccountHolder");
+      var bankName = bankNameEl ? bankNameEl.value.trim() : "";
+      var bankBranch = bankBranchEl ? bankBranchEl.value.trim() : "";
+      var bankAccountType = bankAccountTypeEl ? bankAccountTypeEl.value : "";
+      var bankAccountNumber = bankAccountNumberEl ? bankAccountNumberEl.value.trim() : "";
+      var bankAccountHolder = bankAccountHolderEl ? bankAccountHolderEl.value.trim() : "";
+      if (!bankName) errors.push("支払先の銀行名を入力してください。");
+      if (!bankBranch) errors.push("支払先の支店名を入力してください。");
+      if (!bankAccountType) errors.push("口座種別を選択してください。");
+      if (!bankAccountNumber) errors.push("口座番号を入力してください。");
+      else if (!/^\d+$/.test(bankAccountNumber)) errors.push("口座番号は数字のみで入力してください。");
+      if (!bankAccountHolder) errors.push("口座名義（カナ）を入力してください。");
+      else if (!/^[\u3040-\u309F\u30A0-\u30FF\uFF65-\uFF9F\s]+$/.test(bankAccountHolder)) errors.push("口座名義はカナ（ひらがな・カタカナ）とスペースのみで入力してください。");
 
       const availability = getCheckedValues("availability");
       if (availability.length === 0) errors.push("稼働しやすい時間帯を1つ以上選択してください。");
@@ -808,7 +927,7 @@
         errors.push("連絡先（電話番号／メール／LINE表示名）のいずれか1つ以上を入力してください。");
       }
 
-      if (!agreeTermsEl.checked) errors.push("登録前の確認事項への同意にチェックを入れてください。");
+      if (!agreeTermsEl.checked) errors.push("規約に同意するにチェックを入れてください。");
 
       const payload = {
         nickname: nickname,
@@ -827,9 +946,6 @@
         city: city,
         vehicle: vehicle,
         vehicle_type: vehicle,
-        vehicleMaker: vehicleMaker,
-        vehicleModel: vehicleModel,
-        plateNumber: plateNumber,
         autoInsurance: autoInsuranceEl ? autoInsuranceEl.value : "",
         cargoInsurance: cargoInsuranceEl ? cargoInsuranceEl.value : "",
         availability: availability,
@@ -843,6 +959,16 @@
         expYears: expYears,
         rateBand: rateBand,
         ngText: ngText,
+        bankName: bankName,
+        bankBranch: bankBranch,
+        bankAccountType: bankAccountType,
+        bankAccountNumber: bankAccountNumber,
+        bankAccountHolder: bankAccountHolder,
+        cargoInsuranceConfirmed: cargoConfirmedEl ? cargoConfirmedEl.checked : false,
+        insuranceCompany: insuranceCompany,
+        insurancePolicyNumber: insurancePolicyNumber,
+        black_plate_pledge: blackPlatePledgeEl ? blackPlatePledgeEl.checked : false,
+        terms_agreed: agreeTermsEl ? agreeTermsEl.checked : false,
         userAgent: navigator.userAgent || "",
         source: "drivers-site",
         createdAt: new Date().toISOString()
@@ -1030,6 +1156,7 @@
 
       var licenseFront = document.getElementById("licenseFront");
       var licenseBack = document.getElementById("licenseBack");
+      var vehicleInspection = document.getElementById("vehicleInspection");
       var vehiclePhoto1 = document.getElementById("vehiclePhoto1");
       var vehiclePhoto2 = document.getElementById("vehiclePhoto2");
       var autoInsuranceFile = document.getElementById("autoInsuranceFile");
@@ -1038,6 +1165,7 @@
       Promise.all([
         resizeImageToBase64(licenseFront.files[0]),
         resizeImageToBase64(licenseBack.files[0]),
+        vehicleInspection.files[0] ? resizeImageToBase64(vehicleInspection.files[0]) : Promise.resolve(null),
         resizeImageToBase64(vehiclePhoto1.files[0]),
         vehiclePhoto2.files[0] ? resizeImageToBase64(vehiclePhoto2.files[0]) : Promise.resolve(null),
         (autoInsuranceFile.files[0]) ? fileToBase64Simple(autoInsuranceFile.files[0]) : Promise.resolve(null),
@@ -1048,10 +1176,11 @@
           data: result.payload,
           licenseFront: { name: licenseFront.files[0].name, data: arr[0] },
           licenseBack: { name: licenseBack.files[0].name, data: arr[1] },
-          vehiclePhoto1: { name: vehiclePhoto1.files[0].name, data: arr[2] },
-          vehiclePhoto2: arr[3] && vehiclePhoto2.files[0] ? { name: vehiclePhoto2.files[0].name, data: arr[3] } : null,
-          autoInsuranceFile: arr[4] && autoInsuranceFile.files[0] ? { name: autoInsuranceFile.files[0].name, data: arr[4] } : null,
-          cargoInsuranceFile: arr[5] && cargoInsuranceFile.files[0] ? { name: cargoInsuranceFile.files[0].name, data: arr[5] } : null
+          vehicleInspection: arr[2] && vehicleInspection.files[0] ? { name: vehicleInspection.files[0].name, data: arr[2] } : null,
+          vehiclePhoto1: { name: vehiclePhoto1.files[0].name, data: arr[3] },
+          vehiclePhoto2: arr[4] && vehiclePhoto2.files[0] ? { name: vehiclePhoto2.files[0].name, data: arr[4] } : null,
+          autoInsuranceFile: arr[5] && autoInsuranceFile.files[0] ? { name: autoInsuranceFile.files[0].name, data: arr[5] } : null,
+          cargoInsuranceFile: arr[6] && cargoInsuranceFile.files[0] ? { name: cargoInsuranceFile.files[0].name, data: arr[6] } : null
         };
         return fetch(endpoint, {
           method: "POST",
@@ -1059,19 +1188,30 @@
           body: JSON.stringify(payload)
         });
       }).then(function (res) {
-        if (!res.ok) throw new Error("network");
-        return res.json().catch(function () { return {}; });
+        return res.json().catch(function () { return {}; }).then(function (json) {
+          if (!res.ok) {
+            var msg = (json && json.message) ? json.message : (json && json.error ? json.error : "通信エラー（" + res.status + "）");
+            throw new Error(msg);
+          }
+          if (!json || json.ok !== true || !json.receiptId) {
+            throw new Error((json && json.message) ? json.message : (json && json.error ? json.error : "サーバーから正しい応答が返りませんでした。"));
+          }
+          return json;
+        });
       }).then(function (json) {
-        if (!json || json.ok !== true || !json.receiptId) throw new Error("invalid_response");
         lastReceiptId = json.receiptId;
         lastPayload = result.payload;
         receiptIdEl.textContent = json.receiptId;
         renderSummary(result.payload);
         successBox.style.display = "";
         if (filesSection) filesSection.style.display = "";
+        errorBox.style.display = "none";
+        networkErrorBox.style.display = "none";
         window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-      }).catch(function () {
+      }).catch(function (err) {
         networkErrorBox.style.display = "";
+        var msgEl = document.getElementById("networkErrorMessage");
+        if (msgEl && err && err.message) msgEl.innerHTML = "送信できませんでした。<br /><strong>理由：</strong>" + (err.message || "通信エラー") + "<br />設定（GAS・スプレッドシート・Drive）をご確認いただくか、下のボタンからLINEでお知らせください。";
         window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
       }).finally(function () {
         submitBtn.disabled = false;
@@ -1098,7 +1238,10 @@
       successBox.style.display = "none";
       if (addressZipErrorEl) addressZipErrorEl.style.display = "none";
       if (filesSection) filesSection.style.display = "none";
+      if (bankAccountNumberErrorEl) bankAccountNumberErrorEl.style.display = "none";
+      if (bankAccountHolderErrorEl) bankAccountHolderErrorEl.style.display = "none";
       if (registerVehicleModelEl) DriversRegister.updatePurchaseModelSelect(registerVehicleMakerEl, registerVehicleModelEl);
+      if (typeof updateSubmitButton === "function") updateSubmitButton();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 

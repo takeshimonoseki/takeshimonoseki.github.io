@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>協力ドライバーからの連絡専用ページ｜drivers-site</title>
   <meta name="description" content="協力ドライバー登録済み・検討中の方向けの連絡ページ。案件の希望登録ではなく、条件の相談や登録内容の変更依頼などにお使いください。" />
-  <link rel="stylesheet" href="./assets/drivers.css" />
+  <link rel="stylesheet" href="./drivers.css" />
   <script src="./config.js"></script>
 </head>
 <body>
@@ -118,7 +118,7 @@
       var mailLink = document.getElementById("headerMailLink");
       var telLink = document.getElementById("headerTelLink");
 
-      var lineUrl = window.CONFIG.LINE_URL || "";
+      var lineUrl = window.CONFIG.LINE_ADD_FRIEND_URL || window.CONFIG.LINE_URL || "";
       var email = window.CONFIG.EMAIL_TO || "";
       var tel = window.CONFIG.TEL || "";
 
