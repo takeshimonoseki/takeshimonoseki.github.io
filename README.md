@@ -1,0 +1,1 @@
+# takeshimonoseki.github.io
