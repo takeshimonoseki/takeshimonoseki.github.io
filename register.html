@@ -76,9 +76,9 @@
             <li>現住所（非公開）・拠点の市町村（公開）</li>
             <li>免許証の写真（表・裏とも必須）</li>
             <li>車両情報（車種区分・車検証写真・黒ナンバー誓約・車両写真）</li>
-            <li>保険（自動車保険・貨物保険の加入有無は必須）</li>
-            <li>稼働時間帯・得意な案件タイプ・プロフィール（200〜600字）</li>
-            <li>連絡先（電話／メール／LINEのいずれか）</li>
+            <li>保険（自動車保険：加入有無＋証券画像必須／貨物保険：任意）</li>
+            <li>稼働時間帯・得意な案件タイプ・プロフィール（任意）</li>
+            <li>連絡先（電話番号必須／メール・LINEは任意）</li>
           </ul>
         </section>
 
@@ -271,49 +271,29 @@
                 <option value="未加入">未加入</option>
                 <option value="検討中">検討中</option>
               </select>
-              <div class="field-help mt-xs">保険証券の画像は任意です（下の書類アップロードで提出可）。</div>
               <div class="mt-sm">
-                <label class="field-label">保険証券画像（任意）</label>
+                <div class="field-label">
+                  <span class="field-label-main">自動車保険の保険証券画像</span>
+                  <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                </div>
                 <input type="file" id="autoInsuranceFile" accept="image/*,.pdf" />
+                <div class="field-help">自動車保険証券の画像をアップロードしてください（必須）。</div>
               </div>
 
               <div class="field-label mt-sm">
                 <span class="field-label-main">貨物保険</span>
-                <span class="field-label-sub"><span class="badge-required">必須</span></span>
+                <span class="field-label-sub small">任意</span>
               </div>
-              <select id="cargoInsurance" name="cargoInsurance" required>
-                <option value="">選択してください</option>
+              <select id="cargoInsurance" name="cargoInsurance">
+                <option value="">選択しない（任意）</option>
                 <option value="加入している">加入している</option>
                 <option value="未加入">未加入</option>
                 <option value="検討中">検討中</option>
               </select>
-              <div class="form-row-full mt-xs">
-                <label class="choice choice-required">
-                  <input type="checkbox" id="cargoInsuranceConfirmed" name="cargoInsuranceConfirmed" />
-                  貨物保険：加入済み（必須）
-                </label>
-                <p id="cargoInsuranceWarning" class="field-error insurance-required-warning" style="display:none;">貨物保険への加入は登録必須です。加入済みのうえで上記にチェックを入れてください。</p>
-              </div>
-              <div class="form-grid mt-sm">
-                <div>
-                  <div class="field-label">
-                    <span class="field-label-main">保険証券：保険会社名</span>
-                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
-                  </div>
-                  <input type="text" id="insuranceCompany" name="insuranceCompany" autocomplete="off" placeholder="例：○○損保" />
-                </div>
-                <div>
-                  <div class="field-label">
-                    <span class="field-label-main">保険証券：証券番号</span>
-                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
-                  </div>
-                  <input type="text" id="insurancePolicyNumber" name="insurancePolicyNumber" autocomplete="off" placeholder="例：ABC-12345678" />
-                </div>
-              </div>
               <div class="mt-xs">
-                <label class="field-label">保険証券画像（任意）</label>
+                <label class="field-label">貨物保険証券画像（任意）</label>
                 <input type="file" id="cargoInsuranceFile" accept="image/*,.pdf" />
-                <div class="field-help">貨物保険証券の画像をアップロードできます。Driveに保存し、登録データと紐づけます。</div>
+                <div class="field-help">貨物保険に加入している場合は任意でアップロードできます。</div>
               </div>
             </div>
 
@@ -322,7 +302,7 @@
                 <span class="field-label-main">稼働しやすい時間帯</span>
                 <span class="field-label-sub">
                   <span class="badge-public">公開</span>
-                  <span class="badge-required">必須</span>
+                  <span class="small">任意</span>
                 </span>
               </div>
               <div class="choice-row">
@@ -340,7 +320,7 @@
                 <span class="field-label-main">得意な案件タイプ</span>
                 <span class="field-label-sub">
                   <span class="badge-public">公開</span>
-                  <span class="badge-required">必須</span>
+                  <span class="small">任意</span>
                 </span>
               </div>
               <div class="choice-row">
@@ -359,7 +339,7 @@
                 <span class="field-label-main">プロフィール（自己紹介）</span>
                 <span class="field-label-sub">
                   <span class="badge-public">公開</span>
-                  <span class="badge-required">必須｜200〜600字</span>
+                  <span class="small">任意（200〜600字推奨）</span>
                 </span>
               </div>
               <textarea id="profile" name="profile" placeholder="例：これまでの経験・得意なこと・大事にしていること・できる範囲／NGな範囲 などを書いてください。"></textarea>
@@ -424,71 +404,58 @@
 
             <div class="form-row-full">
               <div class="field-label">
-                <span class="field-label-main">連絡先（電話番号 / メール / LINE表示名）</span>
+                <span class="field-label-main">連絡先</span>
                 <span class="field-label-sub">
                   <span class="badge-private">非公開</span>
-                  <span class="badge-required">いずれか必須</span>
                 </span>
               </div>
               <div class="form-grid">
                 <div>
-                  <input type="text" id="contactPhone" name="contactPhone" autocomplete="tel" placeholder="電話番号（例：090-xxxx-xxxx）" />
+                  <div class="field-label"><span class="field-label-main">電話番号</span><span class="field-label-sub"><span class="badge-required">必須</span></span></div>
+                  <input type="text" id="contactPhone" name="contactPhone" autocomplete="tel" placeholder="例：090-xxxx-xxxx" />
                 </div>
                 <div>
-                  <input type="email" id="contactEmail" name="contactEmail" autocomplete="email" placeholder="メールアドレス（任意）" />
+                  <div class="field-label"><span class="field-label-main">メールアドレス</span><span class="field-label-sub small">任意</span></div>
+                  <input type="email" id="contactEmail" name="contactEmail" autocomplete="email" placeholder="任意" />
                 </div>
                 <div class="form-row-full">
-                  <input type="text" id="contactLineName" name="contactLineName" autocomplete="off" placeholder="LINE表示名（例：たけ さん など）" />
+                  <div class="field-label"><span class="field-label-main">LINE表示名</span><span class="field-label-sub small">任意</span></div>
+                  <input type="text" id="contactLineName" name="contactLineName" autocomplete="off" placeholder="例：たけ さん など" />
                 </div>
               </div>
               <div class="field-help">
-                少なくとも1つはご入力ください。サイト上には一切公開せず、<strong>代表たけのみが控えとして保持</strong>します。
+                電話番号は必須です。サイト上には一切公開せず、<strong>代表たけのみが控えとして保持</strong>します。
               </div>
             </div>
 
             <div class="form-row-full mt-md">
               <h3 class="h3-sub">支払先 銀行口座</h3>
-              <p class="field-help">報酬のお振込先です。すべてご入力ください。</p>
+              <p class="field-help">報酬のお振込先です。後からでもOK（任意）。入力がある場合のみ、口座番号は数字のみ・名義はカナ推奨。</p>
               <div class="form-grid form-grid-bank mt-sm">
                 <div>
-                  <div class="field-label">
-                    <span class="field-label-main">銀行名</span>
-                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
-                  </div>
+                  <div class="field-label"><span class="field-label-main">銀行名</span><span class="field-label-sub small">任意</span></div>
                   <input type="text" id="bankName" name="bankName" autocomplete="off" placeholder="例：楽天銀行（らくで候補表示）" list="bankList" />
                   <datalist id="bankList"></datalist>
                 </div>
                 <div>
-                  <div class="field-label">
-                    <span class="field-label-main">支店名</span>
-                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
-                  </div>
+                  <div class="field-label"><span class="field-label-main">支店名</span><span class="field-label-sub small">任意</span></div>
                   <input type="text" id="bankBranch" name="bankBranch" autocomplete="off" placeholder="例：○○支店" />
                 </div>
                 <div>
-                  <div class="field-label">
-                    <span class="field-label-main">口座種別</span>
-                    <span class="field-label-sub"><span class="badge-required">必須</span></span>
-                  </div>
-                  <select id="bankAccountType" name="bankAccountType" required>
-                    <option value="">選択してください</option>
+                  <div class="field-label"><span class="field-label-main">口座種別</span><span class="field-label-sub small">任意</span></div>
+                  <select id="bankAccountType" name="bankAccountType">
+                    <option value="">選択しない（任意）</option>
                     <option value="普通">普通</option>
                     <option value="当座">当座</option>
                   </select>
                 </div>
                 <div>
-                  <div class="field-label">
-                    <span class="field-label-main">口座番号</span>
-                    <span class="field-label-sub"><span class="badge-required">必須・数字のみ</span></span>
-                  </div>
+                  <div class="field-label"><span class="field-label-main">口座番号</span><span class="field-label-sub small">任意・数字のみ</span></div>
                   <input type="text" id="bankAccountNumber" name="bankAccountNumber" autocomplete="off" placeholder="例：1234567" maxlength="10" inputmode="numeric" />
                   <div id="bankAccountNumberError" class="field-error" style="display:none;"></div>
                 </div>
                 <div class="form-row-full">
-                  <div class="field-label">
-                    <span class="field-label-main">口座名義（カナ）</span>
-                    <span class="field-label-sub"><span class="badge-required">必須・カナ・スペースのみ</span></span>
-                  </div>
+                  <div class="field-label"><span class="field-label-main">口座名義（カナ）</span><span class="field-label-sub small">任意・カナ推奨</span></div>
                   <input type="text" id="bankAccountHolder" name="bankAccountHolder" autocomplete="off" placeholder="例：ヤマダ タロウ" />
                   <div id="bankAccountHolderError" class="field-error" style="display:none;"></div>
                 </div>
@@ -671,8 +638,6 @@
     const contactLineNameEl = document.getElementById("contactLineName");
     const agreeTermsEl = document.getElementById("agreeTerms");
     const submitBtn = document.getElementById("submitBtn");
-    const cargoInsuranceConfirmedEl = document.getElementById("cargoInsuranceConfirmed");
-    const cargoInsuranceWarningEl = document.getElementById("cargoInsuranceWarning");
     const blackPlatePledgeEl = document.getElementById("blackPlatePledge");
     const blackPlateWarningEl = document.getElementById("blackPlateWarning");
 
@@ -737,10 +702,8 @@
       var termsOk = agreeTermsEl && agreeTermsEl.checked;
       var enabled = blackOk && termsOk;
       submitBtn.disabled = !enabled;
-      if (cargoInsuranceWarningEl) cargoInsuranceWarningEl.style.display = (cargoInsuranceConfirmedEl && cargoInsuranceConfirmedEl.checked) ? "none" : "block";
       if (blackPlateWarningEl) blackPlateWarningEl.style.display = blackOk ? "none" : "block";
     }
-    if (cargoInsuranceConfirmedEl) cargoInsuranceConfirmedEl.addEventListener("change", updateSubmitButton);
     if (blackPlatePledgeEl) blackPlatePledgeEl.addEventListener("change", updateSubmitButton);
     if (agreeTermsEl) agreeTermsEl.addEventListener("change", updateSubmitButton);
     updateSubmitButton();
@@ -873,17 +836,9 @@
 
       var autoInsuranceEl = document.getElementById("autoInsurance");
       var cargoInsuranceEl = document.getElementById("cargoInsurance");
+      var autoInsuranceFileEl = document.getElementById("autoInsuranceFile");
       if (!autoInsuranceEl || !autoInsuranceEl.value) errors.push("自動車保険の加入有無を選択してください。");
-      if (!cargoInsuranceEl || !cargoInsuranceEl.value) errors.push("貨物保険の加入有無を選択してください。");
-
-      var cargoConfirmedEl = document.getElementById("cargoInsuranceConfirmed");
-      if (!cargoConfirmedEl || !cargoConfirmedEl.checked) errors.push("「貨物保険：加入済み（必須）」にチェックを入れてください。");
-      var insuranceCompanyEl = document.getElementById("insuranceCompany");
-      var insurancePolicyNumberEl = document.getElementById("insurancePolicyNumber");
-      var insuranceCompany = insuranceCompanyEl ? insuranceCompanyEl.value.trim() : "";
-      var insurancePolicyNumber = insurancePolicyNumberEl ? insurancePolicyNumberEl.value.trim() : "";
-      if (!insuranceCompany) errors.push("保険証券の保険会社名を入力してください。");
-      if (!insurancePolicyNumber) errors.push("保険証券の証券番号を入力してください。");
+      if (!autoInsuranceFileEl || !autoInsuranceFileEl.files || !autoInsuranceFileEl.files[0]) errors.push("自動車保険の保険証券画像を添付してください。");
 
       var bankNameEl = document.getElementById("bankName");
       var bankBranchEl = document.getElementById("bankBranch");
@@ -895,24 +850,15 @@
       var bankAccountType = bankAccountTypeEl ? bankAccountTypeEl.value : "";
       var bankAccountNumber = bankAccountNumberEl ? bankAccountNumberEl.value.trim() : "";
       var bankAccountHolder = bankAccountHolderEl ? bankAccountHolderEl.value.trim() : "";
-      if (!bankName) errors.push("支払先の銀行名を入力してください。");
-      if (!bankBranch) errors.push("支払先の支店名を入力してください。");
-      if (!bankAccountType) errors.push("口座種別を選択してください。");
-      if (!bankAccountNumber) errors.push("口座番号を入力してください。");
-      else if (!/^\d+$/.test(bankAccountNumber)) errors.push("口座番号は数字のみで入力してください。");
-      if (!bankAccountHolder) errors.push("口座名義（カナ）を入力してください。");
-      else if (!/^[\u3040-\u309F\u30A0-\u30FF\uFF65-\uFF9F\s]+$/.test(bankAccountHolder)) errors.push("口座名義はカナ（ひらがな・カタカナ）とスペースのみで入力してください。");
+      var bankAny = bankName || bankBranch || bankAccountType || bankAccountNumber || bankAccountHolder;
+      if (bankAny) {
+        if (bankAccountNumber && !/^\d+$/.test(bankAccountNumber)) errors.push("口座番号は数字のみで入力してください。");
+        if (bankAccountHolder && !/^[\u3040-\u309F\u30A0-\u30FF\uFF65-\uFF9F\s]+$/.test(bankAccountHolder)) errors.push("口座名義はカナ（ひらがな・カタカナ）とスペースのみで入力してください。");
+      }
 
       const availability = getCheckedValues("availability");
-      if (availability.length === 0) errors.push("稼働しやすい時間帯を1つ以上選択してください。");
-
       const specialties = getCheckedValues("specialties");
-      if (specialties.length === 0) errors.push("得意な案件タイプを1つ以上選択してください。");
-
       const profile = profileEl.value.trim();
-      const profileLen = profile.length;
-      if (!profile) errors.push("プロフィール（自己紹介）を入力してください。");
-      else if (profileLen < 200 || profileLen > 600) errors.push("プロフィールは200〜600文字でご記入ください。（現在 " + profileLen + " 文字）");
 
       const dispatchHope = document.getElementById("dispatchHope") && document.getElementById("dispatchHope").value.trim();
       const expYears = document.getElementById("expYears").value;
@@ -922,9 +868,7 @@
       const contactPhone = contactPhoneEl.value.trim();
       const contactEmail = contactEmailEl.value.trim();
       const contactLineName = contactLineNameEl.value.trim();
-      if (!contactPhone && !contactEmail && !contactLineName) {
-        errors.push("連絡先（電話番号／メール／LINE表示名）のいずれか1つ以上を入力してください。");
-      }
+      if (!contactPhone) errors.push("電話番号を入力してください。");
 
       if (!agreeTermsEl.checked) errors.push("規約に同意するにチェックを入れてください。");
 
@@ -963,9 +907,8 @@
         bankAccountType: bankAccountType,
         bankAccountNumber: bankAccountNumber,
         bankAccountHolder: bankAccountHolder,
-        cargoInsuranceConfirmed: cargoConfirmedEl ? cargoConfirmedEl.checked : false,
-        insuranceCompany: insuranceCompany,
-        insurancePolicyNumber: insurancePolicyNumber,
+        insuranceCompany: "",
+        insurancePolicyNumber: "",
         black_plate_pledge: blackPlatePledgeEl ? blackPlatePledgeEl.checked : false,
         terms_agreed: agreeTermsEl ? agreeTermsEl.checked : false,
         userAgent: navigator.userAgent || "",
@@ -1146,6 +1089,8 @@
       var endpoint = (window.CONFIG && window.CONFIG.GAS_ENDPOINT) || "";
       if (!endpoint || endpoint === "あとで貼る") {
         networkErrorBox.style.display = "";
+        var msgEl = document.getElementById("networkErrorMessage");
+        if (msgEl) msgEl.innerHTML = "送信先（GAS_ENDPOINT）が未設定です。<br />config.js の GAS_ENDPOINT に GAS WebアプリのURLを設定してください。";
         window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
         return;
       }
@@ -1213,8 +1158,8 @@
         if (msgEl && err && err.message) msgEl.innerHTML = "送信できませんでした。<br /><strong>理由：</strong>" + (err.message || "通信エラー") + "<br />設定（GAS・スプレッドシート・Drive）をご確認いただくか、下のボタンからLINEでお知らせください。";
         window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
       }).finally(function () {
-        submitBtn.disabled = false;
         submitBtn.textContent = "上記に同意して登録する";
+        if (typeof updateSubmitButton === "function") updateSubmitButton();
       });
     });
 
@@ -1239,7 +1184,6 @@
       if (filesSection) filesSection.style.display = "none";
       if (bankAccountNumberErrorEl) bankAccountNumberErrorEl.style.display = "none";
       if (bankAccountHolderErrorEl) bankAccountHolderErrorEl.style.display = "none";
-      if (registerVehicleModelEl) DriversRegister.updatePurchaseModelSelect(registerVehicleMakerEl, registerVehicleModelEl);
       if (typeof updateSubmitButton === "function") updateSubmitButton();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
