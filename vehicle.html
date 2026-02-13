@@ -140,10 +140,6 @@
         </select>
       </div>
       <div class="form-row-full">
-        <label class="field-label">備考（色／こだわり等）</label>
-        <textarea id="purchaseRemark" placeholder="例：白系希望・4WD希望・荷室の広さ重視 など" rows="3"></textarea>
-      </div>
-      <div class="form-row-full">
         <label class="field-label">希望納期</label>
         <select id="purchaseDelivery">
           <option value="">選択</option>
@@ -315,7 +311,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var C = window.CONFIG || {};
-      var lineUrl = C.LINE_ADD_FRIEND_URL || C.LINE_URL || "";
+      var lineUrl = C.LINE_URL || "";
       var email = C.EMAIL_TO || "";
       var tel = C.TEL || "";
 
@@ -365,41 +361,17 @@
         DriversRegister.updatePurchaseModelSelect(purchaseMakerEl, purchaseModelEl);
       }
       document.getElementById("btnLinePurchase").addEventListener("click", function () {
+        var lines = ["【車両購入の相談】"];
         var use = document.getElementById("purchaseUse").value;
         var budget = document.getElementById("purchaseBudget").value;
         var maker = document.getElementById("purchaseMaker").value;
         var model = (document.getElementById("purchaseModel") && document.getElementById("purchaseModel").value) ? document.getElementById("purchaseModel").value.trim() : "";
-        var remark = (document.getElementById("purchaseRemark") && document.getElementById("purchaseRemark").value) ? document.getElementById("purchaseRemark").value.trim() : "";
         var delivery = document.getElementById("purchaseDelivery").value;
         var contact = document.getElementById("purchaseContact").value;
-
-        var payload = {
-          type: "vehicle_consult",
-          data: {
-            use: use,
-            budget: budget,
-            maker: maker,
-            model: model,
-            remark: remark,
-            delivery: delivery,
-            contact: contact || "未選択"
-          }
-        };
-        var endpoint = C.GAS_ENDPOINT || "";
-        if (endpoint && endpoint !== "あとで貼る") {
-          fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify(payload)
-          }).catch(function () {});
-        }
-
-        var lines = ["【車両購入の相談】"];
         if (use) lines.push("用途：" + use);
         if (budget) lines.push("予算帯：" + budget);
         if (maker) lines.push("メーカー：" + maker);
         if (model) lines.push("車種（モデル）：" + model);
-        if (remark) lines.push("備考：" + remark);
         if (delivery) lines.push("希望納期：" + delivery);
         lines.push("連絡希望：" + (contact || "未選択（まずはLINEでOK）"));
         openLineWithText(lines.join("\n"));
