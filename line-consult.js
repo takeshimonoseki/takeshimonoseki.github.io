@@ -31,7 +31,7 @@
     var s = String(raw || "").trim();
     if (!s) return "";
     if (s[0] !== "@") s = "@" + s;
-    return encodeURIComponent(s); // @ -> %40
+    return s;
   }
 
   function buildMessage(sectionEl, title) {
@@ -88,10 +88,10 @@
     // note textarea
     var noteEl = sectionEl ? sectionEl.querySelector("textarea.js-line-note, textarea[data-line-note]") : null;
     var note = noteEl ? String(noteEl.value || "").trim() : "";
-    if (note) {
-      lines.push("備考:");
-      lines.push(note);
-    }
+    if (!note) note = "未入力";
+
+    lines.push("備考:");
+    lines.push(note);
 
     if (lines.length <= 2) {
       lines.push("（未選択）");
@@ -105,11 +105,13 @@
     var msg = encodeURIComponent(String(text || "").slice(0, 5000));
 
     var oa = (window.CONFIG && (window.CONFIG.LINE_OA_ID || window.CONFIG.LINE_OA)) ? (window.CONFIG.LINE_OA_ID || window.CONFIG.LINE_OA) : "";
-    var oaEnc = normalizeOaId(oa);
+    var oaEnc = encodeURIComponent(normalizeOaId(oa));
 
     // ✅ 公式アカウント宛て（最優先）
     if (oaEnc) {
-      location.href = "https://line.me/R/oaMessage/" + oaEnc + "/?" + msg;
+      var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent || "");
+      var base = isMobile ? "line://oaMessage/" : "https://line.me/R/oaMessage/";
+      location.href = base + oaEnc + "/?" + msg;
       return;
     }
 

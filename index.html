@@ -64,6 +64,7 @@
         <nav class="nav" aria-label="メイン">
           <!-- ✅ トップ：同ページ内で確実に最上部へ -->
           <a href="#top" class="nav-link nav-link-primary" data-scroll-top aria-current="page">トップ</a>
+          <a href="./consult.html" class="nav-link">開業相談</a>
           <a href="./vehicle.html" class="nav-link">車両の相談</a>
           <a href="./register.html" class="nav-link">登録</a>
         </nav>
@@ -94,10 +95,10 @@
           </div>
 
           <div class="hero-actions hero-actions-grid">
+            <a class="btn btn-primary" href="./register.html">登録に進む</a>
             <a class="btn btn-line" id="heroLineBtn" href="#" target="_blank" rel="noopener noreferrer">LINEで事前に質問</a>
             <a class="btn btn-tel" id="heroTelBtn" href="#">電話で相談</a>
             <a class="btn btn-mail" id="heroMailBtn" href="#">メールで問い合わせ</a>
-            <a class="btn btn-primary" href="./register.html">登録に進む</a>
           </div>
 
           <div class="starter-inline section-anchor starter-impact" id="starter">
@@ -109,7 +110,7 @@
             </ul>
             <div class="hero-actions hero-actions-grid starter-actions">
               <!-- ✅ ワンクッション：start.html へ -->
-              <a class="btn btn-line-alt" id="starterLineBtn" href="./start.html">開業トータル相談はこちら（LINE）</a>
+              <a class="btn btn-line-alt" id="starterLineBtn" href="./consult.html">開業トータル相談はこちら（LINE）</a>
 
               <!-- ✅ 文言変更＋色分け -->
               <a class="btn btn-secondary" href="./vehicle.html">車両の相談はこちら</a>
@@ -389,14 +390,14 @@
       var email = window.CONFIG.EMAIL_TO || "";
       var tel = window.CONFIG.TEL || "";
 
-      // LINE：事前質問テンプレ（OA IDが入ってると“直接トーク”）
-      var lineAsk = lineLinkForText_("【事前に質問】\n相談内容：\n（ここに入力して送ってください）");
+      // 相談の入口は必ず「相談スタート（どの相談から始めますか？）」へ集約
+      var startUrl = "./consult.html";
       var headerLineLink = document.getElementById("headerLineLink");
       var heroLineBtn = document.getElementById("heroLineBtn");
       var footerLineBtn = document.getElementById("footerLineBtn");
-      if (headerLineLink) headerLineLink.href = lineAsk;
-      if (heroLineBtn) heroLineBtn.href = lineAsk;
-      if (footerLineBtn) footerLineBtn.href = lineAsk;
+      if (headerLineLink) headerLineLink.href = startUrl;
+      if (heroLineBtn) heroLineBtn.href = startUrl;
+      if (footerLineBtn) footerLineBtn.href = startUrl;
 
       if (mailLink && email) {
         mailLink.href = "mailto:" + email;

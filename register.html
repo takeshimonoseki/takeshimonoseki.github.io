@@ -78,8 +78,9 @@
         </div>
         <nav class="nav" aria-label="メイン">
           <a href="./index.html" class="nav-link">トップ</a>
+          <a href="./consult.html" class="nav-link">開業相談</a>
           <a href="./vehicle.html" class="nav-link">車両の相談</a>
-          <span class="nav-link nav-link-primary" aria-current="page">登録</span>
+          <a href="./register.html" class="nav-link nav-link-primary" aria-current="page">登録</a>
         </nav>
       </div>
     </div>
@@ -335,11 +336,12 @@
       var mailLink = document.getElementById("headerMailLink");
       var telLink = document.getElementById("headerTelLink");
 
-      var lineUrl = window.CONFIG.LINE_URL || "";
+      // 相談の入口は「相談スタート」へ集約
+      var startUrl = "./consult.html";
       var email = window.CONFIG.EMAIL_TO || "";
       var tel = window.CONFIG.TEL || "";
 
-      if (lineLink && lineUrl) lineLink.href = lineUrl;
+      if (lineLink) lineLink.href = startUrl;
       if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
       if (telLink && tel) { telLink.href = "tel:" + tel.replace(/[^0-9+]/g, ""); telLink.textContent = tel; }
     })();
