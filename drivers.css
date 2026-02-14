@@ -231,7 +231,9 @@ main {
   transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
 }
 
-.nav-link:hover {
+/* NOTE: primary(現在地)は白文字なので、hoverで白背景になると文字が消える。
+   そのため、通常リンクのみhover背景を付ける */
+.nav-link:not(.nav-link-primary):hover {
   background: rgba(255, 255, 255, 0.9);
   border-color: rgba(139, 44, 44, 0.16);
   transform: translateY(-1px);

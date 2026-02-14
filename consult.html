@@ -1,146 +1,227 @@
-<!-- FILE: consult.html（全文） -->
 <!doctype html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>クルマ相談｜drivers-site（山口県）</title>
-  <meta name="description" content="車両・整備・車検・開業の相談をLINEで送れるページ。" />
-  <link rel="canonical" href="https://takeshimonoseki.github.io/consult.html" />
-  <meta property="og:title" content="クルマ相談｜drivers-site（山口県）" />
-  <meta property="og:url" content="https://takeshimonoseki.github.io/consult.html" />
-  <meta property="og:type" content="website" />
+  <title>相談スタート｜drivers-site（山口県）</title>
+  <meta name="description" content="どの相談から始めるか選び、内容をまとめてLINEの送信欄に下書きとして入れます。" />
   <link rel="stylesheet" href="./drivers.css" />
   <script src="./config.js"></script>
-  <script src="./drivers.js" defer></script>
-  <script src="./line-consult.js" defer></script>
 </head>
 <body>
-  <header class="site-header" id="top">
+  <div id="top"></div>
+
+  <header class="site-header">
     <div class="site-header-inner">
       <div class="header-left">
-        <div class="region-badge" aria-label="対応地域">
-          <div class="region-en" id="regionEn">YAMAGUCHI</div>
-          <div class="region-ja" id="regionJa">山口県</div>
-        </div>
-        <div class="brand">
-          <div class="brand-mark" aria-hidden="true"><span></span></div>
-          <div>
-            <div class="company-name" id="companyName">軽貨物TAKE</div>
-            <div class="brand-text-sub">協力ドライバー登録サイト</div>
-          </div>
-        </div>
+        <a class="brand" href="./index.html">
+          <span class="brand-badge" aria-hidden="true">YAMAGUCHI<br>山口県</span>
+          <span class="brand-text">
+            <span class="brand-title" id="companyName">軽貨物TAKE</span>
+            <span class="brand-sub">協力ドライバー登録サイト</span>
+          </span>
+        </a>
       </div>
+
       <div class="header-right">
         <div class="contact-strip" aria-label="連絡先">
-          <div class="contact-item">
-            <span class="contact-label">LINE</span>
-            <span class="contact-value"><a href="#" id="headerLineLink">相談する</a></span>
-          </div>
-          <div class="contact-item">
-            <span class="contact-label">MAIL</span>
-            <span class="contact-value"><a href="#" id="headerMailLink"></a></span>
-          </div>
-          <div class="contact-item">
-            <span class="contact-label">TEL</span>
-            <span class="contact-value"><a href="#" id="headerTelLink"></a></span>
-          </div>
+          <a class="mini-link" id="headerLineLink" href="./consult.html">相談する</a>
+          <a class="mini-link" id="headerMailLink" href="#">MAIL</a>
+          <a class="mini-link" id="headerTelLink" href="#">TEL</a>
         </div>
+
         <nav class="nav" aria-label="メイン">
           <a href="./index.html" class="nav-link">トップ</a>
+          <a href="./consult.html" class="nav-link nav-link-primary" aria-current="page">開業相談</a>
           <a href="./vehicle.html" class="nav-link">車両の相談</a>
-          <span class="nav-link nav-link-primary" aria-current="page">クルマ相談</span>
           <a href="./register.html" class="nav-link">登録</a>
         </nav>
       </div>
     </div>
   </header>
 
-  <main class="page page-consult" role="main">
-    <h1 class="hero-title consult-title">クルマ相談</h1>
-    <p class="hero-lead">
-      選択した内容＋備考をまとめて、LINEを開いた時点で<strong>入力欄に下書き</strong>として入れます。<br />
-      送信はあなたが押してください。
-    </p>
+  <main class="page">
 
-    <section class="section card consult-card" id="consult-main">
-      <h2 class="vehicle-card-title">相談内容を選ぶ</h2>
+      <article class="card" style="margin-bottom: 14px;">
+        <div class="card-inner">
+          <h1 class="hero-title" style="margin:0 0 6px;">相談スタート</h1>
+          <p class="hero-lead" style="margin:0;">
+            選んだ内容＋備考をまとめて、LINEの送信欄に<strong>下書き</strong>として入れます。送信ボタンはあなたが押します。
+          </p>
+        </div>
+      </article>
 
-      <div class="form-row-full">
-        <label class="field-label" for="consultType">相談カテゴリ</label>
-        <select id="consultType">
-          <option value="">選択してください</option>
-          <option value="車両購入">車両購入</option>
-          <option value="修理・整備">修理・整備</option>
-          <option value="車検">車検</option>
-          <option value="開業トータル">開業トータル</option>
-          <option value="その他">その他</option>
-        </select>
-      </div>
+      <!-- ✅ 最優先：登録へ誘導 -->
+      <article class="card" style="margin-bottom: 14px;">
+        <div class="card-inner">
+          <div class="pill" style="display:inline-flex; gap:8px; align-items:center; margin-bottom:8px;">
+            <span class="badge badge-ok">最優先</span>
+            <span class="muted">協力ドライバー登録</span>
+          </div>
+          <h2 class="section-title" style="margin:0 0 8px;">まず登録フォームへ（1分）</h2>
+          <p class="muted" style="margin:0 0 12px;">登録が一番うれしいので、相談より先にここだけでもOKです。</p>
+          <a class="btn btn-primary" href="./register.html">協力ドライバー登録フォームへ</a>
+        </div>
+      </article>
 
-      <div class="form-row-full">
-        <label class="field-label" for="consultWhen">いつ頃</label>
-        <select id="consultWhen">
-          <option value="">選択</option>
-          <option value="今日〜明日">今日〜明日</option>
-          <option value="今週中">今週中</option>
-          <option value="今月">今月</option>
-          <option value="急ぎではない">急ぎではない</option>
-          <option value="未定">未定</option>
-        </select>
-      </div>
+      <!-- ✅ 相談：選択→生成→確認→送る -->
+      <article class="card" id="consultCard">
+        <div class="card-inner">
+          <h2 class="section-title" style="margin:0 0 10px;">LINEで相談（内容付き）</h2>
 
-      <fieldset class="form-row-full">
-        <legend class="field-label">希望（複数OK）</legend>
-        <label><input type="checkbox" name="consultWish" value="とにかく早く" /> とにかく早く</label>
-        <label><input type="checkbox" name="consultWish" value="費用優先" /> 費用優先</label>
-        <label><input type="checkbox" name="consultWish" value="安心優先" /> 安心優先</label>
-        <label><input type="checkbox" name="consultWish" value="まず話を聞きたい" /> まず話を聞きたい</label>
-      </fieldset>
+          <div class="columns" style="margin-top: 6px;">
+            <section>
+              <h3 class="section-title" style="margin:0 0 10px; font-size:16px;">① 相談カテゴリを選ぶ</h3>
+              <div class="radio-row" style="display:grid; gap:10px;">
+                <label>
+                  <input type="radio" name="consultType" value="協力ドライバー登録について" checked>
+                  <span><b>協力ドライバー登録について</b><br><span class="muted">登録の流れ／公開範囲／稼働条件など</span></span>
+                </label>
+                <label>
+                  <input type="radio" name="consultType" value="開業トータル相談">
+                  <span><b>開業トータル相談</b><br><span class="muted">車両・黒ナンバー・保険・確定申告など全体整理</span></span>
+                </label>
+                <label>
+                  <input type="radio" name="consultType" value="車両購入の相談">
+                  <span><b>車両購入の相談</b><br><span class="muted">おすすめ／予算／リース・中古／選び方</span></span>
+                </label>
+                <label>
+                  <input type="radio" name="consultType" value="修理整備の相談">
+                  <span><b>修理整備の相談</b><br><span class="muted">症状／見積／整備先の相談</span></span>
+                </label>
+                <label>
+                  <input type="radio" name="consultType" value="その他（クルマ相談）">
+                  <span><b>その他（クルマ相談）</b><br><span class="muted">車検・保険・名義・雑談まで</span></span>
+                </label>
+              </div>
 
-      <!-- ✅ 要件：クルマ相談ページの最下部に備考欄 -->
-      <div class="form-row-full mt-md">
-        <label class="field-label">備考（任意）</label>
-        <textarea class="js-line-note" data-line-note rows="6" placeholder="例：車種／状況／予算／希望などを自由に"></textarea>
-      </div>
+              <div style="margin-top: 12px;">
+                <h3 class="section-title" style="margin:0 0 8px; font-size:16px;">② 備考（自由入力）</h3>
+                <textarea id="note" class="field" rows="7" placeholder="例）\n・今の状況：未経験／準備中／稼働中\n・希望エリア：〇〇\n・予算感：〇〇\n・困っていること：〇〇\n（ここは例です。送信本文には混ざりません）"></textarea>
 
-      <div class="mt-md">
-        <button type="button" class="btn btn-line js-line-send" id="btnLineConsult" data-line-title="クルマ相談">LINEで相談する</button>
-      </div>
-    </section>
+                <details style="margin-top:10px;">
+                  <summary class="muted">相談例（参考・送信本文には入りません）</summary>
+                  <ul class="muted" style="margin:8px 0 0; padding-left: 18px;">
+                    <li>開業に必要な手順を、最短で整理してほしい</li>
+                    <li>黒ナンバー取得の流れと必要書類を教えてほしい</li>
+                    <li>軽バン（中古/リース）のおすすめと相場感を知りたい</li>
+                    <li>この症状（異音/警告灯）って修理必要？目安いくら？</li>
+                    <li>協力ドライバー登録の流れと公開範囲を確認したい</li>
+                  </ul>
+                </details>
+              </div>
 
-    <div class="mt-md">
-      <a class="btn btn-primary" href="./index.html">トップに戻る</a>
-    </div>
+              <div class="actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" id="btnAddFriend" href="#" target="_blank" rel="noopener noreferrer">まず友だち追加</a>
+                <button class="btn btn-line" type="button" id="btnBuild">この内容で作る</button>
+              </div>
+
+              <p class="muted" style="margin: 10px 0 0;">
+                ※ 送信日時は入れません（LINE側で分かるため）。
+              </p>
+            </section>
+
+            <section>
+              <h3 class="section-title" style="margin:0 0 10px; font-size:16px;">③ 確認して送る</h3>
+              <div id="previewBox" class="card" style="display:none;">
+                <div class="card-inner">
+                  <div class="muted" style="margin-bottom:8px;">この内容がLINEの入力欄に入ります（送信はあなたが押します）</div>
+                  <pre id="previewText" style="white-space:pre-wrap; margin:0; font-size:14px; line-height:1.6;"></pre>
+
+                  <div class="actions" style="margin-top: 12px;">
+                    <button class="btn btn-secondary" type="button" id="btnEdit">修正する</button>
+                    <button class="btn btn-line" type="button" id="btnSend">LINEで送る</button>
+                  </div>
+
+                  <div class="muted" style="margin-top:10px;">
+                    ※ 端末によってLINEが開かない場合は、いったん友だち追加→戻ってもう一度「LINEで送る」を押してください。
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </article>
+
   </main>
 
   <script>
-    (function applyConfig() {
-      if (!window.CONFIG) return;
-      var regionJa = document.getElementById("regionJa");
-      var regionEn = document.getElementById("regionEn");
-      var companyName = document.getElementById("companyName");
+    (function(){
+      var C = window.CONFIG || {};
 
-      if (regionJa) regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
-      if (regionEn) regionEn.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
-      if (companyName) companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+      // header
+      var companyName = document.getElementById('companyName');
+      if (companyName && C.COMPANY_NAME) companyName.textContent = C.COMPANY_NAME;
 
-      var lineLink = document.getElementById("headerLineLink");
-      var mailLink = document.getElementById("headerMailLink");
-      var telLink = document.getElementById("headerTelLink");
-      var lineUrl = window.CONFIG.LINE_URL || "";
-      var email = window.CONFIG.EMAIL_TO || "";
-      var tel = window.CONFIG.TEL || "";
+      var mail = (C.EMAIL_TO || '').trim();
+      var tel = (C.TEL || '').trim();
+      var headerMailLink = document.getElementById('headerMailLink');
+      var headerTelLink = document.getElementById('headerTelLink');
+      if (headerMailLink && mail) headerMailLink.href = 'mailto:' + mail;
+      if (headerTelLink && tel) headerTelLink.href = 'tel:' + tel.replace(/[^0-9+]/g,'');
 
-      if (lineLink && lineUrl) lineLink.href = lineUrl;
-      if (mailLink && email) {
-        mailLink.href = "mailto:" + email;
-        mailLink.textContent = email;
+      // add friend
+      var addUrl = (C.LINE_URL || '').trim();
+      var btnAddFriend = document.getElementById('btnAddFriend');
+      if (btnAddFriend) btnAddFriend.href = addUrl || '#';
+
+      function getSelectedType(){
+        var el = document.querySelector('input[name="consultType"]:checked');
+        return el ? el.value : '';
       }
-      if (telLink && tel) {
-        telLink.href = "tel:" + tel.replace(/[^0-9+]/g, "");
-        telLink.textContent = tel.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+
+      function buildMessage(){
+        var type = getSelectedType() || '未選択';
+        var note = (document.getElementById('note').value || '').trim();
+        if (!note) note = '未入力';
+
+        return [
+          '【相談カテゴリ】',
+          type,
+          '',
+          '【備考】',
+          note
+        ].join('\n');
       }
+
+      function openLineWithText(text){
+        var msg = encodeURIComponent(String(text || '').slice(0, 5000));
+        var oa = (C.LINE_OA_ID || '').trim();
+        if (oa) {
+          if (oa[0] !== '@') oa = '@' + oa;
+          var oaEnc = encodeURIComponent(oa);
+          var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent || '');
+          var base = isMobile ? 'line://oaMessage/' : 'https://line.me/R/oaMessage/';
+          location.href = base + oaEnc + '/?' + msg;
+          return;
+        }
+        // fallback: share text
+        location.href = 'https://line.me/R/msg/text/?' + msg;
+      }
+
+      // UI actions
+      var btnBuild = document.getElementById('btnBuild');
+      var btnSend = document.getElementById('btnSend');
+      var btnEdit = document.getElementById('btnEdit');
+      var previewBox = document.getElementById('previewBox');
+      var previewText = document.getElementById('previewText');
+
+      function showPreview(){
+        var msg = buildMessage();
+        previewText.textContent = msg;
+        previewBox.style.display = 'block';
+        previewBox.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+
+      if (btnBuild) btnBuild.addEventListener('click', showPreview);
+      if (btnEdit) btnEdit.addEventListener('click', function(){
+        // プレビューを閉じず、入力欄へ戻す（視覚的に修正が成立する）
+        document.getElementById('note').focus();
+        document.getElementById('consultCard').scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      if (btnSend) btnSend.addEventListener('click', function(){
+        openLineWithText(buildMessage());
+      });
     })();
   </script>
 </body>
