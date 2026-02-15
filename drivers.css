@@ -1196,3 +1196,17 @@ textarea:focus {
   padding: 8px 10px;
   border-radius: 12px;
 }
+
+/* ===== 追加：select/optionダークモード強制 ===== */
+/* 強制的にダークモードを適用 */
+select, option {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+/* ブラウザのデフォルトスタイルを打ち消す */
+select {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid #444;
+}
