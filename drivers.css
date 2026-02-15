@@ -1,10 +1,10 @@
 /* 
-  Neo-Brutalism "Deep Space" Theme 
+  Neo-Brutalism "Deep Space" Theme (Hybrid)
   Target: drivers-site-from-github 2Refactor
 */
 
 :root {
-  /* Colors */
+  /* --- NEW VARIABLES (Neo-Brutalism) --- */
   --bg-deep: #050505;
   --bg-card: rgba(10, 10, 10, 0.6);
   --border-subtle: rgba(255, 255, 255, 0.08);
@@ -12,24 +12,27 @@
   
   --text-main: #FFFFFF;
   --text-muted: #94A3B8; /* Slate-400 */
-  --text-accent: #38BDF8; /* Sky-400 for tech feel or stick to white for brutalism */
+  --text-accent: #38BDF8; 
 
   /* Spotlight */
   --spotlight-color: rgba(255, 255, 255, 0.08);
 
-  /* Spacing (4pt grid base) */
+  /* Spacing */
   --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-6: 24px;
-  --space-8: 32px;
-
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 16px;
+  
+  /* --- MAPPED LEGACY VARIABLES (Dark Mode Transformation) --- */
+  --bg: #050505;
+  --surface: rgba(20, 20, 20, 0.4); /* Glassy dark */
+  --text: #F8F8F8;
+  --muted: #94A3B8;
+  --line: rgba(255, 255, 255, 0.12);
+  --accent: #DC2626; /* Red-600 */
+  --accent2: #991B1B; /* Red-800 */
+  
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   --radius-lg: 24px;
-  --radius-xl: 32px;
+  --radius-md: 16px;
 }
 
 /* Global Reset & Base */
@@ -42,9 +45,8 @@ body {
   background-color: var(--bg-deep);
   color: var(--text-main);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
   line-height: 1.5;
-  overflow-x: hidden; /* Prevent horizontal scroll from animations */
+  overflow-x: hidden;
 }
 
 /* Typography Overrides */
@@ -55,16 +57,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
 }
 
-p {
-  margin: 0;
-  color: var(--text-muted);
-}
-
-/* 
-  Utility Classes for Animation & Glassmorphism 
-  (Supplementing Tailwind)
-*/
-
+/* Utility Classes for Neo-Brutalism */
 .glass-card {
   background: var(--bg-card);
   backdrop-filter: blur(24px);
@@ -77,199 +70,34 @@ p {
               border-color 0.3s ease,
               box-shadow 0.3s ease;
 }
-
 .glass-card:hover {
   border-color: var(--border-glow);
   transform: translateY(-4px);
   box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
 }
-
-/* Spotlight Effect Layer */
 .glass-card::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(
-    800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-    var(--spotlight-color), 
-    transparent 40%
-  );
-  z-index: 0; /* Behind content */
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
+  background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--spotlight-color), transparent 40%);
+  z-index: 0; opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
 }
+.glass-card:hover::before { opacity: 1; }
+.glass-card > * { position: relative; z-index: 1; }
+.glass-card input, .glass-card select, .glass-card textarea {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+}
+.glass-card label { color: #94A3B8; }
 
-.glass-card:hover::before {
-  opacity: 1;
-}
-
-/* Ensure content stays on top of spotlight */
-.glass-card > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Text Utilities */
-.font-mono {
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.text-gradient {
-  background: linear-gradient(to right, #fff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-deep);
-}
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Animation Utilities */
-.reveal-hidden {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), 
-              transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.reveal-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stagger delays handled via JS or utility classes */
+.reveal-hidden { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal-visible { opacity: 1; transform: translateY(0); }
 .delay-100 { transition-delay: 100ms; }
 .delay-200 { transition-delay: 200ms; }
 .delay-300 { transition-delay: 300ms; }
 
-/* 
-  Preserve Legacy Form Styles but modernized 
-*/
-select, input, textarea {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: var(--radius-md);
-  font-family: inherit;
-  font-size: 15px;
-  transition: all 0.2s ease;
-  outline: none;
-}
-
-select:focus, input:focus, textarea:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
-}
-
-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Checkbox Modernization */
-input[type="checkbox"] {
-  width: auto;
-  margin-right: 8px;
-  accent-color: #fff;
-}
-
-/* Button Modernization */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  padding: 14px 24px;
-  border-radius: 999px;
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-  cursor: pointer;
-  border: none;
-}
-
-.btn:active {
-  transform: scale(0.96);
-}
-
-/* LINE Button Special */
-.btn-line {
-  background: #06C755;
-  color: white;
-  box-shadow: 0 4px 24px rgba(6, 199, 85, 0.2);
-}
-
-.btn-line:hover {
-  background: #05b04c;
-  box-shadow: 0 8px 32px rgba(6, 199, 85, 0.4);
-  transform: translateY(-2px);
-}
-
-.btn-primary {
-  background: white;
-  color: black;
-}
-.btn-primary:hover {
-  background: #e2e2e2;
-}
-
-/* Hide original helper classes that might conflict, or adapt them */
-.mt-md { margin-top: 24px; }
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-size: 18px;
-  line-height: 1.6;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
-  background:
-    radial-gradient(1200px 900px at 10% 0%, #ffffff 0%, var(--bg) 55%, #fbeff0 100%);
-  color: var(--text);
-}
-
-a {
-  color: inherit;
-}
-
-main {
-  display: block;
-}
-
-.page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 20px 18px 40px;
-}
-
-@media (min-width: 960px) {
-  .page {
-    padding: 26px 12px 60px;
-  }
-}
+/* --- LEGACY STYLES (Preserved but Dark-Mode Adapted via Variables) --- */
 
 /* ヘッダー / ナビ */
 .site-header {
@@ -278,13 +106,9 @@ main {
   z-index: 20;
   padding: 10px 0 14px;
   margin-bottom: 16px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 246, 247, 0.96),
-    rgba(255, 246, 247, 0.82)
-  );
+  background: rgba(5, 5, 5, 0.85);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(139, 44, 44, 0.18);
+  border-bottom: 1px solid var(--line);
 }
 
 .site-header-inner {
@@ -336,22 +160,22 @@ main {
   gap: 0;
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(139, 44, 44, 0.26);
-  background: rgba(255, 247, 247, 0.98);
-  box-shadow: 0 6px 14px rgba(139, 44, 44, 0.22);
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
 }
 
 .region-en {
   font-size: 11px;
   letter-spacing: 0.16em;
   font-weight: 800;
-  color: rgba(76, 29, 29, 0.92);
+  color: var(--text-accent);
 }
 
 .region-ja {
   font-size: 11px;
   font-weight: 700;
-  color: rgba(76, 29, 29, 0.9);
+  color: var(--text-muted);
 }
 
 .brand {
@@ -419,7 +243,7 @@ main {
   padding: 1px 6px;
   border-radius: 999px;
   background: rgba(139, 44, 44, 0.06);
-  color: rgba(76, 29, 29, 0.98);
+  color: #fff;
 }
 
 .contact-value a {
@@ -454,8 +278,8 @@ main {
 /* NOTE: primary(現在地)は白文字なので、hoverで白背景になると文字が消える。
    そのため、通常リンクのみhover背景を付ける */
 .nav-link:not(.nav-link-primary):hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(139, 44, 44, 0.16);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--line);
   transform: translateY(-1px);
 }
 
@@ -510,7 +334,7 @@ main {
   border-radius: 999px;
   background: rgba(139, 44, 44, 0.06);
   border: 1px solid rgba(139, 44, 44, 0.18);
-  color: rgba(139, 44, 44, 0.96);
+  color: #fff;
   font-size: 11px;
   font-weight: 900;
 }
@@ -598,8 +422,8 @@ main {
   margin-left: -0.5rem;
   margin-right: -0.5rem;
   padding: 1.5rem 1.25rem;
-  background: linear-gradient(135deg, rgba(255, 247, 248, 0.98), rgba(255, 240, 242, 0.95));
-  border: 1px solid rgba(139, 44, 44, 0.22);
+  background: var(--bg-card);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   box-shadow: 0 8px 24px rgba(139, 44, 44, 0.08);
 }
@@ -705,7 +529,7 @@ main {
   padding: 11px 16px;
   border-radius: var(--radius-md);
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--bg-card);
   font-size: 14px;
   font-weight: 800;
   color: var(--text);
@@ -739,12 +563,12 @@ main {
 }
 
 .btn-outline {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .btn-ghost {
   border-style: dashed;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* LINEのみ緑（#06C755）・他は被らない */
@@ -858,7 +682,7 @@ main {
 
 .badge-soft {
   background: rgba(139, 44, 44, 0.06);
-  color: rgba(139, 44, 44, 0.96);
+  color: #fff;
   border: 1px solid rgba(139, 44, 44, 0.16);
 }
 
@@ -898,11 +722,11 @@ main {
 .info-table th {
   width: 32%;
   font-weight: 700;
-  color: rgba(76, 29, 29, 0.94);
+  color: var(--text-muted);
 }
 
 .info-table td {
-  color: var(--muted);
+  color: var(--text);
 }
 
 .info-table tr:last-child th,
@@ -928,7 +752,7 @@ main {
 details.faq {
   border-radius: var(--radius-md);
   border: 1px solid rgba(148, 27, 27, 0.2);
-  background: rgba(255, 255, 255, 0.96);
+  background: var(--bg-card);
   padding: 9px 11px;
 }
 
@@ -1062,7 +886,7 @@ textarea {
   padding: 10px 11px;
   border-radius: 12px;
   border: 1px solid rgba(148, 27, 27, 0.22);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.05);
   font-size: 14px;
   color: var(--text);
   outline: none;
@@ -1079,7 +903,7 @@ select:focus,
 textarea:focus {
   border-color: rgba(139, 44, 44, 0.7);
   box-shadow: 0 0 0 3px rgba(139, 44, 44, 0.22);
-  background: #fffdfd;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .field-help {
@@ -1133,6 +957,10 @@ textarea:focus {
   background: rgba(254, 226, 226, 0.9);
   color: #7f1d1d;
   font-size: 12px;
+  display: none;
+}
+.error-banner:not(:empty) {
+  display: block;
 }
 
 .success-banner {
@@ -1143,6 +971,10 @@ textarea:focus {
   background: rgba(220, 252, 231, 0.94);
   color: #14532d;
   font-size: 12px;
+  display: none;
+}
+.success-banner:not(:empty) {
+  display: block;
 }
 
 .summary-grid {
