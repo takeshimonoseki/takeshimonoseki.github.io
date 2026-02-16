@@ -99,6 +99,19 @@ h1, h2, h3, h4, h5, h6 {
 
 /* --- LEGACY STYLES (Preserved but Dark-Mode Adapted via Variables) --- */
 
+/* ヘッダー内側：PC/スマホで横並び・折り返し・余白を安定 */
+.header-inner {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+@media (max-width: 375px) {
+  .header-inner {
+    gap: 0.375rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
 /* ヘッダー / ナビ */
 .site-header {
   position: sticky;
@@ -595,16 +608,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .btn-mail:hover {
   background: #1d4ed8;
-}
-
-.btn-tel {
-  border: 0;
-  background: #F59E0B;
-  color: #fff;
-  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.35);
-}
-.btn-tel:hover {
-  background: #d97706;
 }
 
 .btn-sm {
@@ -1176,9 +1179,6 @@ textarea:focus {
 
 .contact-mail{ background:#2563EB; color:#fff; border-color:transparent; }
 .contact-mail:hover{ filter: brightness(.95); }
-
-.contact-tel{ background:#F59E0B; color:#1b1200; border-color:transparent; }
-.contact-tel:hover{ filter: brightness(.95); }
 
 /* 現在地は押せそうに見せない */
 .nav-link[aria-current="page"]{ cursor: default; }

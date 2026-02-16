@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>本登録｜協力ドライバー登録フォーム｜drivers-site（山口県）</title>
+  <meta name="description" content="山口県エリアの協力ドライバー本登録フォーム。本人確認・必要書類の入力です。" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/main-register.html" />
+  <meta property="og:title" content="本登録｜協力ドライバー登録フォーム｜drivers-site（山口県）" />
+  <meta property="og:url" content="https://takeshimonoseki.github.io/main-register.html" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            deep: '#050505',
+            muted: '#94A3B8',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="./drivers.css" />
+  <script src="./config.js"></script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    .field-input {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: white;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .field-input:focus {
+      outline: none;
+      border-color: rgba(56,189,248,0.5);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+    }
+    .field-input::placeholder { color: rgba(255,255,255,0.25); }
+    select.field-input { appearance: none; cursor: pointer; }
+    select.field-input option { background: #1e293b; color: white; }
+    textarea.field-input { resize: vertical; min-height: 80px; }
+
+    .is-invalid { border-color: rgba(239,68,68,0.6) !important; }
+    .is-invalid:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.15) !important; }
+    .field-error-text { color: #f87171; font-size: 12px; margin-top: 4px; }
+
+    .error-banner {
+      padding: 16px; border-radius: 16px;
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+      color: #fca5a5; font-size: 14px;
+    }
+    .error-banner strong { color: #f87171; }
+    .error-banner ul { margin-top: 8px; padding-left: 18px; }
+    .error-banner li { margin-bottom: 4px; }
+
+    .terms-box {
+      padding: 16px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.02);
+    }
+    .terms-box .terms-title { font-weight: 800; font-size: 14px; margin-bottom: 8px; }
+    .terms-box .terms-list { padding-left: 18px; font-size: 13px; color: rgba(255,255,255,0.6); }
+    .terms-box .terms-list li { margin-bottom: 6px; }
+    .terms-box .terms-note { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+    .terms-box .terms-note a { color: #38bdf8; text-decoration: underline; }
+
+    #agreeLabel { font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    #agreeLabel.is-invalid { color: #f87171; }
+    #agreeLabel input { accent-color: #38bdf8; }
+
+    .submit-hint { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+    .is-disabled { opacity: 0.4; pointer-events: none; }
+  </style>
+</head>
+<body class="bg-deep text-white min-h-screen">
+
+  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3 group">
+        <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
+          <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
+          <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        </div>
+        <div>
+          <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
+          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">本登録</div>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-4 flex-wrap">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
+          <a href="#" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
+          <span class="text-white/20">|</span>
+          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
+        </div>
+
+        <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
+          <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
+          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
+          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
+          <a href="./main-register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">本登録</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+
+    <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden relative overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-bold text-muted mb-4">
+          <i data-lucide="info" class="w-3 h-3"></i> 求人ではなく「登録プール」です
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">協力ドライバー登録フォーム（本登録）</h1>
+        <p class="text-sm text-muted leading-relaxed mb-2">
+          本人確認・必要書類の入力です。仮登録後に案内する場合もあります。
+        </p>
+        <p class="text-xs text-white/40">
+          登録内容は後から変更・削除の依頼が可能です（LINEからご連絡ください）。
+        </p>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 md:p-10 reveal-hidden delay-100">
+      <form id="mainRegisterForm" novalidate>
+
+        <div id="errorBox" class="error-banner mb-6" style="display:none;">
+          <strong>送信できませんでした。</strong>
+          <div class="mt-2">赤枠の項目をご確認ください。</div>
+          <ul id="errorList"></ul>
+        </div>
+
+        <div class="p-5 rounded-2xl border border-amber-500/20 bg-amber-500/5 mb-6">
+          <div class="flex items-center gap-2 mb-5">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            <span class="font-bold text-sm">必須項目</span>
+            <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">必須まとめ</span>
+          </div>
+
+          <div class="space-y-5">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <label class="text-sm font-bold" for="nickname">ニックネーム（公開名）</label>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400">公開</span>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
+              </div>
+              <input type="text" id="nickname" name="nickname" autocomplete="off" placeholder="例：やまぐち便 さん" class="field-input" />
+              <div class="text-xs text-muted mt-1">本名じゃなくてOKです。</div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <label class="text-sm font-bold" for="lastName">苗字</label>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400">内部のみ</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
+                </div>
+                <input type="text" id="lastName" name="lastName" autocomplete="family-name" placeholder="例：山田" class="field-input" />
+              </div>
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <label class="text-sm font-bold" for="firstName">名前</label>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400">内部のみ</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
+                </div>
+                <input type="text" id="firstName" name="firstName" autocomplete="given-name" placeholder="例：太郎" class="field-input" />
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <label class="text-sm font-bold" for="licenseFront">免許証写真（表）</label>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400">非公開</span>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
+              </div>
+              <input type="file" id="licenseFront" name="licenseFront" accept="image/*" class="field-input" />
+              <div class="text-xs text-muted mt-1">画像ファイル（JPEG/PNGなど）</div>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <label class="text-sm font-bold" for="licenseBack">免許証写真（裏）</label>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400">非公開</span>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
+              </div>
+              <input type="file" id="licenseBack" name="licenseBack" accept="image/*" class="field-input" />
+              <div class="text-xs text-muted mt-1">画像ファイル（JPEG/PNGなど）</div>
+            </div>
+
+            <div>
+              <div class="terms-box" id="termsBox">
+                <div class="terms-title">同意内容（必ず確認）</div>
+                <ul class="terms-list">
+                  <li>入力内容は代表たけが本人確認・登録管理のために利用します。</li>
+                  <li>登録後でも、内容の変更・削除依頼が可能です（LINEから連絡）。</li>
+                  <li>迷惑行為・虚偽入力がある場合、以後の連絡をお断りすることがあります。</li>
+                </ul>
+                <div class="terms-note">
+                  個人情報の取り扱いは <a href="./privacy.html">プライバシー・個人情報の取扱い</a> をご確認ください。
+                </div>
+              </div>
+
+              <label class="flex items-center gap-2 mt-3 text-sm font-semibold cursor-pointer" id="agreeLabel">
+                <input type="checkbox" id="agreeTerms" class="accent-sky-400" />
+                上記の同意内容に同意して本登録します（必須）
+              </label>
+            </div>
+
+            <div class="flex flex-col items-end gap-2">
+              <div class="submit-hint" id="submitHint" aria-live="polite"></div>
+              <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all active:scale-95" id="submitBtn">
+                <i data-lucide="send" class="w-4 h-4"></i> 送信する
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <a href="./register.html" class="inline-flex items-center gap-2 text-sm text-muted hover:text-white transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> まずは仮登録へ
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <footer class="border-t border-white/5 mt-12 pt-8 pb-4 text-center">
+      <div class="text-xs text-muted" id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
+      <p class="text-[11px] text-muted mt-2"><a href="./privacy.html" class="underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors">プライバシー・個人情報の取扱い</a></p>
+    </footer>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    (function applyConfig() {
+      if (!window.CONFIG) return;
+      var regionJa = document.getElementById("regionJa");
+      var regionEn = document.getElementById("regionEn");
+      var companyName = document.getElementById("companyName");
+      var footerCompany = document.getElementById("footerCompany");
+
+      if (regionJa) regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
+      if (regionEn) regionEn.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
+      if (companyName) companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+      if (footerCompany) {
+        footerCompany.textContent =
+          (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
+      }
+
+      var lineLink = document.getElementById("headerLineLink");
+      var mailLink = document.getElementById("headerMailLink");
+      var startUrl = "./consult.html";
+      var email = window.CONFIG.EMAIL_TO || "";
+      if (lineLink) lineLink.href = startUrl;
+      if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
+    })();
+
+    var nicknameEl = document.getElementById("nickname");
+    var lastNameEl = document.getElementById("lastName");
+    var firstNameEl = document.getElementById("firstName");
+    var licenseFrontEl = document.getElementById("licenseFront");
+    var licenseBackEl = document.getElementById("licenseBack");
+    var agreeTermsEl = document.getElementById("agreeTerms");
+    var agreeLabelEl = document.getElementById("agreeLabel");
+    var submitBtn = document.getElementById("submitBtn");
+    var submitHintEl = document.getElementById("submitHint");
+    var errorBox = document.getElementById("errorBox");
+    var errorListEl = document.getElementById("errorList");
+
+    function clearValidationUI_() {
+      document.querySelectorAll(".is-invalid").forEach(function(el){ el.classList.remove("is-invalid"); });
+      document.querySelectorAll(".field-error-text").forEach(function(el){ el.remove(); });
+      if (agreeLabelEl) agreeLabelEl.classList.remove("is-invalid");
+    }
+
+    function addFieldError_(el, msg) {
+      if (!el) return;
+      el.classList.add("is-invalid");
+      if (msg) {
+        var div = document.createElement("div");
+        div.className = "field-error-text";
+        div.textContent = msg;
+        el.insertAdjacentElement("afterend", div);
+      }
+    }
+
+    function updateSubmitHint() {
+      var missing = [];
+      if (!(nicknameEl.value || "").trim()) missing.push("ニックネーム");
+      if (!(lastNameEl.value || "").trim()) missing.push("苗字");
+      if (!(firstNameEl.value || "").trim()) missing.push("名前");
+      if (!(licenseFrontEl.files && licenseFrontEl.files.length)) missing.push("免許証（表）");
+      if (!(licenseBackEl.files && licenseBackEl.files.length)) missing.push("免許証（裏）");
+      if (!(agreeTermsEl && agreeTermsEl.checked)) missing.push("同意チェック");
+      if (submitHintEl) {
+        if (missing.length === 0) {
+          submitHintEl.textContent = "必須OK。送信できます。";
+          submitBtn.classList.remove("is-disabled");
+        } else {
+          submitHintEl.textContent = "未入力： " + missing.join(" / ");
+          submitBtn.classList.add("is-disabled");
+        }
+      }
+    }
+
+    ["input","change"].forEach(function(ev){
+      nicknameEl.addEventListener(ev, updateSubmitHint);
+      lastNameEl.addEventListener(ev, updateSubmitHint);
+      firstNameEl.addEventListener(ev, updateSubmitHint);
+      licenseFrontEl.addEventListener(ev, updateSubmitHint);
+      licenseBackEl.addEventListener(ev, updateSubmitHint);
+      if (agreeTermsEl) agreeTermsEl.addEventListener(ev, updateSubmitHint);
+    });
+    updateSubmitHint();
+
+    document.getElementById("mainRegisterForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      clearValidationUI_();
+      errorBox.style.display = "none";
+      errorListEl.innerHTML = "";
+
+      var errors = [];
+      var firstInvalid = null;
+      if (!(nicknameEl.value || "").trim()) { errors.push("ニックネームを入力してください。"); addFieldError_(nicknameEl, "必須です"); if (!firstInvalid) firstInvalid = nicknameEl; }
+      if (!(lastNameEl.value || "").trim()) { errors.push("苗字を入力してください。"); addFieldError_(lastNameEl, "必須です"); if (!firstInvalid) firstInvalid = lastNameEl; }
+      if (!(firstNameEl.value || "").trim()) { errors.push("名前を入力してください。"); addFieldError_(firstNameEl, "必須です"); if (!firstInvalid) firstInvalid = firstNameEl; }
+      if (!(licenseFrontEl.files && licenseFrontEl.files.length)) { errors.push("免許証写真（表）を選択してください。"); addFieldError_(licenseFrontEl, "必須です"); if (!firstInvalid) firstInvalid = licenseFrontEl; }
+      if (!(licenseBackEl.files && licenseBackEl.files.length)) { errors.push("免許証写真（裏）を選択してください。"); addFieldError_(licenseBackEl, "必須です"); if (!firstInvalid) firstInvalid = licenseBackEl; }
+      if (!agreeTermsEl.checked) { errors.push("同意にチェックを入れてください。"); agreeLabelEl.classList.add("is-invalid"); if (!firstInvalid) firstInvalid = agreeTermsEl; }
+
+      if (errors.length) {
+        errors.forEach(function(msg){ var li = document.createElement("li"); li.textContent = msg; errorListEl.appendChild(li); });
+        errorBox.style.display = "";
+        if (firstInvalid && firstInvalid.scrollIntoView) firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      alert("送信処理は次ステップでGAS/LINE通知に接続します。");
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      document.querySelectorAll('.glass-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    });
+
+    var observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
+    document.querySelectorAll('.reveal-hidden').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

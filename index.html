@@ -11,25 +11,17 @@
   <meta property="og:url" content="https://takeshimonoseki.github.io/" />
   <meta property="og:type" content="website" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            deep: '#050505',
-            muted: '#94A3B8',
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          }
+          colors: { deep: '#050505', muted: '#94A3B8' },
+          fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] }
         }
       }
     }
@@ -39,17 +31,12 @@
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
 
-  <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-deep text-white min-h-screen">
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- HEADER — Fixed, Glassmorphism -->
-  <!-- ═══════════════════════════════════════════════════════ -->
+<body class="bg-deep text-white min-h-screen">
   <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- Left: Brand -->
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
@@ -67,46 +54,36 @@
         </a>
       </div>
 
-      <!-- Right: Contact + Nav -->
-      <div class="flex items-center gap-4">
-        <!-- Contact mini-links (desktop only) -->
+      <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
           <a href="#" id="headerLineLink" class="hover:text-white transition-colors">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerTelLink" class="hover:text-white transition-colors">090-XXXX-XXXX</a>
         </div>
 
-        <nav class="hidden md:flex gap-1" aria-label="メイン">
+        <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
           <a href="#top" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" data-scroll-top aria-current="page">トップ</a>
           <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">登録</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
+          <a href="./main-register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">本登録</a>
         </nav>
 
-        <!-- Mobile hamburger -->
-        <a href="./consult.html" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+        <a href="./consult.html" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="メニュー">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- MAIN -->
-  <!-- ═══════════════════════════════════════════════════════ -->
   <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" role="main">
 
-    <!-- ─── HERO ─── -->
     <section class="mb-12 reveal-hidden">
       <div class="glass-card p-8 md:p-12 lg:p-16 relative overflow-hidden">
-        <!-- Decorative gradient blob -->
         <div class="absolute -top-40 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-red-600/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-tr from-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10">
-          <!-- Kicker -->
           <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full mb-6">
             <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
             <span class="text-xs font-bold text-muted font-mono" id="regionKicker">山口県エリア</span>
@@ -116,10 +93,9 @@
 
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[1.1] mb-6">
             <span class="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/40">協力ドライバー</span><br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">登録</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">仮登録</span>
           </h1>
 
-          <!-- Summary Points -->
           <div class="space-y-3 mb-8 max-w-xl">
             <div class="flex items-start gap-3">
               <div class="mt-1 w-5 h-5 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
@@ -141,7 +117,6 @@
             </div>
           </div>
 
-          <!-- Chips -->
           <div class="flex flex-wrap gap-2 mb-8">
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 bg-white/5 text-white/60">求人ではなく「登録プール」</span>
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 bg-white/5 text-white/60">お客⇄ドライバーを直接つなげない</span>
@@ -149,327 +124,86 @@
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 bg-white/5 text-white/60">クレームは運営が一次窓口</span>
           </div>
 
-          <!-- CTA Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-xl">
             <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 hover:-translate-y-0.5 transition-all col-span-2 sm:col-span-1" href="./register.html">
-              <i data-lucide="user-plus" class="w-4 h-4"></i> 登録
+              <i data-lucide="user-plus" class="w-4 h-4"></i> 仮登録
             </a>
             <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-0.5 transition-all" id="heroLineBtn" href="#" target="_blank" rel="noopener noreferrer">
               <i data-lucide="message-circle" class="w-4 h-4"></i> LINE
-            </a>
-            <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-amber-500 text-white font-bold text-sm shadow-lg shadow-amber-500/20 hover:-translate-y-0.5 transition-all" id="heroTelBtn" href="#">
-              <i data-lucide="phone" class="w-4 h-4"></i> 電話
             </a>
             <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-600/20 hover:-translate-y-0.5 transition-all" id="heroMailBtn" href="#">
               <i data-lucide="mail" class="w-4 h-4"></i> メール
             </a>
           </div>
+
+          <div class="mt-5 max-w-xl text-xs text-white/70">
+            本登録（本人確認・書類など）もあります：
+            <a href="./main-register.html" class="underline underline-offset-4 decoration-white/30 hover:decoration-white/60 transition-colors">本登録ページを見る</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ─── STARTER SECTION ─── -->
-    <section class="mb-12 reveal-hidden delay-100" id="starter">
+    <section class="mb-12 reveal-hidden delay-100" id="registration-flow">
       <div class="glass-card p-6 md:p-10">
         <div class="flex items-center gap-3 mb-6">
-          <div class="p-2 rounded-lg bg-orange-500/10 text-orange-400">
-            <i data-lucide="rocket" class="w-6 h-6"></i>
-          </div>
-          <h2 class="text-2xl font-black tracking-tight">今から軽貨物を始めたい人へ</h2>
-        </div>
-
-        <p class="text-muted text-sm sm:text-base mb-4 max-w-2xl">
-          車両・黒ナンバー・保険・確定申告…最初の壁を一緒に整理します。
-        </p>
-
-        <ul class="space-y-2 mb-8 text-sm text-white/70">
-          <li class="flex items-start gap-2">
-            <i data-lucide="chevron-right" class="w-4 h-4 mt-0.5 text-orange-400 flex-shrink-0"></i>
-            車両／黒ナンバー／保険／確定申告の相談ができます
-          </li>
-          <li class="flex items-start gap-2">
-            <i data-lucide="chevron-right" class="w-4 h-4 mt-0.5 text-orange-400 flex-shrink-0"></i>
-            開業トータル相談は「段階を選ぶページ」を挟んでからLINEを開きます
-          </li>
-        </ul>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg">
-          <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#00B900] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all" id="starterLineBtn" href="./consult.html">
-            <i data-lucide="message-circle" class="w-4 h-4"></i> 開業相談（LINE）
-          </a>
-          <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 hover:-translate-y-0.5 transition-all" href="./vehicle.html">
-            <i data-lucide="car-front" class="w-4 h-4"></i> 車両の相談
-          </a>
-          <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all" href="./register.html">
-            <i data-lucide="user-plus" class="w-4 h-4"></i> 登録に進む
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── BENTO GRID: Info / Merits / Policy ─── -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-
-      <!-- Merit Card -->
-      <div class="glass-card p-6 lg:col-span-2 reveal-hidden delay-200" id="merits">
-        <div class="flex items-center gap-3 mb-5">
           <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-            <i data-lucide="award" class="w-5 h-5"></i>
+            <i data-lucide="route" class="w-6 h-6"></i>
           </div>
-          <h2 class="text-lg font-bold">登録メリット・登録条件</h2>
+          <h2 class="text-2xl font-black tracking-tight">登録の流れ（仮登録 → 本登録）</h2>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-3">登録メリット</h3>
-            <ul class="space-y-2 text-sm text-white/70">
-              <li class="flex items-start gap-2"><i data-lucide="star" class="w-3.5 h-3.5 mt-0.5 text-yellow-400 flex-shrink-0"></i> 自分に合う案件だけ事前に相談できる</li>
-              <li class="flex items-start gap-2"><i data-lucide="star" class="w-3.5 h-3.5 mt-0.5 text-yellow-400 flex-shrink-0"></i> ニックネームとエリアだけが公開</li>
-              <li class="flex items-start gap-2"><i data-lucide="star" class="w-3.5 h-3.5 mt-0.5 text-yellow-400 flex-shrink-0"></i> タイミングが合うときだけ声がかかる</li>
-              <li class="flex items-start gap-2"><i data-lucide="star" class="w-3.5 h-3.5 mt-0.5 text-yellow-400 flex-shrink-0"></i> 希望条件を登録時に書いておける</li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-3">登録条件</h3>
-            <ul class="space-y-2 text-sm text-white/70">
-              <li class="flex items-start gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 mt-0.5 text-blue-400 flex-shrink-0"></i> 山口県を中心に動ける方</li>
-              <li class="flex items-start gap-2"><i data-lucide="truck" class="w-3.5 h-3.5 mt-0.5 text-blue-400 flex-shrink-0"></i> 軽バン / 軽トラ等をお持ちの方</li>
-              <li class="flex items-start gap-2"><i data-lucide="shield-check" class="w-3.5 h-3.5 mt-0.5 text-blue-400 flex-shrink-0"></i> マナー・時間厳守ができる方</li>
-              <li class="flex items-start gap-2"><i data-lucide="file-text" class="w-3.5 h-3.5 mt-0.5 text-blue-400 flex-shrink-0"></i> 本人確認等は後日でOK</li>
-            </ul>
-          </div>
-        </div>
-        <p class="text-xs text-muted mt-4 border-t border-white/5 pt-4">※登録段階では「検討中」でもOK。後日お話ししながら決めていきます。</p>
-      </div>
-
-      <!-- Nomination Card -->
-      <div class="glass-card p-6 reveal-hidden delay-300" id="no-selection">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400">
-            <i data-lucide="users" class="w-5 h-5"></i>
-          </div>
-          <h2 class="text-lg font-bold">指名について</h2>
-        </div>
-        <p class="text-sm text-white/70 leading-relaxed">
-          <span class="text-white font-bold">希望は参考にする場合があります</span>（確約しない）。<br>
-          お客さまとドライバーを直接つなげず、運営が窓口となります。
+        <p class="text-muted text-sm sm:text-base mb-6 max-w-3xl">
+          まずは<strong class="text-white">仮登録</strong>で「動けるエリア・車両・希望」などを把握します。<br>
+          必要に応じて<strong class="text-white">本登録（本人確認・必要書類など）</strong>をご案内します。
         </p>
-      </div>
 
-      <!-- Startup Support Card -->
-      <div class="glass-card p-6 reveal-hidden" id="support">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 rounded-lg bg-sky-500/10 text-sky-400">
-            <i data-lucide="gift" class="w-5 h-5"></i>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/5">
+            <div class="text-xs font-bold text-white/60 mb-2">STEP 1</div>
+            <div class="text-base font-black mb-2">仮登録</div>
+            <div class="text-sm text-white/70">ニックネーム / 市町村 / 車両 / 稼働帯 / 希望など</div>
           </div>
-          <h2 class="text-lg font-bold">開業サポート</h2>
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/5">
+            <div class="text-xs font-bold text-white/60 mb-2">STEP 2</div>
+            <div class="text-base font-black mb-2">ヒアリング</div>
+            <div class="text-sm text-white/70">案件や条件が合いそうな時だけ、運営から連絡</div>
+          </div>
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/5">
+            <div class="text-xs font-bold text-white/60 mb-2">STEP 3</div>
+            <div class="text-base font-black mb-2">本登録</div>
+            <div class="text-sm text-white/70">本人確認・必要書類など（詳細は案内時）</div>
+          </div>
         </div>
-        <ul class="space-y-2 text-sm text-white/70 mb-4">
-          <li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 mt-0.5 text-sky-400 flex-shrink-0"></i> 黒ナンバー取得の相談</li>
-          <li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 mt-0.5 text-sky-400 flex-shrink-0"></i> 保険の相談・案内</li>
-          <li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 mt-0.5 text-sky-400 flex-shrink-0"></i> 確定申告の相談・案内</li>
-        </ul>
-        <p class="text-[11px] text-muted">必要に応じ提携先をご案内する場合があります。</p>
-      </div>
 
-      <!-- Vehicle Support Card -->
-      <div class="glass-card p-6 reveal-hidden delay-100" id="vehicle">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 rounded-lg bg-amber-500/10 text-amber-400">
-            <i data-lucide="wrench" class="w-5 h-5"></i>
-          </div>
-          <h2 class="text-lg font-bold">車両の相談</h2>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 hover:-translate-y-0.5 transition-all" href="./register.html">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> 仮登録へ
+          </a>
+          <a class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 hover:-translate-y-0.5 transition-all" href="./main-register.html">
+            <i data-lucide="file-check" class="w-4 h-4"></i> 本登録へ
+          </a>
         </div>
-        <ul class="space-y-1.5 text-sm text-white/70 mb-4">
-          <li>• 車両購入の相談</li>
-          <li>• 修理・整備の相談</li>
-          <li>• 車検の相談</li>
-          <li>• 開業トータル相談</li>
-        </ul>
-        <a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-sm font-bold text-white/80 hover:bg-white/10 hover:-translate-y-0.5 transition-all" href="./vehicle.html">
-          <i data-lucide="arrow-right" class="w-4 h-4"></i> 車両の相談ページへ
-        </a>
-      </div>
-
-      <!-- Info Card (Public / Private) -->
-      <div class="glass-card p-6 lg:col-span-3 reveal-hidden delay-200" id="info">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="p-2 rounded-lg bg-teal-500/10 text-teal-400">
-            <i data-lucide="eye" class="w-5 h-5"></i>
-          </div>
-          <h2 class="text-lg font-bold">公開される情報 / 非公開の情報</h2>
-        </div>
-        <p class="text-sm text-muted mb-4">登録時に入力いただく情報のうち、「どこまでが外に見えるか」をはっきり分けています。</p>
-
-        <details class="group" open>
-          <summary class="cursor-pointer text-sm font-bold text-white/60 hover:text-white transition-colors flex items-center gap-2 select-none">
-            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
-            詳細を見る
-          </summary>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <!-- Public -->
-            <div class="p-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-bold mb-4">
-                <i data-lucide="eye" class="w-3 h-3"></i> 公開される情報
-              </div>
-              <div class="space-y-3 text-sm">
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">ニックネーム</span><span class="text-muted">本名でなくOK</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">市町村</span><span class="text-muted">ざっくりエリア</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">車種</span><span class="text-muted">軽バン / 軽トラ等</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">稼働帯</span><span class="text-muted">チェック項目</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">得意分野</span><span class="text-muted">引越・スポット等</span></div>
-                <div class="flex justify-between"><span class="font-bold text-white/80">プロフィール</span><span class="text-muted">自己紹介文のみ</span></div>
-              </div>
-            </div>
-
-            <!-- Private -->
-            <div class="p-5 rounded-2xl border border-red-500/20 bg-red-500/5">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-400 text-[11px] font-bold mb-4">
-                <i data-lucide="lock" class="w-3 h-3"></i> 非公開（代表たけのみ）
-              </div>
-              <div class="space-y-3 text-sm">
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">連絡手段</span><span class="text-muted">電話 or LINE選択</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">連絡先</span><span class="text-muted">内部メモのみ</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">経験年数</span><span class="text-muted">ざっくり区分</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">希望単価帯</span><span class="text-muted">感覚レベル管理</span></div>
-                <div class="flex justify-between border-b border-white/5 pb-2"><span class="font-bold text-white/80">NG条件</span><span class="text-muted">避けたい条件</span></div>
-                <div class="flex justify-between"><span class="font-bold text-white/80">本人確認等</span><span class="text-muted">承認後に別途</span></div>
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <!-- ─── POLICY SECTION ─── -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12" id="policy">
-      <div class="glass-card p-6 reveal-hidden">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">
-            <i data-lucide="shield" class="w-5 h-5"></i>
-          </div>
-          <h2 class="text-lg font-bold">運営方針</h2>
-        </div>
-        <ul class="space-y-2 text-sm text-white/70">
-          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 mt-0.5 text-indigo-400 flex-shrink-0"></i> お客さまとドライバーを<strong class="text-white">直接つなげず</strong>、運営が窓口</li>
-          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 mt-0.5 text-indigo-400 flex-shrink-0"></i> クレーム・トラブルは<strong class="text-white">運営が一次窓口</strong></li>
-          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 mt-0.5 text-indigo-400 flex-shrink-0"></i> 指名はできず、希望は<strong class="text-white">参考情報</strong>として扱う</li>
-          <li class="flex items-start gap-2"><i data-lucide="check" class="w-3.5 h-3.5 mt-0.5 text-indigo-400 flex-shrink-0"></i> ドライバー同士のグループは原則つくらず、<strong class="text-white">運営主導</strong></li>
-        </ul>
-      </div>
-
-      <div class="glass-card p-6 reveal-hidden delay-100">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 rounded-lg bg-pink-500/10 text-pink-400">
-            <i data-lucide="database" class="w-5 h-5"></i>
-          </div>
-          <h2 class="text-lg font-bold">個人情報の取扱い</h2>
-        </div>
-        <ul class="space-y-2 text-sm text-white/70">
-          <li class="flex items-start gap-2"><i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 text-pink-400 flex-shrink-0"></i> <strong class="text-white">目的</strong>：登録・案件紹介・支払い・クレーム対応</li>
-          <li class="flex items-start gap-2"><i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 text-pink-400 flex-shrink-0"></i> <strong class="text-white">閲覧者</strong>：運営のみ。公開プロフィールは限定情報</li>
-          <li class="flex items-start gap-2"><i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 text-pink-400 flex-shrink-0"></i> <strong class="text-white">保管</strong>：スプレッドシート・Drive管理。本名等は非公開</li>
-          <li class="flex items-start gap-2"><i data-lucide="info" class="w-3.5 h-3.5 mt-0.5 text-pink-400 flex-shrink-0"></i> <strong class="text-white">削除</strong>：修正・削除依頼はいつでも受付</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ─── FAQ ─── -->
-    <section class="mb-12 reveal-hidden" id="faq">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="p-2 rounded-lg bg-violet-500/10 text-violet-400">
-          <i data-lucide="help-circle" class="w-5 h-5"></i>
-        </div>
-        <h2 class="text-xl font-bold">よくある質問</h2>
-      </div>
-
-      <div class="space-y-3">
-        <details class="glass-card group">
-          <summary class="p-5 cursor-pointer flex items-center justify-between text-sm font-bold text-white/80 hover:text-white transition-colors select-none">
-            登録したら必ず仕事が流れてきますか？
-            <i data-lucide="plus" class="w-4 h-4 text-muted group-open:hidden"></i>
-            <i data-lucide="minus" class="w-4 h-4 text-muted hidden group-open:block"></i>
-          </summary>
-          <div class="px-5 pb-5 text-sm text-muted leading-relaxed border-t border-white/5 pt-4">
-            お約束はできませんが、エリアやタイミングが合えば声をかけさせていただきます。<br>
-            「登録だけ」でも大歓迎で、<strong class="text-white/80">合う案件があったときだけご相談</strong>するスタイルです。
-          </div>
-        </details>
-
-        <details class="glass-card group">
-          <summary class="p-5 cursor-pointer flex items-center justify-between text-sm font-bold text-white/80 hover:text-white transition-colors select-none">
-            本名や顔写真は必要ですか？
-            <i data-lucide="plus" class="w-4 h-4 text-muted group-open:hidden"></i>
-            <i data-lucide="minus" class="w-4 h-4 text-muted hidden group-open:block"></i>
-          </summary>
-          <div class="px-5 pb-5 text-sm text-muted leading-relaxed border-t border-white/5 pt-4">
-            このサイト上では<strong class="text-white/80">本名も顔写真も不要</strong>です。<br>
-            公開されるのはニックネーム・市町村・車種・得意分野・プロフィール文章だけです。
-          </div>
-        </details>
-
-        <details class="glass-card group">
-          <summary class="p-5 cursor-pointer flex items-center justify-between text-sm font-bold text-white/80 hover:text-white transition-colors select-none">
-            お客さまと直接やり取りしてもいいですか？
-            <i data-lucide="plus" class="w-4 h-4 text-muted group-open:hidden"></i>
-            <i data-lucide="minus" class="w-4 h-4 text-muted hidden group-open:block"></i>
-          </summary>
-          <div class="px-5 pb-5 text-sm text-muted leading-relaxed border-t border-white/5 pt-4">
-            原則として、<strong class="text-white/80">お客さまとドライバーさんを直接つなぐことはしません</strong>。<br>
-            連絡・調整はすべて代表たけ経由で行います。
-          </div>
-        </details>
-
-        <details class="glass-card group">
-          <summary class="p-5 cursor-pointer flex items-center justify-between text-sm font-bold text-white/80 hover:text-white transition-colors select-none">
-            車両の相談はできますか？
-            <i data-lucide="plus" class="w-4 h-4 text-muted group-open:hidden"></i>
-            <i data-lucide="minus" class="w-4 h-4 text-muted hidden group-open:block"></i>
-          </summary>
-          <div class="px-5 pb-5 text-sm text-muted leading-relaxed border-t border-white/5 pt-4">
-            可能です。<a href="./vehicle.html" class="text-white underline underline-offset-4 decoration-white/30 hover:decoration-white/60 transition-colors">車両の相談ページ</a>から内容を選んで送れます。
-          </div>
-        </details>
       </div>
     </section>
 
-    <!-- ─── NEWS ─── -->
-    <section class="mb-12 reveal-hidden" id="news">
-      <div class="glass-card p-6">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
-            <i data-lucide="bell" class="w-5 h-5"></i>
-          </div>
-          <h2 class="text-lg font-bold">お知らせ</h2>
-        </div>
-        <div id="newsList" class="space-y-2 text-sm text-muted"></div>
-        <p class="text-sm text-muted" id="newsNone" style="display:none;">お知らせはありません。</p>
-      </div>
-    </section>
-
-    <!-- ─── CONTACT ─── -->
     <section class="mb-12 reveal-hidden" id="contact">
       <div class="glass-card p-6 text-center">
         <h2 class="text-lg font-bold mb-2">問い合わせ</h2>
-        <p class="text-sm text-muted mb-6">登録前に不安があれば、下のボタンからLINE・メール・電話でご相談ください。</p>
+        <p class="text-sm text-muted mb-6">登録前に不安があれば、下のボタンからLINE・メールでご相談ください。</p>
       </div>
     </section>
 
-    <!-- ─── FOOTER ─── -->
     <footer class="border-t border-white/5 pt-10 pb-8">
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto mb-8">
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto mb-8">
         <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all" id="footerLineBtn" href="#" target="_blank" rel="noopener noreferrer">
           <i data-lucide="message-circle" class="w-4 h-4"></i> LINE
         </a>
         <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-600/20 hover:-translate-y-0.5 transition-all" id="footerMailBtn" href="#">
           <i data-lucide="mail" class="w-4 h-4"></i> メール
         </a>
-        <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-amber-500 text-white font-bold text-sm shadow-lg shadow-amber-500/20 hover:-translate-y-0.5 transition-all" id="footerTelBtn" href="#">
-          <i data-lucide="phone" class="w-4 h-4"></i> 電話
-        </a>
         <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all" href="./register.html">
-          <i data-lucide="user-plus" class="w-4 h-4"></i> 登録
+          <i data-lucide="user-plus" class="w-4 h-4"></i> 仮登録
         </a>
       </div>
 
@@ -479,29 +213,14 @@
         <p class="text-[11px] text-muted"><a href="./privacy.html" class="underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors">プライバシー・個人情報の取扱い</a></p>
       </div>
     </footer>
-
   </main>
 
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
 
-    // LINEリンク生成（公式アカウントIDがあれば"直接トーク"、無ければ友だち追加URL）
-    function lineLinkForText_(text) {
-      var C = window.CONFIG || {};
-      var oa = (C.LINE_OA_ID || "").trim();
-      var add = (C.LINE_URL || "").trim();
-      var msg = String(text || "").trim();
-      if (oa) {
-        if (oa[0] !== "@") oa = "@" + oa;
-        return "https://line.me/R/oaMessage/" + encodeURIComponent(oa) + "/?" + encodeURIComponent(msg);
-      }
-      return add || "#";
-    }
-
-    // CONFIG からヘッダー・フッター情報を反映
     (function applyConfig() {
       if (!window.CONFIG) return;
+
       var regionJa = document.getElementById("regionJa");
       var regionEn = document.getElementById("regionEn");
       var regionKicker = document.getElementById("regionKicker");
@@ -516,11 +235,11 @@
         footerCompany.textContent = (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
       }
 
-      var mailLink = document.getElementById("headerMailLink");
-      var telLink = document.getElementById("headerTelLink");
       var email = window.CONFIG.EMAIL_TO || "";
-      var tel = window.CONFIG.TEL || "";
+      var mailLink = document.getElementById("headerMailLink");
+      if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
 
+      // LINEは「相談ページ」へ
       var startUrl = "./consult.html";
       var headerLineLink = document.getElementById("headerLineLink");
       var heroLineBtn = document.getElementById("heroLineBtn");
@@ -529,27 +248,12 @@
       if (heroLineBtn) heroLineBtn.href = startUrl;
       if (footerLineBtn) footerLineBtn.href = startUrl;
 
-      if (mailLink && email) {
-        mailLink.href = "mailto:" + email;
-        mailLink.textContent = email;
-      }
-      if (telLink && tel) {
-        telLink.href = "tel:" + tel.replace(/[^0-9+]/g, "");
-        telLink.textContent = tel.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-      }
-
-      var heroTelBtn = document.getElementById("heroTelBtn");
       var heroMailBtn = document.getElementById("heroMailBtn");
       var footerMailBtn = document.getElementById("footerMailBtn");
-      var footerTelBtn = document.getElementById("footerTelBtn");
-
-      if (heroTelBtn && tel) heroTelBtn.href = "tel:" + tel.replace(/[^0-9+]/g, "");
-      if (heroMailBtn && email) heroMailBtn.href = "mailto:" + email + "?subject=" + encodeURIComponent("【協力ドライバー登録】問い合わせ");
+      if (heroMailBtn && email) heroMailBtn.href = "mailto:" + email + "?subject=" + encodeURIComponent("【協力ドライバー仮登録】問い合わせ");
       if (footerMailBtn && email) footerMailBtn.href = "mailto:" + email;
-      if (footerTelBtn && tel) footerTelBtn.href = "tel:" + tel.replace(/[^0-9+]/g, "");
     })();
 
-    // トップボタン：確実に最上部へ
     document.querySelectorAll('a[data-scroll-top]').forEach(function(a){
       a.addEventListener("click", function(e){
         e.preventDefault();
@@ -557,16 +261,6 @@
       });
     });
 
-    // Spotlight Effect (Mouse Tracking)
-    document.addEventListener('mousemove', (e) => {
-      document.querySelectorAll('.glass-card').forEach(card => {
-        const rect = card.getBoundingClientRect();
-        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      });
-    });
-
-    // Entrance Animation (Intersection Observer)
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -574,31 +268,9 @@
           observer.unobserve(entry.target);
         }
       });
-    }, {
-      threshold: 0.05,
-      rootMargin: "0px 0px -40px 0px"
-    });
+    }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
 
-    document.querySelectorAll('.reveal-hidden').forEach((el) => {
-      observer.observe(el);
-    });
-
-    // News feed
-    fetch("./news.json").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }).then(function (data) {
-      var list = document.getElementById("newsList");
-      var none = document.getElementById("newsNone");
-      if (!list) return;
-      if (!data || !data.items || data.items.length === 0) {
-        if (none) none.style.display = "block";
-        return;
-      }
-      data.items.slice(0, 5).forEach(function (item) {
-        var div = document.createElement("div");
-        div.className = "flex items-center gap-3 py-2 border-b border-white/5 last:border-0";
-        div.innerHTML = (item.date ? '<span class="font-mono text-xs text-white/40 flex-shrink-0">' + item.date + '</span>' : '') + '<span class="text-white/70">' + (item.text || "") + '</span>';
-        list.appendChild(div);
-      });
-    });
+    document.querySelectorAll('.reveal-hidden').forEach((el) => observer.observe(el));
   </script>
 </body>
 </html>
