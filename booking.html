@@ -1,0 +1,566 @@
+<!--
+保存名：booking.html
+置き場所：index.html / philosophy.html と「同じフォルダ」
+
+このページでCRM送信する想定です（CFG.CRM_ENDPOINT_URL）。
+未設定の場合は「送信内容を表示」だけします。
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>軽貨物TAKE｜本契約・予約</title>
+  <meta name="description" content="本契約・予約フォーム（概算の再表示）。" />
+  <style>
+    :root{
+      --bg: #fffbfa;
+      --bg2: #fff0f3;
+      --panel: #ffffff;
+      --text: #2d2a26;
+      --muted: #6b6560;
+      --line: rgba(0,0,0,.08);
+      --accent: #d48494;
+      --accent2: #6b9b5a;
+      --danger: #c45c5c;
+      --radius: 20px;
+      --radius2: 16px;
+      --shadow-soft: 0 4px 24px rgba(0,0,0,.06);
+    }
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 25%, #ffffff 70%);
+      color:var(--text);
+      min-height:100vh;
+      font-size: 17px;
+      line-height: 1.75;
+      position: relative;
+    }
+    body::before{
+      content: "";
+      position: fixed;
+      top: -80px; right: -80px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,200,210,.4) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    a{color:inherit}
+    .wrap{max-width:900px;margin:0 auto;padding:24px 20px 48px;position:relative;z-index:1}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:16px 0 20px;
+      position:sticky;top:0;z-index:10;
+      background: rgba(255,251,250,.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.04em;}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background: linear-gradient(135deg, var(--accent), #e8a0b0);
+      box-shadow: var(--shadow-soft);
+    }
+    nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    nav a{
+      text-decoration:none;
+      padding:12px 18px;
+      min-height:48px;
+      min-width:48px;
+      box-sizing:border-box;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      color:var(--muted);
+      border:1px solid transparent;
+      font-weight:700;
+      font-size: 15px;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+    }
+    nav a:hover,nav a:focus{border-color:var(--line);background: rgba(212,132,148,.12); color:var(--text)}
+    nav a.nav-active{background: rgba(212,132,148,.18); border-color: rgba(212,132,148,.4); color: #b85c6c;}
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow:hidden;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .card.reveal{opacity:0;transform:translateY(16px);transition: opacity .5s ease, transform .5s ease}
+    .card.reveal.in-view{opacity:1;transform:translateY(0)}
+    @media (hover: hover) and (pointer: fine){
+      .card.reveal.in-view:hover{transform:translateY(-2px);box-shadow: 0 8px 32px rgba(0,0,0,.08);}
+    }
+    .inner{padding:28px 24px}
+    h1{margin:0;font-size: 1.5rem; line-height: 1.35;}
+    .hint{font-size: 15px; color:var(--muted); line-height: 1.6;}
+    label{display:block; font-size: 15px; color:var(--muted); font-weight:700; margin:4px 0 8px;}
+    input, textarea{
+      width:100%;
+      padding:14px 16px;
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      outline:none;
+      background: #fff;
+      color:var(--text);
+      font-size: 17px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    input::placeholder, textarea::placeholder{ color: var(--muted); }
+    textarea{min-height:100px;resize:vertical}
+    input:focus, textarea:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212,132,148,.2);
+    }
+    select{
+      width:100%;
+      padding:14px 16px;
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      outline:none;
+      background: #fff;
+      color:var(--text);
+      font-size: 17px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      color-scheme: light;
+      cursor: pointer;
+    }
+    select option{
+      background-color: #fff;
+      color: var(--text);
+    }
+    select option:hover,
+    select option:focus{
+      background-color: rgba(212,132,148,.12);
+      color: var(--text);
+    }
+    select option:checked{
+      background-color: rgba(212,132,148,.2);
+      color: var(--text);
+    }
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media (max-width: 620px){ .grid{grid-template-columns:1fr} }
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:14px 20px;
+      min-height:48px;
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      font-weight:700;
+      font-size: 16px;
+      cursor:pointer;
+      text-decoration:none;
+      transition: transform .15s ease, box-shadow .15s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:scale(0.98)}
+    .btnPrimary{
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--accent), #e8a0b0);
+      color:#fff;
+      box-shadow: var(--shadow-soft);
+    }
+    .btnLine{
+      border:0;
+      background: linear-gradient(135deg, #06c755, #1abf5b);
+      color:#fff;
+      box-shadow: var(--shadow-soft);
+    }
+    .btnMail{
+      border:0;
+      background: linear-gradient(135deg, #4a6fa5, #3d5a80);
+      color:#fff;
+      box-shadow: var(--shadow-soft);
+    }
+    .badge{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:8px 12px;border-radius:999px;
+      background: rgba(0,0,0,.04); border:1px solid var(--line); font-weight:700; font-size: 14px;
+    }
+    .price{font-size: 1.75rem; font-weight:800; margin:8px 0 4px; letter-spacing:-0.02em; color:var(--danger);}
+    .break{
+      margin-top:12px;border-top:1px dashed var(--line);
+      padding-top:12px;display:grid;grid-template-columns:1fr;gap:8px;
+      font-size: 16px; color:var(--muted);
+    }
+    .breakRow{display:flex;justify-content:space-between;gap:10px}
+    .breakRow strong{color:var(--text)}
+    .toast{
+      position:fixed;right:20px;bottom:20px;z-index:9999;
+      background: var(--panel);
+      border:1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+      border-radius: var(--radius2);
+      padding:16px 18px;
+      min-width:260px;
+      display:none;
+    }
+    .toast b{display:block;margin-bottom:4px; font-size: 16px;}
+    .siteFooter{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);font-size: 15px;color:var(--muted);text-align:center;}
+    .sectionHead{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .helpBtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:40px;height:40px;min-width:40px;min-height:40px;
+      border-radius:50%; border:1px solid var(--line); background:#fff;
+      color:var(--muted); font-size: 1.1rem; font-weight:700; cursor:pointer;
+      transition: border-color .2s, background .2s, color .2s;
+    }
+    .helpBtn:hover,.helpBtn:focus{ border-color: var(--accent); background: rgba(212,132,148,.12); color: var(--accent); }
+    .helpOverlay{
+      position:fixed;inset:0;z-index:10001;
+      display:none;align-items:center;justify-content:center; padding:20px;
+      background: rgba(0,0,0,.4); backdrop-filter: blur(4px);
+    }
+    .helpOverlay[aria-hidden="false"]{ display:flex; }
+    .helpModal{
+      max-width:420px;width:100%; max-height:85vh;overflow:auto;
+      background: var(--panel); border:1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow-soft); padding:24px;
+    }
+    .helpModal h3{ margin:0 0 12px; font-size: 1.15rem; }
+    .helpModal p{ margin:0; font-size: 16px; line-height: 1.75; color: var(--text); }
+    .helpModal .closeBtn{ margin-top:16px; min-height:48px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div style="font-size:16px;opacity:.95">軽貨物TAKE</div>
+          <div style="font-size:14px;color:var(--muted);font-weight:700">下関｜代表：松永 たけし</div>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">TOP</a>
+        <a href="booking.html" class="nav-active" aria-current="page">予約</a>
+        <a href="philosophy.html">理念</a>
+      </nav>
+    </header>
+
+    <div class="card reveal">
+      <div class="inner">
+        <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <div class="sectionHead">
+            <h1>本契約・予約（内容の確定）</h1>
+            <button type="button" class="helpBtn" aria-label="このページの説明" data-help="booking">？</button>
+          </div>
+          <span class="badge" id="typeBadge">タイプ：-</span>
+        </div>
+        <div class="hint">直前の概算を表示します。内容がOKなら下のフォームを埋めて送信してください。</div>
+
+        <div style="margin-top:14px;padding:18px;border:1px solid var(--line);border-radius:var(--radius2);background: rgba(212,132,148,.04)">
+          <div class="row" style="justify-content:space-between">
+            <span class="badge">直前の概算（目安）</span>
+            <span class="hint">税込</span>
+          </div>
+          <div class="price" id="totalPrice">—</div>
+          <div class="break" id="breakdown"></div>
+          <div class="hint" id="noDraft" style="display:none;margin-top:10px">
+            ※概算データが見つかりません。先に index.html で「概算を出す」を押してください。
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <button class="btn btnLine" id="btnLine">LINEで送る</button>
+            <button class="btn btnMail" id="btnMail">メールで送る</button>
+            <button class="btn" id="btnCopy">本文をコピー</button>
+          </div>
+        </div>
+
+        <form id="form" style="margin-top:16px">
+          <div class="grid">
+            <div>
+              <label>お名前</label>
+              <input id="name" required placeholder="例：山田 太郎" />
+            </div>
+            <div>
+              <label>電話番号</label>
+              <input id="phone" required inputmode="tel" placeholder="例：090-1234-5678" />
+            </div>
+            <div style="grid-column:1/-1">
+              <label>ご住所</label>
+              <input id="address" required placeholder="例：下関市〇〇町 1-2-3" />
+            </div>
+            <div>
+              <label>作業希望日時</label>
+              <input id="datetime" type="datetime-local" required />
+            </div>
+            <div>
+              <label>当日のお支払い（確認）</label>
+              <input value="当日決済（現金/振込）" readonly />
+            </div>
+            <div style="grid-column:1/-1">
+              <label>依頼内容（補足）</label>
+              <textarea id="detail" placeholder="例：作業内容、注意点、駐車場所など"></textarea>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <button class="btn btnPrimary" type="submit">送信する（本契約を確定）</button>
+            <span class="hint">※CRM未設定の場合は「送信内容表示」になります</span>
+          </div>
+        </form>
+
+        <div id="resultBox" style="display:none;margin-top:14px;padding:18px;border:1px solid var(--line);border-radius:var(--radius2);background: rgba(212,132,148,.04)">
+          <b>送信内容を準備しました</b>
+          <div class="hint" style="margin-top:6px">CRMが未設定/エラーの場合でも、本文をコピーしてLINE/メールで送れます。</div>
+          <textarea id="payloadPreview" readonly style="margin-top:10px"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">
+      <b id="toastTitle">完了</b>
+      <div id="toastMsg" style="color:var(--muted);font-size:12px;line-height:1.5"></div>
+    </div>
+    <div class="helpOverlay" id="helpOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="helpModal" role="document">
+        <h3 id="helpTitle">説明</h3>
+        <div id="helpContent"></div>
+        <button type="button" class="btn btnPrimary closeBtn" id="helpClose">閉じる</button>
+      </div>
+    </div>
+    <footer class="siteFooter">軽貨物TAKE｜下関｜代表：松永 たけし</footer>
+  </div>
+
+  <script>
+  (function(){
+    var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(prefersReduced) return;
+    var card = document.querySelector(".card.reveal");
+    if(!card) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add("in-view"); });
+    }, { rootMargin: "0px 0px -40px 0px", threshold: 0.1 });
+    io.observe(card);
+  })();
+  </script>
+<script>
+  const BOOKING_DRAFT_KEY = "TAKESAN_BOOKING_DRAFT";
+
+  function showToast(title, msg){
+    const t = document.getElementById("toast");
+    document.getElementById("toastTitle").innerText = title;
+    document.getElementById("toastMsg").innerText = msg || "";
+    t.style.display = "block";
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(()=>{ t.style.display="none"; }, 2600);
+  }
+
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  async function copyToClipboard(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      return true;
+    }catch(e){
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position="fixed";
+      ta.style.left="-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }
+  }
+
+  function yen(n){ return `${Math.floor(n).toLocaleString()}円`; }
+
+  function renderBreakdown(el, rows){
+    el.innerHTML = rows.map(r=>{
+      return `<div class="breakRow"><span>${escapeHtml(r.k)}</span><strong>${escapeHtml(r.v)}</strong></div>`;
+    }).join("");
+  }
+
+  function buildMailto(email, text){
+    const subject = encodeURIComponent("【軽貨物TAKE】本契約（予約）");
+    const body = encodeURIComponent((text || "").slice(0, 1800));
+    return `mailto:${email}?subject=${subject}&body=${body}`;
+  }
+
+  function getDraft(){
+    try{
+      const raw = localStorage.getItem(BOOKING_DRAFT_KEY);
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){
+      return null;
+    }
+  }
+
+  function normalizeTypeLabel(t){
+    if(t === "delivery") return "配送・運搬";
+    if(t === "handy") return "暮らしの手伝い";
+    return t || "-";
+  }
+
+  const draft = getDraft();
+  const typeBadge = document.getElementById("typeBadge");
+  const totalPrice = document.getElementById("totalPrice");
+  const breakdown = document.getElementById("breakdown");
+  const noDraft = document.getElementById("noDraft");
+
+  // 連絡先（draftに入ってる想定：indexから持ってくる）
+  const email = (draft && draft.estimate && draft.estimate.email) ? draft.estimate.email : "takeshimonoseki@gmail.com";
+  const lineUrl = (draft && draft.estimate && draft.estimate.lineUrl) ? draft.estimate.lineUrl : "https://line.me/ti/p/azXpkv3_bQ";
+
+  let quoteText = "";
+  if(!draft){
+    noDraft.style.display = "block";
+    typeBadge.innerText = "タイプ：-";
+    totalPrice.innerText = "—";
+  }else{
+    typeBadge.innerText = `タイプ：${normalizeTypeLabel(draft.type)}`;
+    quoteText = draft.quoteText || "";
+    const est = draft.estimate || {};
+    if(typeof est.total === "number" && est.total > 0){
+      totalPrice.innerText = yen(est.total);
+    }else{
+      totalPrice.innerText = "相談してください";
+    }
+    if(Array.isArray(est.breakdown) && est.breakdown.length){
+      renderBreakdown(breakdown, est.breakdown);
+    }else{
+      breakdown.innerHTML = `<div class="breakRow"><span>本文</span><strong>下のボタンで送れます</strong></div>`;
+    }
+  }
+
+  document.getElementById("btnCopy").addEventListener("click", async ()=>{
+    if(!quoteText){
+      showToast("本文なし", "先に概算を作ってから来てください");
+      return;
+    }
+    const ok = await copyToClipboard(quoteText);
+    showToast(ok ? "コピーしました" : "コピー失敗", "LINE/メールに貼り付けてください");
+  });
+
+  document.getElementById("btnLine").addEventListener("click", async ()=>{
+    if(!quoteText){
+      showToast("本文なし", "先に概算を作ってから来てください");
+      return;
+    }
+    await copyToClipboard(quoteText);
+    window.open(lineUrl, "_blank", "noopener,noreferrer");
+    showToast("LINEへ", "本文はコピー済みです。貼り付けて送ってください。");
+  });
+
+  document.getElementById("btnMail").addEventListener("click", async ()=>{
+    if(!quoteText){
+      showToast("本文なし", "先に概算を作ってから来てください");
+      return;
+    }
+    await copyToClipboard(quoteText);
+    window.open(buildMailto("takeshimonoseki@gmail.com", quoteText), "_blank");
+    showToast("メールへ", "本文はコピー済みです。貼り付けて送ってください。");
+  });
+
+  // CRM送信（任意）
+  async function postToCrm(url, payload){
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  }
+
+  document.getElementById("form").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const datetime = document.getElementById("datetime").value;
+    const detail = document.getElementById("detail").value.trim();
+
+    const payloadText = [
+      "【本契約（予約）｜軽貨物TAKE】",
+      `名前：${name}`,
+      `電話：${phone}`,
+      `住所：${address}`,
+      `希望日時：${datetime ? datetime.replace("T"," ") : "(未入力)"}`,
+      `補足：${detail || "(なし)"}`,
+      "—",
+      (quoteText || "(概算本文なし)")
+    ].join("\n");
+
+    // 表示
+    document.getElementById("resultBox").style.display = "block";
+    document.getElementById("payloadPreview").value = payloadText;
+
+    // CRM送信（設定されている場合のみ）
+    const crmUrl = (draft && draft.crmEndpointUrl && draft.crmEndpointUrl !== "PASTE_YOUR_GAS_WEBAPP_URL_HERE")
+      ? draft.crmEndpointUrl
+      : "";
+
+    if(!crmUrl){
+      showToast("送信準備OK", "CRM未設定のため、LINE/メールで送れます");
+      return;
+    }
+
+    try{
+      const ok = await postToCrm(crmUrl, {
+        source: "booking.html",
+        createdAt: new Date().toISOString(),
+        type: draft?.type || "",
+        quoteText,
+        customer: { name, phone, address, datetime, detail },
+        estimate: draft?.estimate || {}
+      });
+
+      showToast(ok ? "送信しました" : "送信に失敗", ok ? "受付しました" : "CRM URLや権限を確認してください");
+    }catch(err){
+      showToast("送信エラー", "CRM URLやCORS設定を確認してください");
+    }
+  });
+
+  (function(){
+    var helpTitles = { booking: "本契約・予約" };
+    var helpBodies = { booking: "直前の概算を表示します。内容がOKなら下のフォームを埋めて送信してください。※概算データが見つかりません。先に index.html で「概算を出す」を押してください。と表示される場合は、TOPページで見積を出してからこちらへお進みください。" };
+    document.querySelectorAll(".helpBtn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = this.getAttribute("data-help");
+        var title = helpTitles[id] || "説明";
+        var body = helpBodies[id] || "";
+        document.getElementById("helpTitle").textContent = title;
+        document.getElementById("helpContent").innerHTML = "<p>" + (body.replace(/</g,"&lt;").replace(/>/g,"&gt;")) + "</p>";
+        var overlay = document.getElementById("helpOverlay");
+        overlay.setAttribute("aria-hidden", "false");
+        overlay.style.display = "flex";
+      });
+    });
+    document.getElementById("helpClose").addEventListener("click", function(){
+      document.getElementById("helpOverlay").setAttribute("aria-hidden", "true");
+      document.getElementById("helpOverlay").style.display = "none";
+    });
+    document.getElementById("helpOverlay").addEventListener("click", function(e){
+      if (e.target === this) { this.setAttribute("aria-hidden", "true"); this.style.display = "none"; }
+    });
+  })();
+</script>
+<script src="assets/sakura.js"></script>
+</body>
+</html>

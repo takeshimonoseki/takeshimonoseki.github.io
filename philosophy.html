@@ -1,0 +1,248 @@
+<!--
+保存名：philosophy.html
+置き場所：index.html / booking.html と同じフォルダ
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>軽貨物TAKE｜想い - 地域とつながる</title>
+  <meta name="description" content="軽貨物TAKEの想い。" />
+  <style>
+    :root{
+      --bg: #fffbfa;
+      --bg2: #fff0f3;
+      --panel: #ffffff;
+      --text: #2d2a26;
+      --muted: #6b6560;
+      --line: rgba(0,0,0,.08);
+      --accent: #d48494;
+      --accent2: #6b9b5a;
+      --radius: 20px;
+      --shadow-soft: 0 4px 24px rgba(0,0,0,.06);
+    }
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 25%, #ffffff 70%);
+      color:var(--text);
+      min-height:100vh;
+      font-size: 17px;
+      line-height: 1.75;
+      position: relative;
+    }
+    body::before{
+      content: "";
+      position: fixed;
+      top: -80px; right: -80px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,200,210,.4) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    a{color:inherit}
+    .wrap{max-width:900px;margin:0 auto;padding:24px 20px 48px;position:relative;z-index:1}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:16px 0 20px;
+      position:sticky;top:0;z-index:10;
+      background: rgba(255,251,250,.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.04em;}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background: linear-gradient(135deg, var(--accent), #e8a0b0);
+      box-shadow: var(--shadow-soft);
+    }
+    nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    nav a{
+      text-decoration:none;
+      padding:12px 18px;
+      min-height:48px;
+      min-width:48px;
+      box-sizing:border-box;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      color:var(--muted);
+      border:1px solid transparent;
+      font-weight:700;
+      font-size: 15px;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+    }
+    nav a:hover,nav a:focus{border-color:var(--line);background: rgba(212,132,148,.12); color:var(--text)}
+    nav a.nav-active{background: rgba(212,132,148,.18); border-color: rgba(212,132,148,.4); color: #b85c6c;}
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow:hidden;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .card.reveal{opacity:0;transform:translateY(16px);transition: opacity .5s ease, transform .5s ease}
+    .card.reveal.in-view{opacity:1;transform:translateY(0)}
+    @media (hover: hover) and (pointer: fine){
+      .card.reveal.in-view:hover{transform:translateY(-2px);box-shadow: 0 8px 32px rgba(0,0,0,.08);}
+    }
+    .inner{padding:28px 24px}
+    h1{margin:0;font-size: 1.75rem; letter-spacing:-0.02em; line-height: 1.35;}
+    p{color:var(--muted); font-size: 17px; line-height: 1.85; margin:14px 0 0;}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:14px 20px;
+      min-height:48px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      font-weight:700;
+      font-size: 16px;
+      cursor:pointer;
+      text-decoration:none;
+      transition: transform .15s ease, box-shadow .15s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:scale(0.98)}
+    .btnPrimary{
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--accent), #e8a0b0);
+      color:#fff;
+      box-shadow: var(--shadow-soft);
+    }
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+    .hint{font-size: 15px; color:var(--muted); line-height: 1.65;}
+    select{
+      color-scheme: light;
+    }
+    select option{
+      background-color: #fff;
+      color: var(--text);
+    }
+    select option:hover,
+    select option:focus{
+      background-color: rgba(212,132,148,.12);
+      color: var(--text);
+    }
+    select option:checked{
+      background-color: rgba(212,132,148,.2);
+      color: var(--text);
+    }
+    .siteFooter{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);font-size: 15px;color:var(--muted);text-align:center;}
+    .sectionHead{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .helpBtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:40px;height:40px;min-width:40px;min-height:40px;
+      border-radius:50%; border:1px solid var(--line); background:#fff;
+      color:var(--muted); font-size: 1.1rem; font-weight:700; cursor:pointer;
+      transition: border-color .2s, background .2s, color .2s;
+    }
+    .helpBtn:hover,.helpBtn:focus{ border-color: var(--accent); background: rgba(212,132,148,.12); color: var(--accent); }
+    .helpOverlay{
+      position:fixed;inset:0;z-index:10001;
+      display:none;align-items:center;justify-content:center; padding:20px;
+      background: rgba(0,0,0,.4); backdrop-filter: blur(4px);
+    }
+    .helpOverlay[aria-hidden="false"]{ display:flex; }
+    .helpModal{
+      max-width:420px;width:100%; max-height:85vh;overflow:auto;
+      background: var(--panel); border:1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow-soft); padding:24px;
+    }
+    .helpModal h3{ margin:0 0 12px; font-size: 1.15rem; }
+    .helpModal p{ margin:0; font-size: 16px; line-height: 1.75; color: var(--text); }
+    .helpModal .closeBtn{ margin-top:16px; min-height:48px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div style="font-size:16px;opacity:.95">軽貨物TAKE</div>
+          <div style="font-size:14px;color:var(--muted);font-weight:700">下関｜代表：松永 たけし</div>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">TOP</a>
+        <a href="booking.html">予約</a>
+        <a href="philosophy.html" class="nav-active" aria-current="page">理念</a>
+      </nav>
+    </header>
+
+    <div class="card reveal">
+      <div class="inner">
+        <div class="sectionHead">
+          <h1>想い - 地域とつながる</h1>
+          <button type="button" class="helpBtn" aria-label="このページの説明" data-help="philosophy">？</button>
+        </div>
+        <p>
+          個人事業主として、企業のような堅苦しさではなく、隣人のような温かさを大切にしています。
+        </p>
+        <p>
+          特にお年寄りの方々が、住み慣れたこの地域で不便なく暮らせるよう、私ができることは何でもお手伝いしたい。
+        </p>
+        <p class="hint" style="margin-top:14px">
+          拠点：山口県下関市｜代表：松永 たけし
+        </p>
+      </div>
+    </div>
+    <div class="helpOverlay" id="helpOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <div class="helpModal" role="document">
+        <h3 id="helpTitle">説明</h3>
+        <div id="helpContent"></div>
+        <button type="button" class="btn btnPrimary closeBtn" id="helpClose">閉じる</button>
+      </div>
+    </div>
+    <footer class="siteFooter">軽貨物TAKE｜下関｜代表：松永 たけし</footer>
+  </div>
+  <script>
+    (function(){
+      var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if(prefersReduced) return;
+      var card = document.querySelector(".card.reveal");
+      if(!card) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add("in-view"); });
+      }, { rootMargin: "0px 0px -40px 0px", threshold: 0.1 });
+      io.observe(card);
+    })();
+    (function(){
+      var helpTitles = { philosophy: "想い - 地域とつながる" };
+      var helpBodies = { philosophy: "個人事業主として、企業のような堅苦しさではなく、隣人のような温かさを大切にしています。特にお年寄りの方々が、住み慣れたこの地域で不便なく暮らせるよう、私ができることは何でもお手伝いしたい。拠点：山口県下関市｜代表：松永 たけし" };
+      document.querySelectorAll(".helpBtn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var id = this.getAttribute("data-help");
+          var title = helpTitles[id] || "説明";
+          var body = helpBodies[id] || "";
+          document.getElementById("helpTitle").textContent = title;
+          document.getElementById("helpContent").innerHTML = "<p>" + (body.replace(/</g,"&lt;").replace(/>/g,"&gt;")) + "</p>";
+          var overlay = document.getElementById("helpOverlay");
+          overlay.setAttribute("aria-hidden", "false");
+          overlay.style.display = "flex";
+        });
+      });
+      document.getElementById("helpClose").addEventListener("click", function(){
+        document.getElementById("helpOverlay").setAttribute("aria-hidden", "true");
+        document.getElementById("helpOverlay").style.display = "none";
+      });
+      document.getElementById("helpOverlay").addEventListener("click", function(e){
+        if (e.target === this) { this.setAttribute("aria-hidden", "true"); this.style.display = "none"; }
+      });
+    })();
+  </script>
+  <script src="assets/sakura.js"></script>
+</body>
+</html>

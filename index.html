@@ -1,681 +1,542 @@
-<!doctype html>
-<html lang="ja" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>配送サービス｜軽貨物TAKE（山口県）</title>
-    <meta
-      name="description"
-      content="山口県エリアの安心・丁寧な配送サービス。お引越しからスポット配送まで、LINEで簡単にご依頼いただけます。"
-    />
-    <link rel="canonical" href="https://takeshimonoseki.github.io/" />
-    <meta property="og:title" content="配送サービス｜軽貨物TAKE（山口県）" />
-    <meta
-      property="og:description"
-      content="山口県エリアの安心・丁寧な配送サービス。LINEで簡単にご依頼。"
-    />
-    <meta property="og:url" content="https://takeshimonoseki.github.io/" />
-    <meta property="og:type" content="website" />
+<!DOCTYPE html>
 
-    <!-- Fonts: Nunito (rounded, friendly) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
+<html class="scroll-smooth" lang="ja">
 
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              warm: "#FAFAF9",
-              cream: "#FDFBF7",
-              blush: {
-                100: "#FFE4E6",
-                200: "#FECDD3",
-                300: "#FDA4AF",
-                400: "#FB7185",
-                500: "#F43F5E",
-              },
-              skin: "#44403C",
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <title>配送サービス｜軽貨物TAKE（山口県）</title>
+  <meta content="山口県エリアの安心・丁寧な配送サービス。お引越しからスポット配送まで、LINEで簡単にご依頼いただけます。" name="description" />
+  <link href="https://takeshimonoseki.github.io/" rel="canonical" />
+  <meta content="配送サービス｜軽貨物TAKE（山口県）" property="og:title" />
+  <meta content="山口県エリアの安心・丁寧な配送サービス。LINEで簡単にご依頼。" property="og:description" />
+  <meta content="https://takeshimonoseki.github.io/" property="og:url" />
+  <meta content="website" property="og:type" />
+  <!-- Fonts: Nunito (rounded, friendly) -->
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            warm: "#FAFAF9",
+            cream: "#FDFBF7",
+            blush: {
+              100: "#FFE4E6",
+              200: "#FECDD3",
+              300: "#FDA4AF",
+              400: "#FB7185",
+              500: "#F43F5E",
             },
-            fontFamily: {
-              sans: [
-                "Nunito",
-                "Rounded Mplus 1c",
-                "Hiragino Maru Gothic Pro",
-                "sans-serif",
-              ],
-            },
-            borderRadius: {
-              "2xl": "20px",
-              "3xl": "24px",
-              "4xl": "32px",
-            },
+            skin: "#44403C",
+          },
+          fontFamily: {
+            sans: [
+              "Nunito",
+              "Rounded Mplus 1c",
+              "Hiragino Maru Gothic Pro",
+              "sans-serif",
+            ],
+          },
+          borderRadius: {
+            "2xl": "20px",
+            "3xl": "24px",
+            "4xl": "32px",
           },
         },
-      };
-    </script>
+      },
+    };
+  </script>
+  <link href="./customer.css" rel="stylesheet" />
+  <script src="./config.js"></script>
+  <script>
+    document.documentElement.classList.add("js");
+  </script>
+  <!-- Icons（CDN失敗時も表示継続のため defer は使わず body 末尾で createIcons） -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
 
-    <link rel="stylesheet" href="./customer.css" />
-    <script src="./config.js"></script>
-    <script>
-      document.documentElement.classList.add("js");
-    </script>
-    <!-- Icons（CDN失敗時も表示継続のため defer は使わず body 末尾で createIcons） -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-  </head>
-  <body class="bg-warm text-skin min-h-screen">
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- HEADER — Fixed, Warm Glassmorphism -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <header class="site-header" id="top">
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
-      >
-        <!-- Left: Brand -->
-        <div class="flex items-center gap-4">
-          <div class="hidden sm:flex region-badge" aria-label="対応地域">
-            <div class="region-en" id="regionEn">YAMAGUCHI</div>
-            <div class="region-ja" id="regionJa">山口県</div>
-          </div>
-
-          <a href="#top" data-scroll-top class="brand group">
-            <div
-              class="brand-mark group-hover:scale-110 transition-transform duration-300"
-              aria-hidden="true"
-            >
-              <span class="brand-mark-inner"></span>
-            </div>
-            <div>
-              <div
-                class="text-sm font-black tracking-wide leading-none"
-                id="companyName"
-              >
-                軽貨物TAKE
-              </div>
-              <div class="text-[10px] text-stone-400 font-bold mt-0.5">
-                DELIVERY SERVICE
-              </div>
-            </div>
-          </a>
+<body class="bg-warm text-skin min-h-screen">
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- HEADER — Fixed, Warm Glassmorphism -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <header class="site-header" id="top">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Left: Brand -->
+      <div class="flex items-center gap-4">
+        <div aria-label="対応地域" class="hidden sm:flex region-badge">
+          <div class="region-en" id="regionEn">YAMAGUCHI</div>
+          <div class="region-ja" id="regionJa">山口県</div>
         </div>
-
-        <!-- Right: Contact + Nav（共通ボタン・縦中央揃え） -->
-        <div class="header-right flex items-center gap-3 sm:gap-4">
-          <div
-            class="hidden lg:flex items-center gap-3 text-xs text-stone-400"
-            aria-label="連絡先"
-          >
-            <a
-              href="#"
-              id="headerLineLink"
-              class="btn-link-text hover:text-blush-500 transition-colors"
-              >LINE相談</a
-            >
-            <span class="text-stone-300" aria-hidden="true">|</span>
-            <a
-              href="#"
-              id="headerMailLink"
-              class="btn-link-text hover:text-blush-500 transition-colors"
-              >takeshimonoseki@gmail.com</a
-            >
+        <a class="brand group" data-scroll-top="" href="#top">
+          <div aria-hidden="true" class="brand-mark group-hover:scale-110 transition-transform duration-300">
+            <span class="brand-mark-inner"></span>
           </div>
-
-          <nav class="hidden md:flex items-center gap-1 nav" aria-label="メイン">
-            <a
-              href="#top"
-              class="nav-link active"
-              data-scroll-top
-              aria-current="page"
-              >トップ</a
-            >
-            <a href="#services" class="nav-link">サービス</a>
-            <a href="#pricing" class="nav-link">料金</a>
-            <a
-              href="#request-form"
-              class="nav-link"
-              style="
+          <div>
+            <div class="text-sm font-black tracking-wide leading-none" id="companyName">
+              軽貨物TAKE
+            </div>
+            <div class="text-[10px] text-stone-400 font-bold mt-0.5">
+              DELIVERY SERVICE
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- Right: Contact + Nav（共通ボタン・縦中央揃え） -->
+      <div class="header-right flex items-center gap-3 sm:gap-4">
+        <div aria-label="連絡先" class="hidden lg:flex items-center gap-3 text-xs text-stone-400">
+          <a class="btn-link-text hover:text-blush-500 transition-colors" href="#" id="headerLineLink">LINE相談</a>
+          <span aria-hidden="true" class="text-stone-300">|</span>
+          <a class="btn-link-text hover:text-blush-500 transition-colors" href="#"
+            id="headerMailLink">takeshimonoseki@gmail.com</a>
+        </div>
+        <nav aria-label="メイン" class="hidden md:flex items-center gap-1 nav">
+          <a aria-current="page" class="nav-link active" data-scroll-top="" href="#top">トップ</a>
+          <a class="nav-link" href="#services">サービス</a>
+          <a class="nav-link" href="#pricing">料金</a>
+          <a class="nav-link" href="#request-form" style="
                 background: linear-gradient(135deg, #fb7185, #fb923c);
                 color: white;
                 border: none;
-              "
-              >依頼する</a
-            >
-          </nav>
-
-          <a
-            href="#request-form"
-            class="btn btn-primary btn-sm md:hidden"
-            aria-label="依頼する"
-          >
-            <i data-lucide="package" class="w-5 h-5" aria-hidden="true"></i>
+              ">依頼する</a>
+        </nav>
+        <a aria-label="依頼する" class="btn btn-primary btn-sm md:hidden" href="#request-form">
+          <i aria-hidden="true" class="w-5 h-5" data-lucide="package"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- MAIN -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+    <!-- ─── HERO ─── -->
+    <section class="hero-wrap mb-10">
+      <div aria-hidden="true" class="hero-bg"></div>
+      <div class="hero-grid">
+        <!-- Left: Message -->
+        <div class="hero-left glass-card p-7 md:p-8 reveal-hidden">
+          <div class="flex items-center gap-2 text-xs font-extrabold">
+            <span class="pill">山口県エリア対応</span>
+            <span class="pill pill-soft">スポット配送・引越し</span>
+            <span class="pill pill-soft">当日相談OK</span>
+          </div>
+          <h1 class="hero-title mt-4">
+            <span class="block">「迷わない」配送依頼。</span>
+            <span class="block"><span class="text-blush-500">LINE</span>で完結。</span>
+          </h1>
+          <p class="hero-lead mt-4">
+            まずは距離と荷物量だけでもOK。<br />
+            料金目安→依頼→受付通知まで、スムーズにご案内します。
+          </p>
+          <ul class="hero-points mt-5">
+            <li>
+              <i class="w-5 h-5" data-lucide="check-circle"></i>
+              即レス重視（運営が窓口）
+            </li>
+            <li>
+              <i class="w-5 h-5" data-lucide="check-circle"></i>
+              見積りだけでもOK
+            </li>
+            <li>
+              <i class="w-5 h-5" data-lucide="check-circle"></i>
+              当日・夜間の相談も可
+            </li>
+          </ul>
+          <div class="hero-cta mt-6 flex flex-wrap gap-3">
+            <a class="btn btn-primary" href="#request-form">
+              <i class="w-4 h-4" data-lucide="package"></i> 配送を依頼
+            </a>
+            <a class="btn btn-line" href="#" id="heroLineBtn" rel="noopener noreferrer" target="_blank">
+              <i class="w-4 h-4" data-lucide="message-circle"></i> LINE相談
+            </a>
+          </div>
+        </div>
+        <!-- Right: 運賃計算機（md以上で右、mobileでHero下） -->
+        <aside class="hero-right glass-card p-6 md:p-7 reveal-hidden delay-100">
+          <h2 class="fare-calc-title">運賃計算機</h2>
+          <p class="fare-calc-lead">運賃の目安は「専用ページ」でそのまま計算できます（内容は変更しません）。</p>
+          <div class="mt-4">
+            <a class="btn btn-primary w-full" href="./farecalc.html">
+              <i class="w-4 h-4" data-lucide="calculator"></i>
+              運賃を計算する
+            </a>
+            <p class="smallNote mt-3">※「運ぶ・移動」の運賃計算機のみ表示します。ほかの計算機は非表示。</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+    <!-- ─── SERVICES BENTO GRID ─── -->
+    <section class="mb-12 section-anchor" id="services">
+      <div class="bento-grid">
+        <!-- Service: Spot Delivery -->
+        <div class="glass-card p-6 reveal-hidden">
+          <div class="bento-icon">
+            <i class="w-6 h-6" data-lucide="truck"></i>
+          </div>
+          <h2 class="bento-title mt-3">スポット配送</h2>
+          <p class="bento-text mt-2">
+            緊急配送、単発の荷物運び、当日対応など。まずは距離と荷物量を
+            教えてください。
+          </p>
+          <ul class="bento-list mt-4">
+            <li>単発OK / 早朝・夜間相談</li>
+            <li>個人・法人どちらも対応</li>
+          </ul>
+        </div>
+        <!-- Service: Move -->
+        <div class="glass-card p-6 reveal-hidden delay-100">
+          <div class="bento-icon">
+            <i class="w-6 h-6" data-lucide="home"></i>
+          </div>
+          <h2 class="bento-title mt-3">引越し・荷物運び</h2>
+          <p class="bento-text mt-2">
+            単身〜少量引越し。家具家電の運搬もご相談ください。
+          </p>
+          <ul class="bento-list mt-4">
+            <li>荷物量・階数・距離で見積</li>
+            <li>積み下ろし条件も相談可</li>
+          </ul>
+        </div>
+        <!-- Service: Corporate -->
+        <div class="glass-card p-6 reveal-hidden delay-200">
+          <div class="bento-icon">
+            <i class="w-6 h-6" data-lucide="building-2"></i>
+          </div>
+          <h2 class="bento-title mt-3">法人配送</h2>
+          <p class="bento-text mt-2">
+            定期・スポットどちらもOK。現場条件に合わせて柔軟に対応します。
+          </p>
+          <ul class="bento-list mt-4">
+            <li>定期便・チャーター相談</li>
+            <li>請求書対応も可</li>
+          </ul>
+        </div>
+        <!-- Service: Simple CTA -->
+        <div class="glass-card p-6 bento-cta reveal-hidden delay-300">
+          <h2 class="bento-title">まずは料金の目安を確認</h2>
+          <p class="bento-text mt-2">
+            「高いかも…」の不安を先に解消。目安を見てから依頼できます。
+          </p>
+          <a class="btn btn-primary mt-5" href="#pricing">
+            <i class="w-4 h-4" data-lucide="calculator"></i> 料金を見る
           </a>
         </div>
       </div>
-    </header>
-
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- MAIN -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-      <!-- ─── HERO ─── -->
-      <section class="hero-wrap mb-10">
-        <div class="hero-bg" aria-hidden="true"></div>
-
-        <div class="hero-grid">
-          <!-- Left: Message -->
-          <div class="hero-left glass-card p-7 md:p-8 reveal-hidden">
-            <div class="flex items-center gap-2 text-xs font-extrabold">
-              <span class="pill">山口県エリア対応</span>
-              <span class="pill pill-soft">スポット配送・引越し</span>
-              <span class="pill pill-soft">当日相談OK</span>
-            </div>
-
-            <h1 class="hero-title mt-4">
-              <span class="block">「迷わない」配送依頼。</span>
-              <span class="block"
-                ><span class="text-blush-500">LINE</span>で完結。</span
-              >
-            </h1>
-
-            <p class="hero-lead mt-4">
-              まずは距離と荷物量だけでもOK。<br />
-              料金目安→依頼→受付通知まで、スムーズにご案内します。
-            </p>
-
-            <ul class="hero-points mt-5">
-              <li>
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                即レス重視（運営が窓口）
-              </li>
-              <li>
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                見積りだけでもOK
-              </li>
-              <li>
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                当日・夜間の相談も可
-              </li>
-            </ul>
-
-            <div class="hero-cta mt-6 flex flex-wrap gap-3">
-              <a class="btn btn-primary" href="#request-form">
-                <i data-lucide="package" class="w-4 h-4"></i> 配送を依頼
-              </a>
-              <a
-                class="btn btn-line"
-                id="heroLineBtn"
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i data-lucide="message-circle" class="w-4 h-4"></i> LINE相談
-              </a>
-            </div>
+    </section>
+    <!-- ─── PRICING ─── -->
+    <section class="mb-12 section-anchor" id="pricing">
+      <div class="glass-card p-7 md:p-8 reveal-hidden">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <h2 class="section-title">料金</h2>
+          <div class="text-xs text-stone-500 font-bold">
+            ※ 正確な金額は条件で変動します（まずは目安）
           </div>
-
-          <!-- Right: 運賃計算機（md以上で右、mobileでHero下） -->
-          <aside class="hero-right glass-card p-6 md:p-7 reveal-hidden delay-100" id="fareCalculator">
-            <h2 class="fare-calc-title">運賃計算機</h2>
-            <p class="fare-calc-lead">距離・荷物量で目安を表示。推奨プランを送信に同梱できます。</p>
-            <div class="fare-calc-form mt-4">
-              <div class="fare-field">
-                <label class="field-label" for="fareDistance">距離（km）<span class="field-badge required">必須</span></label>
-                <input type="number" id="fareDistance" class="field-input" min="1" step="1" placeholder="例: 50" />
-              </div>
-              <div class="fare-field">
-                <label class="field-label" for="fareDriveHr">走行時間（h）<span class="field-badge optional">任意</span></label>
-                <input type="number" id="fareDriveHr" class="field-input" min="0" step="0.5" placeholder="0" value="0" />
-              </div>
-              <div class="fare-field">
-                <label class="field-label" for="fareLoadSize">荷物量</label>
-                <select id="fareLoadSize" class="field-input">
-                  <option value="small">小</option>
-                  <option value="medium">中</option>
-                  <option value="large">大</option>
-                </select>
-              </div>
-              <div class="fare-row">
-                <div class="fare-field">
-                  <label class="field-label" for="farePickupFloors">集荷階数</label>
-                  <input type="number" id="farePickupFloors" class="field-input" min="0" value="0" />
-                </div>
-                <div class="fare-field">
-                  <label class="field-label" for="fareDropoffFloors">納品階数</label>
-                  <input type="number" id="fareDropoffFloors" class="field-input" min="0" value="0" />
-                </div>
-              </div>
-              <div class="fare-field">
-                <label class="field-label" for="fareWaitMin">待機（分）</label>
-                <input type="number" id="fareWaitMin" class="field-input" min="0" value="0" />
-              </div>
-              <label class="fare-check">
-                <input type="checkbox" id="fareNight" /> 夜間
-              </label>
-            </div>
-            <div class="fare-result mt-4 p-4 rounded-xl bg-white/70 border border-stone-200">
-              <div class="fare-result-row">
-                <span>プランA</span>
-                <strong id="fareOutA">—</strong>
-              </div>
-              <div class="fare-result-row">
-                <span>プランB</span>
-                <strong id="fareOutB">—</strong>
-              </div>
-              <div class="fare-result-row">
-                <span>プランC</span>
-                <strong id="fareOutC">—</strong>
-              </div>
-              <div class="fare-result-rec mt-3 pt-3 border-t border-stone-200">
-                <span>推奨</span>
-                <span id="fareOutRecommended">—</span>
-                <strong id="fareOutRecommendedAmount">距離を入力</strong>
-              </div>
-            </div>
-            <details class="fare-breakdown mt-3" id="fareBreakdownWrap">
-              <summary class="fare-breakdown-summary">内訳</summary>
-              <div class="fare-breakdown-body text-xs text-stone-600 mt-2"></div>
-            </details>
-            <button type="button" class="btn btn-outline btn-sm mt-3" id="fareCopyText">見積テキストをコピー</button>
-          </aside>
         </div>
-      </section>
-
-      <!-- ─── SERVICES BENTO GRID ─── -->
-      <section class="mb-12 section-anchor" id="services">
-        <div class="bento-grid">
-          <!-- Service: Spot Delivery -->
-          <div class="glass-card p-6 reveal-hidden">
-            <div class="bento-icon">
-              <i data-lucide="truck" class="w-6 h-6"></i>
-            </div>
-            <h2 class="bento-title mt-3">スポット配送</h2>
-            <p class="bento-text mt-2">
-              緊急配送、単発の荷物運び、当日対応など。まずは距離と荷物量を
-              教えてください。
-            </p>
-            <ul class="bento-list mt-4">
-              <li>単発OK / 早朝・夜間相談</li>
-              <li>個人・法人どちらも対応</li>
-            </ul>
+        <div class="pricing-grid mt-6">
+          <div class="price-card">
+            <div class="price-kicker">スポット配送</div>
+            <div class="price-main">¥3,000〜</div>
+            <div class="price-sub">距離・荷物量で変動</div>
           </div>
-
-          <!-- Service: Move -->
-          <div class="glass-card p-6 reveal-hidden delay-100">
-            <div class="bento-icon">
-              <i data-lucide="home" class="w-6 h-6"></i>
-            </div>
-            <h2 class="bento-title mt-3">引越し・荷物運び</h2>
-            <p class="bento-text mt-2">
-              単身〜少量引越し。家具家電の運搬もご相談ください。
-            </p>
-            <ul class="bento-list mt-4">
-              <li>荷物量・階数・距離で見積</li>
-              <li>積み下ろし条件も相談可</li>
-            </ul>
+          <div class="price-card">
+            <div class="price-kicker">引越し</div>
+            <div class="price-main">¥8,000〜</div>
+            <div class="price-sub">荷物量・階数で変動</div>
           </div>
-
-          <!-- Service: Corporate -->
-          <div class="glass-card p-6 reveal-hidden delay-200">
-            <div class="bento-icon">
-              <i data-lucide="building-2" class="w-6 h-6"></i>
-            </div>
-            <h2 class="bento-title mt-3">法人配送</h2>
-            <p class="bento-text mt-2">
-              定期・スポットどちらもOK。現場条件に合わせて柔軟に対応します。
-            </p>
-            <ul class="bento-list mt-4">
-              <li>定期便・チャーター相談</li>
-              <li>請求書対応も可</li>
-            </ul>
+          <div class="price-card">
+            <div class="price-kicker">法人</div>
+            <div class="price-main">要相談</div>
+            <div class="price-sub">定期・チャーター</div>
           </div>
-
-          <!-- Service: Simple CTA -->
-          <div class="glass-card p-6 bento-cta reveal-hidden delay-300">
-            <h2 class="bento-title">まずは料金の目安を確認</h2>
-            <p class="bento-text mt-2">
-              「高いかも…」の不安を先に解消。目安を見てから依頼できます。
-            </p>
-            <a class="btn btn-primary mt-5" href="#pricing">
-              <i data-lucide="calculator" class="w-4 h-4"></i> 料金を見る
+        </div>
+        <div class="mt-6 rounded-3xl bg-white/60 border border-stone-200 p-5">
+          <div class="text-sm font-black text-stone-700">
+            料金の目安を出すには？
+          </div>
+          <div class="mt-2 text-sm text-stone-600 leading-relaxed">
+            「発地/着地」「荷物の量」「希望日時」だけでもOK。まずはフォームで送ってください。
+          </div>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a class="btn btn-primary" href="#request-form">
+              <i class="w-4 h-4" data-lucide="package"></i> 依頼フォームへ
+            </a>
+            <a class="btn btn-line" href="#" id="contactLineBtn" rel="noopener noreferrer" target="_blank">
+              <i class="w-4 h-4" data-lucide="message-circle"></i> LINE相談
             </a>
           </div>
-        </div>
-      </section>
-
-      <!-- ─── PRICING ─── -->
-      <section class="mb-12 section-anchor" id="pricing">
-        <div class="glass-card p-7 md:p-8 reveal-hidden">
-          <div class="flex items-center justify-between flex-wrap gap-3">
-            <h2 class="section-title">料金</h2>
-            <div class="text-xs text-stone-500 font-bold">
-              ※ 正確な金額は条件で変動します（まずは目安）
-            </div>
-          </div>
-
-          <div class="pricing-grid mt-6">
-            <div class="price-card">
-              <div class="price-kicker">スポット配送</div>
-              <div class="price-main">¥3,000〜</div>
-              <div class="price-sub">距離・荷物量で変動</div>
-            </div>
-            <div class="price-card">
-              <div class="price-kicker">引越し</div>
-              <div class="price-main">¥8,000〜</div>
-              <div class="price-sub">荷物量・階数で変動</div>
-            </div>
-            <div class="price-card">
-              <div class="price-kicker">法人</div>
-              <div class="price-main">要相談</div>
-              <div class="price-sub">定期・チャーター</div>
-            </div>
-          </div>
-
-          <div class="mt-6 rounded-3xl bg-white/60 border border-stone-200 p-5">
-            <div class="text-sm font-black text-stone-700">
-              料金の目安を出すには？
-            </div>
-            <div class="mt-2 text-sm text-stone-600 leading-relaxed">
-              「発地/着地」「荷物の量」「希望日時」だけでもOK。まずはフォームで送ってください。
-            </div>
-            <div class="mt-4 flex flex-wrap gap-3">
-              <a class="btn btn-primary" href="#request-form">
-                <i data-lucide="package" class="w-4 h-4"></i> 依頼フォームへ
-              </a>
-              <a
-                class="btn btn-line"
-                id="contactLineBtn"
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i data-lucide="message-circle" class="w-4 h-4"></i> LINE相談
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ─── REQUEST FORM ─── -->
-      <section class="mb-12 section-anchor" id="request-form">
-        <div class="glass-card p-7 md:p-8 reveal-hidden">
-          <div class="flex items-start justify-between gap-6 flex-wrap">
-            <div>
-              <h2 class="section-title">配送を依頼</h2>
-              <p class="text-sm text-stone-600 mt-2">
-                まずは必要な項目だけでOK。送信後、受付通知→LINEで条件調整できます。
-              </p>
-            </div>
-            <div class="text-xs text-stone-500 font-bold">
-              ※ LINE/メールのみ受付
-            </div>
-          </div>
-          <input type="hidden" id="fareEstimatePayload" name="fareEstimatePayload" value="" />
-          <!-- NOTE: 依頼送信のGAS連携は Step3で実装。見積は fareEstimatePayload に同梱可能 -->
-          <div class="mt-6 rounded-3xl bg-white/60 border border-stone-200 p-5">
-            <div class="text-sm font-black text-stone-700">準備中</div>
-            <div class="mt-2 text-sm text-stone-600">
-              依頼フォーム送信 → スプレッドシート保存 → LINE通知 は次のステップで仕上げます。未設定の場合はLINE相談へ誘導します。
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ─── FAQ ─── -->
-      <section class="mb-12 section-anchor" id="faq">
-        <div class="glass-card p-7 md:p-8 reveal-hidden">
-          <h2 class="section-title">FAQ</h2>
-          <div class="faq-list mt-6">
-            <details class="faq-item">
-              <summary>見積だけでも大丈夫？</summary>
-              <div class="faq-body">
-                もちろんOKです。距離と荷物量だけでも目安をお伝えできます。
-              </div>
-            </details>
-            <details class="faq-item">
-              <summary>当日でも依頼できますか？</summary>
-              <div class="faq-body">
-                状況によりますが、まずはLINEでご相談ください。
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <!-- ─── NEWS ─── -->
-      <section class="mb-12 section-anchor" id="news">
-        <div class="glass-card p-7 md:p-8 reveal-hidden">
-          <h2 class="section-title">お知らせ</h2>
-          <div class="mt-6" id="newsList"></div>
-          <div class="mt-4 text-sm text-stone-500" id="newsNone" style="display:none;">
-            現在お知らせはありません。
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- FOOTER -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <footer class="site-footer">
-      <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="footer-top">
-          <div class="footer-brand">
-            <div class="footer-title" id="footerCompany">
-              軽貨物TAKE｜配送サービス（山口県）
-            </div>
-            <div class="footer-sub">
-              運営が窓口で安心。配送のご依頼・見積相談はLINEが最短です。
-            </div>
-          </div>
-
-          <div class="footer-cta">
-            <a
-              class="btn btn-line btn-footer"
-              id="footerLineBtn"
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i data-lucide="message-circle" class="w-4 h-4"></i> LINE相談
-            </a>
-            <a class="btn btn-primary btn-footer" href="#request-form">
-              <i data-lucide="package" class="w-4 h-4"></i> 依頼する
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-links mt-8">
-          <a href="./terms.html">利用規約</a>
-          <a href="./privacy.html">プライバシー</a>
-          <a href="./sitemap.xml">サイトマップ</a>
-        </div>
-
-        <div class="footer-bottom mt-4">
-          <div class="text-xs text-stone-400">© 2026 軽貨物TAKE</div>
-          <a class="text-xs text-stone-400 hover:text-blush-500" href="./register.html">ドライバー登録はこちら</a>
         </div>
       </div>
-    </footer>
+    </section>
+    <!-- ─── REQUEST FORM ─── -->
+    <section class="mb-12 section-anchor" id="request-form">
+      <div class="glass-card p-7 md:p-8 reveal-hidden">
+        <div class="flex items-start justify-between gap-6 flex-wrap">
+          <div>
+            <h2 class="section-title">配送を依頼</h2>
+            <p class="text-sm text-stone-600 mt-2">
+              まずは必要な項目だけでOK。送信後、受付通知→LINEで条件調整できます。
+            </p>
+          </div>
+          <div class="text-xs text-stone-500 font-bold">
+            ※ LINE/メールのみ受付
+          </div>
+        </div>
+        <input id="fareEstimatePayload" name="fareEstimatePayload" type="hidden" value="" />
+        <!-- NOTE: 依頼送信のGAS連携は Step3で実装。見積は fareEstimatePayload に同梱可能 -->
+        <div class="mt-6 rounded-3xl bg-white/60 border border-stone-200 p-5">
+          <div class="text-sm font-black text-stone-700">準備中</div>
+          <div class="mt-2 text-sm text-stone-600">
+            依頼フォーム送信 → スプレッドシート保存 → LINE通知 は次のステップで仕上げます。未設定の場合はLINE相談へ誘導します。
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ─── FAQ ─── -->
+    <section class="mb-12 section-anchor" id="faq">
+      <div class="glass-card p-7 md:p-8 reveal-hidden">
+        <h2 class="section-title">FAQ</h2>
+        <div class="faq-list mt-6">
+          <details class="faq-item">
+            <summary>見積だけでも大丈夫？</summary>
+            <div class="faq-body">
+              もちろんOKです。距離と荷物量だけでも目安をお伝えできます。
+            </div>
+          </details>
+          <details class="faq-item">
+            <summary>当日でも依頼できますか？</summary>
+            <div class="faq-body">
+              状況によりますが、まずはLINEでご相談ください。
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+    <!-- ─── NEWS ─── -->
+    <section class="mb-12 section-anchor" id="news">
+      <div class="glass-card p-7 md:p-8 reveal-hidden">
+        <h2 class="section-title">お知らせ</h2>
+        <div class="mt-6" id="newsList"></div>
+        <div class="mt-4 text-sm text-stone-500" id="newsNone" style="display:none;">
+          現在お知らせはありません。
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FOOTER -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-title" id="footerCompany">
+            軽貨物TAKE｜配送サービス（山口県）
+          </div>
+          <div class="footer-sub">
+            運営が窓口で安心。配送のご依頼・見積相談はLINEが最短です。
+          </div>
+        </div>
+        <div class="footer-cta">
+          <a class="btn btn-line btn-footer" href="#" id="footerLineBtn" rel="noopener noreferrer" target="_blank">
+            <i class="w-4 h-4" data-lucide="message-circle"></i> LINE相談
+          </a>
+          <a class="btn btn-primary btn-footer" href="#request-form">
+            <i class="w-4 h-4" data-lucide="package"></i> 依頼する
+          </a>
+        </div>
+      </div>
+      <div class="footer-links mt-8">
+        <a href="./terms.html">利用規約</a>
+        <a href="./privacy.html">プライバシー</a>
+        <a href="./sitemap.xml">サイトマップ</a>
+      </div>
+      <div class="footer-bottom mt-4">
+        <div class="text-xs text-stone-400">© 2026 軽貨物TAKE</div>
+        <a class="text-xs text-stone-400 hover:text-blush-500" href="./register.html">ドライバー登録はこちら</a>
+      </div>
+    </div>
+  </footer>
 
-    <script src="./app.js"></script>
-    <script>
-      
-      (function () {
-        // ✅ Safety: まず本文を表示（reveal-hidden が消えない事故の保険）
+  <script>
+
+    (function () {
+      // ✅ Safety: まず本文を表示（reveal-hidden が消えない事故の保険）
+      try {
+        document.querySelectorAll(".reveal-hidden").forEach(function (el) {
+          el.classList.add("reveal-visible");
+        });
+      } catch (e) { }
+
+      // Initialize Lucide Icons（CDNが落ちても止めない）
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === "function") {
+          window.lucide.createIcons();
+        }
+      } catch (e) { }
+
+      try {
+        // CONFIG からヘッダー・フッター情報を反映
+        (function applyConfig() {
+          if (!window.CONFIG) return;
+          var regionJa = document.getElementById("regionJa");
+          var regionEn = document.getElementById("regionEn");
+          var regionKicker = document.getElementById("regionKicker");
+          var companyName = document.getElementById("companyName");
+          var footerCompany = document.getElementById("footerCompany");
+
+          if (regionJa)
+            regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
+          if (regionEn)
+            regionEn.textContent = (
+              window.CONFIG.REGION_CODE || "YAMAGUCHI"
+            ).toUpperCase();
+          if (regionKicker)
+            regionKicker.textContent =
+              (window.CONFIG.REGION_LABEL || "山口県") + "エリア対応";
+          if (companyName)
+            companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+          if (footerCompany) {
+            footerCompany.textContent =
+              (window.CONFIG.COMPANY_NAME || "軽貨物TAKE") +
+              "｜配送サービス（" +
+              (window.CONFIG.REGION_LABEL || "山口県") +
+              "）";
+          }
+
+          var mailLink = document.getElementById("headerMailLink");
+          var email = window.CONFIG.EMAIL_TO || "";
+
+          var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
+          ["headerLineLink", "heroLineBtn", "contactLineBtn", "footerLineBtn"].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.href = lineUrl;
+          });
+
+          if (mailLink && email) {
+            mailLink.href = "mailto:" + email;
+            mailLink.textContent = email;
+          }
+
+          // Mail buttons
+          var contactMailBtn = document.getElementById("contactMailBtn");
+          if (contactMailBtn && email)
+            contactMailBtn.href =
+              "mailto:" +
+              email +
+              "?subject=" +
+              encodeURIComponent("【配送依頼】お問い合わせ");
+        })();
+
+        // Smooth scroll for nav
+        document.querySelectorAll('a[href^="#"]').forEach((a) => {
+          a.addEventListener("click", (e) => {
+            const href = a.getAttribute("href");
+            if (!href || href === "#") return;
+            const el = document.querySelector(href);
+            if (!el) return;
+            e.preventDefault();
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+
+        // Scroll top link
+        document.querySelectorAll("[data-scroll-top]").forEach((a) => {
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          });
+        });
+
+        // Spotlight Effect
+        document.addEventListener("mousemove", (e) => {
+          document.querySelectorAll(".glass-card").forEach((card) => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+            card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+          });
+        });
+
+        // Entrance Animation (Intersection Observer)
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("reveal-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.05,
+            rootMargin: "0px 0px -40px 0px",
+          },
+        );
+
+        document.querySelectorAll(".reveal-hidden").forEach((el) => {
+          observer.observe(el);
+        });
+
+        // Header shadow on scroll
+        window.addEventListener("scroll", function () {
+          var header = document.querySelector(".site-header");
+          if (header) {
+            if (window.scrollY > 10) header.classList.add("scrolled");
+            else header.classList.remove("scrolled");
+          }
+        });
+
+        // News feed
+        fetch("./news.json")
+          .then(function (r) {
+            return r.ok ? r.json() : null;
+          })
+          .catch(function () {
+            return null;
+          })
+          .then(function (data) {
+            var list = document.getElementById("newsList");
+            var none = document.getElementById("newsNone");
+            if (!list) return;
+            if (!data || !data.items || data.items.length === 0) {
+              if (none) none.style.display = "block";
+              return;
+            }
+            data.items.slice(0, 5).forEach(function (item) {
+              var div = document.createElement("div");
+              div.className = "flex items-center gap-3 py-2";
+              div.style.borderBottom = "1px solid rgba(68,64,60,0.06)";
+              div.innerHTML =
+                (item.date
+                  ? '<span class="font-mono text-xs text-stone-400 flex-shrink-0">' +
+                  item.date +
+                  "</span>"
+                  : "") +
+                '<span class="text-stone-600">' +
+                (item.text || "") +
+                "</span>";
+              list.appendChild(div);
+            });
+          });
+
+      } catch (e) {
+        // ここで落ちても「真っ白」だけは避ける
         try {
           document.querySelectorAll(".reveal-hidden").forEach(function (el) {
             el.classList.add("reveal-visible");
           });
-        } catch (e) {}
+        } catch (_) { }
+        try { console.warn(e); } catch (_) { }
+      }
+    })();
 
-        // Initialize Lucide Icons（CDNが落ちても止めない）
-        try {
-          if (window.lucide && typeof window.lucide.createIcons === "function") {
-            window.lucide.createIcons();
-          }
-        } catch (e) {}
+  </script>
+  <script src="./assets/sakura.js"></script>
+</body>
 
-        try {
-      // CONFIG からヘッダー・フッター情報を反映
-      (function applyConfig() {
-        if (!window.CONFIG) return;
-        var regionJa = document.getElementById("regionJa");
-        var regionEn = document.getElementById("regionEn");
-        var regionKicker = document.getElementById("regionKicker");
-        var companyName = document.getElementById("companyName");
-        var footerCompany = document.getElementById("footerCompany");
-
-        if (regionJa)
-          regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
-        if (regionEn)
-          regionEn.textContent = (
-            window.CONFIG.REGION_CODE || "YAMAGUCHI"
-          ).toUpperCase();
-        if (regionKicker)
-          regionKicker.textContent =
-            (window.CONFIG.REGION_LABEL || "山口県") + "エリア対応";
-        if (companyName)
-          companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
-        if (footerCompany) {
-          footerCompany.textContent =
-            (window.CONFIG.COMPANY_NAME || "軽貨物TAKE") +
-            "｜配送サービス（" +
-            (window.CONFIG.REGION_LABEL || "山口県") +
-            "）";
-        }
-
-        var mailLink = document.getElementById("headerMailLink");
-        var email = window.CONFIG.EMAIL_TO || "";
-
-        var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
-        ["headerLineLink", "heroLineBtn", "contactLineBtn", "footerLineBtn"].forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el) el.href = lineUrl;
-        });
-
-        if (mailLink && email) {
-          mailLink.href = "mailto:" + email;
-          mailLink.textContent = email;
-        }
-
-        // Mail buttons
-        var contactMailBtn = document.getElementById("contactMailBtn");
-        if (contactMailBtn && email)
-          contactMailBtn.href =
-            "mailto:" +
-            email +
-            "?subject=" +
-            encodeURIComponent("【配送依頼】お問い合わせ");
-      })();
-
-      // Smooth scroll for nav
-      document.querySelectorAll('a[href^="#"]').forEach((a) => {
-        a.addEventListener("click", (e) => {
-          const href = a.getAttribute("href");
-          if (!href || href === "#") return;
-          const el = document.querySelector(href);
-          if (!el) return;
-          e.preventDefault();
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      });
-
-      // Scroll top link
-      document.querySelectorAll("[data-scroll-top]").forEach((a) => {
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-      });
-
-      // Spotlight Effect
-      document.addEventListener("mousemove", (e) => {
-        document.querySelectorAll(".glass-card").forEach((card) => {
-          const rect = card.getBoundingClientRect();
-          card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-          card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-        });
-      });
-
-      // Entrance Animation (Intersection Observer)
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("reveal-visible");
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        {
-          threshold: 0.05,
-          rootMargin: "0px 0px -40px 0px",
-        },
-      );
-
-      document.querySelectorAll(".reveal-hidden").forEach((el) => {
-        observer.observe(el);
-      });
-
-      // Header shadow on scroll
-      window.addEventListener("scroll", function () {
-        var header = document.querySelector(".site-header");
-        if (header) {
-          if (window.scrollY > 10) header.classList.add("scrolled");
-          else header.classList.remove("scrolled");
-        }
-      });
-
-      // News feed
-      fetch("./news.json")
-        .then(function (r) {
-          return r.ok ? r.json() : null;
-        })
-        .catch(function () {
-          return null;
-        })
-        .then(function (data) {
-          var list = document.getElementById("newsList");
-          var none = document.getElementById("newsNone");
-          if (!list) return;
-          if (!data || !data.items || data.items.length === 0) {
-            if (none) none.style.display = "block";
-            return;
-          }
-          data.items.slice(0, 5).forEach(function (item) {
-            var div = document.createElement("div");
-            div.className = "flex items-center gap-3 py-2";
-            div.style.borderBottom = "1px solid rgba(68,64,60,0.06)";
-            div.innerHTML =
-              (item.date
-                ? '<span class="font-mono text-xs text-stone-400 flex-shrink-0">' +
-                  item.date +
-                  "</span>"
-                : "") +
-              '<span class="text-stone-600">' +
-              (item.text || "") +
-              "</span>";
-            list.appendChild(div);
-          });
-        });
-
-        } catch (e) {
-          // ここで落ちても「真っ白」だけは避ける
-          try {
-            document.querySelectorAll(".reveal-hidden").forEach(function (el) {
-              el.classList.add("reveal-visible");
-            });
-          } catch (_) {}
-          try { console.warn(e); } catch (_) {}
-        }
-      })();
-
-    </script>
-  </body>
 </html>

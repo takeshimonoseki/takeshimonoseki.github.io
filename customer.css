@@ -618,6 +618,68 @@ html.js .reveal-hidden {
   }
 }
 
+/* ─── Bento Card Elements ─── */
+.bento-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--blush-100);
+  color: var(--blush-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bento-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.bento-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.bento-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bento-list li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.bento-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blush-300);
+}
+
+.bento-list li + li {
+  margin-top: 4px;
+}
+
+.bento-cta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
 /* ─── Feature Card Icon ─── */
 .feature-icon {
   width: 44px;
@@ -888,7 +950,7 @@ textarea.field-input {
   text-decoration: underline;
 }
 
-/* ─── FAQ Accordion ─── */
+/* ─── FAQ Accordion (Legacy: farecalc.html 等で使用。index.html は .faq-item 系) ─── */
 details.faq {
   border-radius: var(--radius-lg);
   overflow: hidden;

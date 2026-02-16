@@ -1,0 +1,2376 @@
+<!--
+保存名：index.html
+置き場所：booking.html / philosophy.html と「同じフォルダ」に置く
+
+★差し替え必須（Ctrl+Fで検索）
+- LINE_URL
+- EMAIL_TO
+- INSTAGRAM_URL / TWITCASTING_URL
+- GMAPS_API_KEY（距離自動算出したい場合のみ）
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>運賃計算機｜軽貨物TAKE</title>
+  <meta name="description" content="軽貨物TAKE（下関）見積計算機。料金をその場で表示→LINE/メールへ流し込み→本契約（別ページ）。" />
+  <style>
+    :root{
+      --bg: #fffbfa;
+      --bg2: #fff0f3;
+      --panel: #ffffff;
+      --text: #2d2a26;
+      --muted: #6b6560;
+      --line: rgba(0,0,0,.08);
+      --accent: #d48494;
+      --accent2: #6b9b5a;
+      --warn: #b45309;
+      --danger: #c45c5c;
+      --shadow: 0 4px 24px rgba(0,0,0,.06);
+      --radius: 20px;
+      --radius2: 16px;
+      --flash: rgba(212,132,148,.4);
+      --flashBg: rgba(212,132,148,.08);
+      --navy1: #4a6fa5;
+      --navy2: #3d5a80;
+    }
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 25%, #ffffff 70%);
+      color:var(--text);
+      min-height:100vh;
+      font-size: 17px;
+      line-height: 1.75;
+      position: relative;
+    }
+    body::before{
+      content: "";
+      position: fixed;
+      top: -80px; right: -80px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,200,210,.4) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after{
+      content: "";
+      position: fixed;
+      bottom: -60px; left: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,220,230,.35) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 20px 48px;position:relative;z-index:1}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:16px 0 20px;
+      position:sticky;top:0;z-index:10;
+      background: rgba(255,251,250,.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.04em;}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background: linear-gradient(135deg, var(--accent), #e8a0b0);
+      box-shadow: var(--shadow);
+      display:flex;align-items:center;justify-content:center;
+    }
+    nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    nav a{
+      text-decoration:none;
+      padding:12px 18px;
+      min-height:48px;
+      min-width:48px;
+      box-sizing:border-box;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      color:var(--muted);
+      border:1px solid transparent;
+      font-weight:700;
+      font-size: 15px;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+    }
+    nav a:hover,nav a:focus{border-color:var(--line);background: rgba(212,132,148,.12); color:var(--text)}
+    nav a.nav-active{background: rgba(212,132,148,.18); border-color: rgba(212,132,148,.4); color: #b85c6c;}
+
+    /* アンカー位置補正（固定ヘッダー対策） */
+    #estimate,#services,#faq,#contact{ scroll-margin-top: 92px; }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){ .hero{grid-template-columns:1fr} }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .heroLeft{padding:26px;position:relative;}
+    .kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      background: rgba(212,132,148,.1);
+      border:1px solid rgba(212,132,148,.25);
+      color: #b85c6c;
+      font-weight:700;
+      font-size: 14px;
+    }
+    h1{
+      margin:14px 0 10px;
+      font-size: 1.85rem;
+      line-height: 1.2;
+      letter-spacing:-0.02em;
+    }
+    @media (max-width: 520px){ h1{font-size: 1.5rem} }
+    .lead{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .mini{font-size: 15px;color:var(--muted);line-height:1.65;margin:8px 0 0}
+
+    .heroRight{padding:0}
+    .calcHead{
+      padding:18px 18px 10px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(212,132,148,.06), transparent);
+    }
+    .calcTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .calcTitle h2{margin:0;font-size: 17px;}
+    .hint{font-size: 15px;color:var(--muted);line-height:1.55;}
+    .tabs{
+      display:flex;gap:8px;margin-top:12px;
+      background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px;
+      width:max-content;
+    }
+    .tabBtn{
+      border:0;background:transparent;
+      padding:10px 12px;border-radius:999px;
+      cursor:pointer;color:var(--muted);
+      font-weight:900;font-size:13px;
+    }
+    .tabBtn[aria-selected="true"]{
+      background: linear-gradient(135deg, var(--accent), #e8a0b0);
+      color:#fff;
+      box-shadow: var(--shadow);
+    }
+    .calcBody{padding:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media (max-width: 520px){ .grid{grid-template-columns:1fr} }
+    label{display:block;font-size: 15px;color:var(--muted);font-weight:700;margin:2px 0 6px}
+    input, select, textarea{
+      width:100%;
+      padding:14px 16px;
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      outline:none;background:#fff;color:var(--text);
+      font-size: 17px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    textarea{min-height:78px;resize:vertical}
+    input:focus, select:focus, textarea:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212,132,148,.2);
+    }
+    select{ color-scheme: light; cursor: pointer; }
+    select option{ background-color: #fff; color: var(--text); }
+    select option:hover, select option:focus{ background-color: rgba(212,132,148,.12); color: var(--text); }
+    select option:checked{ background-color: rgba(212,132,148,.2); color: var(--text); }
+    input[type="range"]{padding:0;height:42px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:14px 20px;
+      min-height:48px;
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      background:#fff;color:var(--text);
+      font-weight:700;
+      font-size: 16px;
+      cursor:pointer;text-decoration:none;
+      transition: transform .15s ease, box-shadow .15s ease;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btnPrimary{
+      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--accent), #e8a0b0);
+      color:#fff;
+      box-shadow: var(--shadow);
+    }
+    .btnGhost{
+      background: rgba(212,132,148,.08);
+      border-color: rgba(212,132,148,.3);
+      color: #b85c6c;
+    }
+    .btnWarn{
+      background:rgba(180,83,9,.07);
+      border-color: rgba(180,83,9,.18);
+      color: rgba(180,83,9,.95);
+    }
+    .btnLine{
+      border:0;
+      background: linear-gradient(135deg, #06c755, #1abf5b);
+      color:#fff;
+      box-shadow: 0 10px 20px rgba(6,199,85,.18);
+    }
+    /* メールボタン強調（ネイビー） */
+    .btnMail{
+      border:0;
+      background: linear-gradient(135deg, var(--navy1), var(--navy2));
+      color:#fff;
+      box-shadow: 0 10px 20px rgba(30,58,138,.18);
+    }
+
+    .section{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);}
+    .result{
+      margin-top:14px;
+      background: rgba(212,132,148,.06);
+      border:1px solid rgba(212,132,148,.2);
+      border-radius:var(--radius2);
+      padding:14px;
+      display:none;
+    }
+    .price{
+      font-size:34px;font-weight:1000;margin:6px 0 2px;
+      letter-spacing:-0.03em;color:var(--danger);
+    }
+    .planBadge{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:6px 10px;border-radius:999px;
+      background:#fff;border:1px solid var(--line);font-weight:1000;font-size:12px;
+    }
+    .break{
+      margin-top:10px;border-top:1px dashed var(--line);
+      padding-top:10px;display:grid;grid-template-columns:1fr;gap:6px;
+      font-size: 16px;color:var(--muted);
+    }
+    .breakRow{display:flex;justify-content:space-between;gap:10px}
+    .breakRow strong{color:var(--text)}
+
+    .toast{
+      position:fixed;right:16px;bottom:16px;z-index:9999;
+      background:#fff;border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:14px;padding:12px 14px;min-width:240px;
+      display:none;
+    }
+    .toast b{display:block;margin-bottom:2px}
+    footer{
+      margin:18px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
+    }
+    .stack{display:flex;flex-direction:column;gap:12px}
+
+    /* bounce（本契約ボタン用） */
+    @keyframes bounceIn {
+      0%   { transform: translateY(0) scale(1); }
+      20%  { transform: translateY(-6px) scale(1.02); }
+      40%  { transform: translateY(0) scale(1); }
+      60%  { transform: translateY(-4px) scale(1.01); }
+      80%  { transform: translateY(0) scale(1); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    .bounce { animation: bounceIn 1.0s ease-out 0s 2; }
+    .pulseGlow{
+      box-shadow: 0 0 0 0 rgba(212,132,148,.25), var(--shadow);
+      animation: glow 1.2s ease-out 0s 2;
+    }
+    @keyframes glow{
+      0%{ box-shadow: 0 0 0 0 rgba(212,132,148,.2), var(--shadow); }
+      50%{ box-shadow: 0 0 0 8px rgba(212,132,148,.1), var(--shadow); }
+      100%{ box-shadow: 0 0 0 0 rgba(212,132,148,.0), var(--shadow); }
+    }
+
+    /* 浮遊の戻るボタン */
+    .fabTop{
+      position:fixed;left:16px;bottom:16px;z-index:9998;
+      display:none;
+    }
+
+    details{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:12px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:900;
+      color:var(--text);
+      list-style:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    .smallNote{font-size:12px;color:var(--muted);line-height:1.6;margin:6px 0 0}
+
+    /* SNS “それっぽい”ボタン */
+    .btnInsta{
+      border:0;color:#fff;
+      background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4);
+      box-shadow: 0 10px 20px rgba(221,42,123,.18);
+    }
+    .btnTwitc{
+      border:0;color:#fff;
+      background: linear-gradient(135deg, #00a7e0, #0088cc);
+      box-shadow: 0 10px 20px rgba(0,167,224,.18);
+    }
+    .icon24{width:18px;height:18px;display:inline-block}
+
+    /* 右計算機：自動入力箇所ハイライト（フラッシュ） */
+    @keyframes flashGlow{
+      0%   { box-shadow: 0 0 0 0 rgba(212,132,148,0); border-color: var(--line); background:#fff; }
+      20%  { box-shadow: 0 0 0 6px rgba(212,132,148,.2); border-color: var(--flash); background: var(--flashBg); }
+      55%  { box-shadow: 0 0 0 2px rgba(212,132,148,.1); border-color: rgba(212,132,148,.4); background: rgba(212,132,148,.06); }
+      100% { box-shadow: 0 0 0 0 rgba(212,132,148,0); border-color: var(--line); background:#fff; }
+    }
+    .flash{
+      animation: flashGlow 1.25s ease-out 0s 1;
+    }
+
+    /* 日付ピッカー（カレンダー） */
+    .dtOverlay{
+      position:fixed; inset:0; z-index:10000;
+      display:none; align-items:center; justify-content:center;
+      padding:18px;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+    }
+    .dtPanel{
+      width:100%; max-width:420px;
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .dtHead{
+      padding:14px 14px 10px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(212,132,148,.06), transparent);
+      font-weight:1000;
+    }
+    /* ヘルプ「？」ボタン・モーダル */
+    .helpBtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:40px;height:40px;min-width:40px;min-height:40px;
+      border-radius:50%;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+      font-size: 1.1rem;
+      font-weight:700;
+      cursor:pointer;
+      transition: border-color .2s, background .2s, color .2s;
+    }
+    .helpBtn:hover,.helpBtn:focus{ border-color: var(--accent); background: rgba(212,132,148,.12); color: var(--accent); }
+    .sectionHead{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .helpOverlay{
+      position:fixed;inset:0;z-index:10001;
+      display:none;align-items:center;justify-content:center;
+      padding:20px;
+      background: rgba(0,0,0,.4);
+      backdrop-filter: blur(4px);
+    }
+    .helpOverlay[aria-hidden="false"]{ display:flex; }
+    .helpModal{
+      max-width:420px;width:100%;
+      max-height:85vh;overflow:auto;
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:24px;
+    }
+    .helpModal h3{ margin:0 0 12px; font-size: 1.15rem; }
+    .helpModal p{ margin:0; font-size: 16px; line-height: 1.75; color: var(--text); }
+    .helpModal .closeBtn{ margin-top:16px; min-height:48px; }
+    .dtBody{padding:14px}
+    .dtFoot{
+      padding:14px;
+      border-top:1px dashed var(--line);
+      display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;
+    }
+  </style>
+
+<style>
+/* --- Customer site integration (表示だけ整理：計算ロジックは未変更) --- */
+#tabHelping, #panelHelping { display:none !important; }
+#h_booking, #d_booking { display:none !important; }
+</style>
+
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <!-- 親しみやすい軽バン＆段ボール（SVG） -->
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <g fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.95">
+              <path d="M3 14.5v-3.2c0-1.1.9-2 2-2h7.2l2.2 2.6H20c.6 0 1 .4 1 1v3.6"/>
+              <path d="M6.2 14.5h9.6"/>
+              <path d="M11.2 9.3l.9-1.3h3l1.2 1.4"/>
+              <circle cx="7" cy="16.5" r="1.6"/>
+              <circle cx="18" cy="16.5" r="1.6"/>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:16px;opacity:.95">軽貨物TAKE</div>
+          <div style="font-size:14px;color:var(--muted);font-weight:700">下関｜代表：松永 たけし</div>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html" class="nav-active" aria-current="page">TOP</a>
+        <a href="booking.html">予約</a>
+        <a href="philosophy.html">理念</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="estimate">
+      <div class="card heroLeft">
+        <span class="kicker">料金がその場で出る｜20km圏内 出張無料</span>
+        <div class="sectionHead">
+          <h1>すぐ頼める優しい軽貨物</h1>
+          <button type="button" class="helpBtn" aria-label="このセクションの説明" data-help="hero">？</button>
+        </div>
+        <p class="lead">
+          左のサービスを押すと、右の計算機が自動で切り替わります。<br>
+          まずは「いくらか？」を出して、ページ下の<strong>LINE</strong>か<strong>メール</strong>で送ってください。
+        </p>
+
+        <p class="mini" id="flow">
+          <strong>流れ：</strong> ①見積（右） → ②下のLINE/メールで相談・合意 → ③本契約（別ページ） → ④当日作業・当日決済
+        </p>
+
+        <div class="section" id="services">
+          <div class="sectionHead">
+            <span class="hint" style="font-weight:700;margin-bottom:8px">できること（押すと右に反映）</span>
+            <button type="button" class="helpBtn" aria-label="できることの説明" data-help="services">？</button>
+          </div>
+
+          <div class="stack">
+            <details open>
+              <summary data-preset="grass">草刈り（袋詰め込｜面積で見積）</summary>
+              <div class="smallNote">
+                時間ではなく<strong>広さ（㎡）</strong>で概算します（相場の約8割目安）。<br>
+                ※回収・持ち帰り・処分は行いません（袋詰めまで）。ゴミ出しはお客様へ。
+              </div>
+            </details>
+
+            <details>
+              <summary data-preset="kerosene">灯油買い出し＆給油（ポリ缶数で見積）</summary>
+              <div class="smallNote">
+                18Lポリ缶の<strong>個数</strong>で概算します（少量依頼向けの基本料金＋加算）。<br>
+                ※灯油代（商品代）は実費です（ここでは含めません）。
+              </div>
+            </details>
+
+            <details>
+              <summary data-preset="estate">不用品仕分け・片付け相談（※買取なし）</summary>
+              <div class="smallNote">
+                車両プラン（1台/2台）とスタッフ人数で概算します。重量物がある場合は増員します。<br>
+                ※回収・処分は行いません（分別・袋詰め・排出の段取り作りが中心）。
+              </div>
+            </details>
+
+            <details>
+              <summary data-preset="haul">運搬（運ぶ・移動｜距離＆階段で見積）</summary>
+              <div class="smallNote">
+                積地・卸地を入れて距離取得（Google連動）→出張費を自動反映。<br>
+                階段・エレベーター有無で付帯料金も自動で加算します。
+              </div>
+            </details>
+
+            <details>
+              <summary data-preset="shopping">買い物代行（2,200円〜）</summary>
+              <div class="smallNote">
+                基本 2,200円（税込）〜 ＋ 出張費（20kmまで無料）で概算します。
+              </div>
+            </details>
+
+            <details>
+              <summary data-preset="carSupport">車検・整備（ユーザー車検代行／整備工場への搬入）</summary>
+              <div class="smallNote">
+                まずは距離で概算。法定費用・整備費は別途で<strong>最終見積</strong>になります。
+              </div>
+            </details>
+
+            <details>
+              <summary data-preset="web">ホームページ制作（買い切り）</summary>
+              <div class="smallNote">
+                <strong>33,000円（税込）〜</strong>（最低価格）として表示。内容により増減します。
+              </div>
+            </details>
+          </div>
+
+          <div class="section">
+            <div class="row">
+              <a class="btn btnGhost" href="#estimate">右の計算機へ</a>
+              <a class="btn" href="./philosophy.html" target="_blank" rel="noopener">想い（別ページ）</a>
+            </div>
+            <p class="smallNote">
+              ※連絡はページ下の「LINE」「メール」にまとめています（混同防止）。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card heroRight">
+        <div class="calcHead">
+          <div class="calcTitle">
+            <h2>見積（計算機）｜税込</h2>
+            <button type="button" class="helpBtn" aria-label="見積の説明" data-help="calc">？</button>
+            <div class="hint" style="width:100%;margin-top:4px">20km圏内：出張無料／超過：+550円/5km</div>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="見積カテゴリ">
+            <button class="tabBtn" id="tabHelping" role="tab" aria-selected="false" aria-controls="panelHelping">手伝う・作業</button>
+            <button class="tabBtn" id="tabDriving" role="tab" aria-selected="true" aria-controls="panelDriving">運ぶ・移動</button>
+          </div>
+        </div>
+
+        <div class="calcBody">
+          <!-- 手伝う・作業 -->
+          <div id="panelHelping" role="tabpanel" aria-labelledby="tabHelping" class="stack" style="display:none">
+            <div class="grid">
+              <div style="grid-column:1/-1">
+                <label>サービス</label>
+                <select id="h_service">
+                  <option value="grass">草刈り（袋詰め込｜面積）</option>
+                  <option value="kerosene">灯油買い出し＆給油（ポリ缶数）</option>
+                  <option value="estate">不用品仕分け・片付け相談（買取なし）</option>
+                  <option value="light">軽作業（掃除/電球交換/ゴミ出し準備）</option>
+                  <option value="hard">力仕事（家具移動/重量物）</option>
+                  <option value="web">ホームページ制作（買い切り）</option>
+                </select>
+              </div>
+
+              <div id="h_kmWrap">
+                <label>距離（km）</label>
+                <input id="h_km" inputmode="decimal" placeholder="例：12 / 25" />
+                <div class="smallNote">※20kmまで出張無料</div>
+              </div>
+
+              <div id="h_dtWrap">
+                <label>希望日時</label>
+                <div class="row" style="flex-wrap:nowrap">
+                  <input id="h_datetime" type="datetime-local" style="flex:1" />
+                  <button class="btn btnGhost" type="button" id="h_dtPick" aria-label="カレンダーで選ぶ">📅</button>
+                  <button class="btn btnWarn" type="button" id="h_dtConfirm">決定</button>
+                </div>
+                <div class="smallNote" id="h_dtStatus">※日時は未決定でもOK（決定すると固定されます）</div>
+              </div>
+
+              <!-- 草刈り：面積 -->
+              <div style="grid-column:1/-1" id="h_mode_grass" class="section" data-mode="grass">
+                <label>広さ（㎡）</label>
+                <div class="grid">
+                  <div>
+                    <input id="g_area" inputmode="decimal" value="30" />
+                    <div class="smallNote">例：30㎡（約9坪）</div>
+                  </div>
+                  <div>
+                    <input id="g_areaRange" type="range" min="0" max="300" step="5" value="30" />
+                    <div class="smallNote">スライダーで調整</div>
+                  </div>
+                </div>
+                <div class="smallNote">
+                  ※相場の約8割目安：<strong id="g_rateLabel">145円/㎡</strong>（最低基本料金あり）
+                </div>
+              </div>
+
+              <!-- 灯油：ポリ缶数 -->
+              <div style="grid-column:1/-1" id="h_mode_kerosene" class="section" data-mode="kerosene" style="display:none">
+                <label>18リットルポリ缶の個数</label>
+                <div class="row" style="flex-wrap:nowrap">
+                  <button class="btn btnGhost" type="button" id="k_cansMinus" aria-label="個数を減らす">－</button>
+                  <input id="k_cans" inputmode="numeric" value="1" style="flex:1;text-align:center;font-weight:900" />
+                  <button class="btn btnGhost" type="button" id="k_cansPlus" aria-label="個数を増やす">＋</button>
+                </div>
+                <div class="smallNote">※灯油代（商品代）は実費。ここは作業費＋出張費の概算です。</div>
+              </div>
+
+              <!-- 片付け：車両/人員 -->
+              <div style="grid-column:1/-1" id="h_mode_estate" class="section" data-mode="estate" style="display:none">
+                <div class="grid">
+                  <div>
+                    <label>車両プラン</label>
+                    <select id="e_vans">
+                      <option value="1">1台プラン</option>
+                      <option value="2">2台プラン</option>
+                    </select>
+                    <div class="smallNote">※車両費：台数×3,300円</div>
+                  </div>
+                  <div>
+                    <label>重量物（冷蔵庫/洗濯機など）</label>
+                    <select id="e_heavy">
+                      <option value="0">なし</option>
+                      <option value="1">あり（増員します）</option>
+                    </select>
+                    <div class="smallNote">※増員分は加算</div>
+                  </div>
+
+                  <div>
+                    <label>スタッフ人数</label>
+                    <div class="row" style="flex-wrap:nowrap">
+                      <button class="btn btnGhost" type="button" id="e_staffMinus" aria-label="人数を減らす">－</button>
+                      <input id="e_staff" inputmode="numeric" value="1" style="flex:1;text-align:center;font-weight:900" />
+                      <button class="btn btnGhost" type="button" id="e_staffPlus" aria-label="人数を増やす">＋</button>
+                    </div>
+                    <div class="smallNote" id="e_staffHint">※1台=基本1名 / 2台=基本2名（重量物があると増員）</div>
+                  </div>
+
+                  <div>
+                    <label>作業時間（時間）</label>
+                    <div class="row" style="flex-wrap:nowrap">
+                      <button class="btn btnGhost" type="button" id="e_hMinus" aria-label="時間を減らす">－</button>
+                      <input id="e_hours" inputmode="decimal" value="2" style="flex:1;text-align:center;font-weight:900" />
+                      <button class="btn btnGhost" type="button" id="e_hPlus" aria-label="時間を増やす">＋</button>
+                    </div>
+                    <div class="smallNote">※0.5時間刻み（タップで直接入力OK）</div>
+                  </div>
+                </div>
+
+                <div class="smallNote">
+                  ※名称は「相談（買取なし）」です。回収・処分は行いません（分別・袋詰め・排出段取り中心）。
+                </div>
+              </div>
+
+              <!-- 共通：作業時間（軽/力） -->
+              <div style="grid-column:1/-1" id="h_mode_hourly" class="section" data-mode="hourly" style="display:none">
+                <div class="tabs" role="tablist" aria-label="作業の種類">
+                  <button class="tabBtn" id="h_typeLight" role="tab" aria-selected="true" type="button">軽作業 2,200円/時</button>
+                  <button class="tabBtn" id="h_typeHard" role="tab" aria-selected="false" type="button">力仕事 3,300円/時</button>
+                </div>
+                <div class="grid" style="margin-top:12px">
+                  <div>
+                    <label>人数</label>
+                    <div class="row" style="flex-wrap:nowrap">
+                      <button class="btn btnGhost" type="button" id="h_peopleMinus" aria-label="人数を減らす">－</button>
+                      <input id="h_people" inputmode="numeric" value="1" style="flex:1;text-align:center;font-weight:900" />
+                      <button class="btn btnGhost" type="button" id="h_peoplePlus" aria-label="人数を増やす">＋</button>
+                    </div>
+                  </div>
+                  <div>
+                    <label>作業時間（時間）</label>
+                    <div class="row" style="flex-wrap:nowrap">
+                      <button class="btn btnGhost" type="button" id="h_hMinus" aria-label="時間を減らす">－</button>
+                      <input id="h_hours" inputmode="decimal" value="1" style="flex:1;text-align:center;font-weight:900" />
+                      <button class="btn btnGhost" type="button" id="h_hPlus" aria-label="時間を増やす">＋</button>
+                    </div>
+                    <div class="smallNote">※0.5時間刻み（タップで直接入力OK）</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Web：最低価格 -->
+              <div style="grid-column:1/-1" id="h_mode_web" class="section" data-mode="web" style="display:none">
+                <div class="smallNote">
+                  ※買い切り制作：<strong>33,000円〜</strong>（最低価格）。内容で調整します。
+                </div>
+              </div>
+
+              <div style="grid-column:1/-1">
+                <label>補足（任意）</label>
+                <textarea id="h_note" placeholder="例：場所、草の量、注意点など"></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <button class="btn btnPrimary" id="btnCalcHelping">計算する（手伝う・作業）</button>
+              <span class="hint">結果に「いくらか？」を表示 → LINE/メールへ自動反映</span>
+            </div>
+
+            <div class="result" id="resultHelping" aria-live="polite">
+              <div class="row" style="justify-content:space-between">
+                <span class="planBadge" id="h_badge">手伝う・作業 見積</span>
+                <span class="hint">税込概算</span>
+              </div>
+              <div class="price" id="h_total">0円</div>
+              <div class="break" id="h_breakdown"></div>
+
+              <div class="section row">
+                <button class="btn btnGhost" id="h_copy">内容をコピー</button>
+                <button class="btn" id="h_toContact">下のLINE/メールへ</button>
+                <button class="btn btnPrimary" id="h_booking" style="display:none">本契約（別ページ）へ</button>
+              </div>
+
+              <p class="smallNote" id="h_legalNote">
+                ※草刈りは「袋詰め込」。回収・持ち帰り・処分は行いません（ゴミ出しはお客様へ）。<br>
+                ※灯油は灯油代（商品代）が実費です（ここでは含めません）。<br>
+                ※片付けは「相談（買取なし）」です。回収・処分は行いません（分別・袋詰め・排出段取り中心）。
+              </p>
+            </div>
+
+            <footer>
+              ※概算です。現地状況（作業量/駐車/追加作業など）で調整が入る場合があります。<br>
+              ※当日決済（現金/振込）。確定は下のLINE/メールで合意後に本契約へ。
+            </footer>
+          </div>
+
+          <!-- 運ぶ・移動 -->
+          <div id="panelDriving" role="tabpanel" aria-labelledby="tabDriving" class="stack">
+            <div class="grid">
+              <div style="grid-column:1/-1">
+                <label>サービス</label>
+                <select id="d_service">
+                  <option value="haul">運搬（距離＆階段で見積）</option>
+                  <option value="shopping">買い物代行（2,200円〜）</option>
+                  <option value="carSupport">車検・整備（ユーザー車検代行／搬入）</option>
+                </select>
+                <div class="smallNote" id="d_serviceHint">※距離・階段・車両台数・追加人員で変わります</div>
+              </div>
+
+              <div id="d_vansWrap">
+                <label>車両台数</label>
+                <select id="d_vans">
+                  <option value="1">1台</option>
+                  <option value="2">2台</option>
+                </select>
+                <div class="smallNote">※2台は「走行分（基本＋出張）」が2倍</div>
+              </div>
+
+              <div id="d_kmWrap">
+                <label>距離（km）</label>
+                <input id="d_km" inputmode="decimal" placeholder="例：8 / 30" />
+                <div class="smallNote">※20kmまで出張無料</div>
+              </div>
+
+              <div id="d_dtWrap">
+                <label>希望日時</label>
+                <div class="row" style="flex-wrap:nowrap">
+                  <input id="d_datetime" type="datetime-local" style="flex:1" />
+                  <button class="btn btnGhost" type="button" id="d_dtPick" aria-label="カレンダーで選ぶ">📅</button>
+                  <button class="btn btnWarn" type="button" id="d_dtConfirm">決定</button>
+                </div>
+                <div class="smallNote" id="d_dtStatus">※日時は未決定でもOK（決定すると固定されます）</div>
+              </div>
+
+              <!-- ルート入力（運搬用） -->
+              <div style="grid-column:1/-1" id="d_mode_haul" class="section" data-mode="haul">
+                <div class="grid">
+                  <div>
+                    <label>積地（出発）</label>
+                    <input id="d_origin" placeholder="例：下関駅 / 下関市〇〇" />
+                  </div>
+                  <div>
+                    <label>卸地（到着）</label>
+                    <input id="d_destination" placeholder="例：唐戸 / 下関市〇〇" />
+                  </div>
+                </div>
+
+                <div class="row" style="margin-top:12px">
+                  <button class="btn btnGhost" type="button" id="btnGetDistance">距離を取得（Google）</button>
+                  <button class="btn btnGhost" type="button" id="btnOpenMaps">Googleマップを開く</button>
+                  <span class="hint" id="mapsStatus">※APIキー未設定なら手入力でOK</span>
+                </div>
+              </div>
+
+              <!-- 階段・エレベーター（運搬のみ） -->
+              <div style="grid-column:1/-1" id="d_mode_stairs" class="section" data-mode="stairs">
+                <div class="hint" style="font-weight:900;margin-bottom:8px">付帯料金（階段・エレベーター）</div>
+                <div class="grid">
+                  <div>
+                    <label>積地：階数</label>
+                    <select id="d_pickFloor">
+                      <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label>積地：エレベーター</label>
+                    <select id="d_pickElev">
+                      <option value="yes">あり</option>
+                      <option value="no">なし（階段）</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label>卸地：階数</label>
+                    <select id="d_dropFloor">
+                      <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label>卸地：エレベーター</label>
+                    <select id="d_dropElev">
+                      <option value="yes">あり</option>
+                      <option value="no">なし（階段）</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="smallNote">※階段：2階以上は 1階上がるごとに +1,100円（エレベーター無しの場合）</div>
+              </div>
+
+              <!-- 追加人件費（ドライバー以外） -->
+              <div style="grid-column:1/-1" id="d_mode_labor" class="section">
+                <div class="hint" style="font-weight:900;margin-bottom:8px">追加人件費（ドライバー以外）</div>
+                <div class="grid">
+                  <div>
+                    <label>追加作業員（人数）</label>
+                    <div class="row" style="flex-wrap:nowrap">
+                      <button class="btn btnGhost" type="button" id="d_workersMinus" aria-label="人数を減らす">－</button>
+                      <input id="d_workers" inputmode="numeric" value="0" style="flex:1;text-align:center;font-weight:900" />
+                      <button class="btn btnGhost" type="button" id="d_workersPlus" aria-label="人数を増やす">＋</button>
+                    </div>
+                    <div class="smallNote">例：ドライバー＋助手1名 → 追加作業員=1</div>
+                  </div>
+                  <div>
+                    <label>追加作業時間（時間）</label>
+                    <div class="row" style="flex-wrap:nowrap">
+                      <button class="btn btnGhost" type="button" id="d_wHoursMinus" aria-label="時間を減らす">－</button>
+                      <input id="d_wHours" inputmode="decimal" value="0" style="flex:1;text-align:center;font-weight:900" />
+                      <button class="btn btnGhost" type="button" id="d_wHoursPlus" aria-label="時間を増やす">＋</button>
+                    </div>
+                    <div class="smallNote">※0.5時間刻み（タップで直接入力OK）</div>
+                  </div>
+                </div>
+                <div class="smallNote">※追加人件費：<strong>2,200円/人・時</strong>（税込）</div>
+              </div>
+
+              <div style="grid-column:1/-1">
+                <label>補足（任意）</label>
+                <textarea id="d_note" placeholder="例：運搬物、買い物リスト、整備工場名など"></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <button class="btn btnPrimary" id="btnCalcDriving">計算する（運ぶ・移動）</button>
+              <span class="hint">結果 → LINE/メール本文に自動で入ります</span>
+            </div>
+
+            <div class="result" id="resultDriving" aria-live="polite">
+              <div class="row" style="justify-content:space-between">
+                <span class="planBadge" id="d_badge">運ぶ・移動 見積</span>
+                <span class="hint">税込概算</span>
+              </div>
+              <div class="price" id="d_total">0円</div>
+              <div class="break" id="d_breakdown"></div>
+
+              <div class="section row">
+                <button class="btn btnGhost" id="d_copy">内容をコピー</button>
+                <button class="btn" id="d_toContact">下のLINE/メールへ</button>
+                <button class="btn btnPrimary" id="d_booking" style="display:none">本契約（別ページ）へ</button>
+              </div>
+
+              <p class="smallNote" id="d_legalNote">
+                ※買い物代行は基本 2,200円〜（目安）。商品代は実費です。<br>
+                ※車検・整備は法定費用・整備費が別途で、最終見積になります（ここは代行運転・搬入等の概算）。
+              </p>
+            </div>
+
+            <footer>
+              ※概算です。現地状況（荷物量/駐車/追加作業など）で調整が入る場合があります。<br>
+              ※当日決済（現金/振込）。確定は下のLINE/メールで合意後に本契約へ。
+            </footer>
+          </div>
+
+          <!-- FAQ -->
+          <div class="section" id="faq">
+            <div class="sectionHead">
+              <span class="hint" style="font-weight:700;margin-bottom:8px">よくある質問</span>
+              <button type="button" class="helpBtn" aria-label="よくある質問の説明" data-help="faq">？</button>
+            </div>
+            <div class="stack">
+              <details>
+                <summary>支払い方法は？</summary>
+                <div class="smallNote">当日決済（作業完了時）：現金 / 振込です。</div>
+              </details>
+              <details>
+                <summary>出張費は？</summary>
+                <div class="smallNote">20km圏内は無料。20kmを超える場合は、5kmごとに +550円（税込）です。</div>
+              </details>
+              <details>
+                <summary>草刈りのゴミはどうなる？</summary>
+                <div class="smallNote">「袋詰め込」まで。当店は回収・処分は行いません。ゴミ出しはお客様にお願いします。</div>
+              </details>
+              <details>
+                <summary>灯油は商品代込み？</summary>
+                <div class="smallNote">灯油代（商品代）は実費です。ここでは作業費＋出張費の概算のみ表示します。</div>
+              </details>
+              <details>
+                <summary>片付けは全部なくせる？</summary>
+                <div class="smallNote">回収・処分は行いません。分別・袋詰め・排出の段取り作りを中心にサポートします（買取なし）。</div>
+              </details>
+              <details>
+                <summary>連絡手段は？</summary>
+                <div class="smallNote">電話番号は非掲載です。ページ下の「LINE」「メール」にまとめています。</div>
+              </details>
+            </div>
+          </div>
+
+        </div><!-- calcBody -->
+      </div><!-- heroRight -->
+    </section>
+
+    <!-- 連絡（フッター側に集約） -->
+    <section class="card" id="contact" style="margin-top:18px">
+      <div style="padding:18px;border-bottom:1px solid var(--line);background: linear-gradient(180deg, rgba(212,132,148,.06), transparent);">
+        <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <div class="sectionHead" style="margin:0">
+            <span style="font-weight:700">連絡（LINE / メール）</span>
+            <button type="button" class="helpBtn" aria-label="連絡方法の説明" data-help="contact">？</button>
+          </div>
+          <div class="hint">※計算した見積が自動で本文に入ります</div>
+        </div>
+      </div>
+
+      <div style="padding:18px">
+        <div class="section" style="margin-top:0;padding-top:0;border-top:0">
+          <div class="row">
+            <a class="btn btnLine" id="btnLineOpen" href="#">LINE</a>
+            <button class="btn btnMail" id="btnMailJump" type="button">メール</button>
+            <button class="btn btnGhost" id="btnCopyLast" type="button">直近の見積をコピー</button>
+          </div>
+          <p class="smallNote">
+            ※電話番号は非掲載です（履歴が残るLINE/メールを優先）。<br>
+            ※当日決済（現金/振込）。確定は合意後に本契約（別ページ）へ。
+          </p>
+        </div>
+
+        <div class="section" id="mailForm">
+          <div class="row" style="justify-content:space-between">
+            <div style="font-weight:900">メール（相談用）</div>
+            <div class="hint">※送信は端末のメールアプリが開きます</div>
+          </div>
+
+          <div class="grid" style="margin-top:12px">
+            <div>
+              <label>お名前</label>
+              <input id="m_name" placeholder="例：山田 太郎" />
+            </div>
+            <div>
+              <label>返信用メール（任意）</label>
+              <input id="m_reply" inputmode="email" placeholder="例：example@gmail.com" />
+            </div>
+            <div style="grid-column:1/-1">
+              <label>相談内容（見積から自動で入ります）</label>
+              <textarea id="m_body" placeholder="ここに相談内容を書けます（見積結果も貼れます）"></textarea>
+            </div>
+          </div>
+
+          <div class="section row">
+            <button class="btn btnPrimary" id="btnMailSend" type="button">メールを作成して送る</button>
+            <button class="btn btnGhost" id="btnMailCopy" type="button">本文をコピー</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="hint" style="font-weight:900;margin-bottom:8px">プロフィール / SNS（連絡手段ではありません）</div>
+          <div class="row">
+            <a class="btn btnInsta" id="btnInsta" href="#" target="_blank" rel="noopener">
+              <span class="icon24" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                  <g fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="6" y="6" width="12" height="12" rx="3"></rect>
+                    <circle cx="12" cy="12" r="3.2"></circle>
+                    <circle cx="16.6" cy="7.4" r="0.8" fill="white" stroke="none"></circle>
+                  </g>
+                </svg>
+              </span>
+              Instagram
+            </a>
+            <a class="btn btnTwitc" id="btnTwit" href="#" target="_blank" rel="noopener">
+              <span class="icon24" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                  <g fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="6" y="7" width="12" height="10" rx="2"></rect>
+                    <path d="M10 17v2"></path>
+                    <path d="M14 17v2"></path>
+                    <path d="M11 11l4 2-4 2z" fill="white" stroke="none"></path>
+                  </g>
+                </svg>
+              </span>
+              TwitCasting
+            </a>
+          </div>
+          <p class="smallNote">軽貨物TAKE｜下関｜代表：松永 たけし</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast">
+      <b id="toastTitle">完了</b>
+      <div id="toastMsg" style="color:var(--muted);font-size:12px;line-height:1.5"></div>
+    </div>
+  </div>
+
+  <div class="fabTop" id="fabTop">
+    <a class="btn btnGhost" href="#estimate">上へ戻る</a>
+  </div>
+
+  <!-- ヘルプ説明モーダル（本文からの引用のみ） -->
+  <div class="helpOverlay" id="helpOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="helpModal" role="document">
+      <h3 id="helpTitle">説明</h3>
+      <div id="helpContent"></div>
+      <button type="button" class="btn btnPrimary closeBtn" id="helpClose">閉じる</button>
+    </div>
+  </div>
+
+  <!-- 日付ピッカー（決定ボタン付き） -->
+  <div class="dtOverlay" id="dtOverlay" aria-hidden="true">
+    <div class="dtPanel" role="dialog" aria-modal="true" aria-labelledby="dtTitle">
+      <div class="dtHead" id="dtTitle">希望日時を選ぶ</div>
+      <div class="dtBody">
+        <div class="grid">
+          <div>
+            <label>日付</label>
+            <input id="dt_date" type="date" />
+          </div>
+          <div>
+            <label>時間</label>
+            <input id="dt_time" type="time" step="300" />
+            <div class="smallNote">※5分刻み</div>
+          </div>
+        </div>
+        <div class="smallNote" style="margin-top:10px">
+          「決定」を押すと日時が確定し、入力欄がロックされます（後から変更もできます）。
+        </div>
+      </div>
+      <div class="dtFoot">
+        <button class="btn btnGhost" type="button" id="dtCancel">キャンセル</button>
+        <button class="btn btnPrimary" type="button" id="dtConfirm">決定</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // =========================
+  // 設定
+  // =========================
+  const CFG = {
+    BOOKING_PAGE_URL: "./booking.html",
+    PHILOSOPHY_PAGE_URL: "./philosophy.html",
+
+    LINE_URL: "https://line.me/R/ti/p/%40277rcesk", // 友だち追加用（本文流し込みは share URL を使います）
+    EMAIL_TO: "takeshimonoseki@gmail.com",
+
+    INSTAGRAM_URL: "https://www.instagram.com/tkc94193614/",
+    TWITCASTING_URL: "https://twitcasting.tv/c:keikamotsutake",
+
+  };
+
+  // =========================
+  // 料金（すべて税込）
+  // =========================
+  const PRICE = {
+    travelFreeKm: 20,
+    travelStepKm: 5,
+    travelStepYen: 550,
+
+    lightPerHour: 2200,
+    hardPerHour: 3300,
+
+    // 草刈り（相場の約8割目安）
+    grassRatePerM2: 145,
+    grassMinFee: 5500,
+
+    // 灯油（18Lポリ缶）
+    keroseneBaseFee: 2200,
+    kerosenePerExtraCan: 550,
+
+    // 片付け（相談・買取なし）車両費
+    vanFeePerUnit: 3300,
+    estateBaseStaffFor1Van: 1,
+    estateBaseStaffFor2Van: 2,
+    estateMaxStaffFor1Van: 2,
+    estateMaxStaffFor2Van: 4,
+
+    // 運ぶ・移動（基本料金）
+    haulBaseFee: 3300,
+    shoppingBaseFee: 2200,
+    carSupportBaseFee: 3300,
+
+    // 階段付帯（エレベーター無しの場合）
+    stairsPerFloor: 1100,
+
+    // 追加人件費（ドライバー以外）
+    extraLaborPerHour: 2200,
+
+    // Web制作（買い切り最低）
+    webBaseMin: 33000
+  };
+
+  // =========================
+  // リンク反映
+  // =========================
+  document.getElementById("btnInsta").href = CFG.INSTAGRAM_URL;
+  document.getElementById("btnTwit").href = CFG.TWITCASTING_URL;
+
+  // =========================
+  // 共通ユーティリティ
+  // =========================
+  function showToast(title, msg){
+    const t = document.getElementById("toast");
+    document.getElementById("toastTitle").innerText = title;
+    document.getElementById("toastMsg").innerText = msg || "";
+    t.style.display = "block";
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(()=>{ t.style.display="none"; }, 2600);
+  }
+
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function z2h(str){
+    if(str == null) return "";
+    return String(str)
+      .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+      .replace(/[．。]/g, ".")
+      .replace(/[ー−―]/g, "-")
+      .replace(/[，、]/g, ",")
+      .trim();
+  }
+
+  function num(v, fallback=0){
+    const s = z2h(v);
+    const n = parseFloat(s);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function int(v, fallback=0){
+    const s = z2h(v);
+    const n = parseInt(s, 10);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function yen(n){ return `${Math.floor(n).toLocaleString()}円`; }
+
+  function roundToHalfHourHours(x){
+    const v = Math.max(0, Number(x) || 0);
+    return Math.round(v * 2) / 2;
+  }
+
+  async function copyToClipboard(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      return true;
+    }catch(e){
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position="fixed";
+      ta.style.left="-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }
+  }
+
+  function renderBreakdown(el, rows){
+    el.innerHTML = rows.map(r=>{
+      return `<div class="breakRow"><span>${escapeHtml(r.k)}</span><strong>${escapeHtml(r.v)}</strong></div>`;
+    }).join("");
+  }
+
+  function pad2(n){ return String(n).padStart(2,"0"); }
+  function makeReservationId(prefix){
+    const d = new Date();
+    const y = d.getFullYear();
+    const mo = pad2(d.getMonth()+1);
+    const da = pad2(d.getDate());
+    const hh = pad2(d.getHours());
+    const mm = pad2(d.getMinutes());
+    const rand = Math.random().toString(36).slice(2,6).toUpperCase();
+    return `TK-${y}${mo}${da}-${hh}${mm}-${prefix}-${rand}`;
+  }
+
+  // 出張費：20kmまで無料、超過は5kmごと+550円
+  function calcTravelFee(distanceKm){
+    const km = Math.max(0, num(distanceKm, 0));
+    if(km <= PRICE.travelFreeKm) return { fee: 0, note: `${PRICE.travelFreeKm}km圏内：無料` };
+    const over = km - PRICE.travelFreeKm;
+    const steps = Math.ceil(over / PRICE.travelStepKm);
+    const fee = steps * PRICE.travelStepYen;
+    return { fee, note: `超過 ${over.toFixed(1)}km → ${steps}段（${PRICE.travelStepKm}kmごと）` };
+  }
+
+  function calcHourlyFee(hours, type, people=1){
+    const h = roundToHalfHourHours(hours);
+    const p = Math.max(1, int(people, 1));
+    const rate = (type === "hard") ? PRICE.hardPerHour : PRICE.lightPerHour;
+    return { hours: h, people: p, rate, fee: h * rate * p };
+  }
+
+  function calcStairsFee(floor, hasElev){
+    const f = Math.max(1, int(floor, 1));
+    if(hasElev) return 0;
+    return Math.max(0, f - 1) * PRICE.stairsPerFloor;
+  }
+
+  function bounceShow(btn){
+    btn.style.display = "inline-flex";
+    btn.classList.remove("bounce","pulseGlow");
+    void btn.offsetWidth;
+    btn.classList.add("bounce","pulseGlow");
+  }
+
+  function buildMailto(subject, body){
+    const s = encodeURIComponent(subject || "軽貨物TAKE ご相談");
+    const b = encodeURIComponent((body || "").slice(0, 1800));
+    return `mailto:${CFG.EMAIL_TO}?subject=${s}&body=${b}`;
+  }
+
+  // ハイライト（入力が自動セットされたと伝える）
+  function flashElements(els){
+    (els || []).forEach(el=>{
+      if(!el) return;
+      el.classList.remove("flash");
+      void el.offsetWidth;
+      el.classList.add("flash");
+      el.addEventListener("animationend", ()=>el.classList.remove("flash"), { once:true });
+    });
+  }
+
+  // =========================
+  // カテゴリ切り替え
+  // =========================
+  const tabHelping = document.getElementById("tabHelping");
+  const tabDriving = document.getElementById("tabDriving");
+  const panelHelping = document.getElementById("panelHelping");
+  const panelDriving = document.getElementById("panelDriving");
+
+  function setCategory(which){
+    const isH = which === "helping";
+    tabHelping.setAttribute("aria-selected", isH ? "true" : "false");
+    tabDriving.setAttribute("aria-selected", !isH ? "true" : "false");
+    panelHelping.style.display = isH ? "flex" : "none";
+    panelDriving.style.display = !isH ? "flex" : "none";
+  }
+  tabHelping.addEventListener("click", ()=>setCategory("helping"));
+  tabDriving.addEventListener("click", ()=>setCategory("driving"));
+
+  // =========================
+  // ステッパー（＋/－）
+  // =========================
+  function bindStepper({ minusId, plusId, inputId, step, min=0, max=999, isInt=false }){
+    const minus = document.getElementById(minusId);
+    const plus = document.getElementById(plusId);
+    const input = document.getElementById(inputId);
+
+    function getVal(){
+      const v = isInt ? int(input.value, min) : num(input.value, min);
+      return Number.isFinite(v) ? v : min;
+    }
+    function setVal(v){
+      const clamped = Math.max(min, Math.min(max, v));
+      input.value = isInt ? String(Math.round(clamped)) : String(clamped);
+    }
+
+    minus.addEventListener("click", ()=>{
+      const v = getVal();
+      const next = isInt ? (v - step) : (roundToHalfHourHours(v - step));
+      setVal(next);
+    });
+    plus.addEventListener("click", ()=>{
+      const v = getVal();
+      const next = isInt ? (v + step) : (roundToHalfHourHours(v + step));
+      setVal(next);
+    });
+
+    input.addEventListener("input", ()=>{
+      const before = input.value;
+      const after = z2h(before);
+      if(before !== after) input.value = after;
+    });
+    input.addEventListener("blur", ()=>{
+      const v = getVal();
+      const normalized = isInt ? Math.round(v) : roundToHalfHourHours(v);
+      setVal(normalized);
+    });
+  }
+
+  // 灯油ポリ缶
+  bindStepper({ minusId:"k_cansMinus", plusId:"k_cansPlus", inputId:"k_cans", step:1, min:1, max:20, isInt:true });
+
+  // 片付け：人数/時間
+  bindStepper({ minusId:"e_staffMinus", plusId:"e_staffPlus", inputId:"e_staff", step:1, min:1, max:4, isInt:true });
+  bindStepper({ minusId:"e_hMinus", plusId:"e_hPlus", inputId:"e_hours", step:0.5, min:0.5, max:24, isInt:false });
+
+  // 共通：作業（手伝う・作業）
+  bindStepper({ minusId:"h_peopleMinus", plusId:"h_peoplePlus", inputId:"h_people", step:1, min:1, max:6, isInt:true });
+  bindStepper({ minusId:"h_hMinus", plusId:"h_hPlus", inputId:"h_hours", step:0.5, min:0.5, max:24, isInt:false });
+
+  // 運ぶ・移動：追加作業員/時間（ドライバー以外）
+  bindStepper({ minusId:"d_workersMinus", plusId:"d_workersPlus", inputId:"d_workers", step:1, min:0, max:10, isInt:true });
+  bindStepper({ minusId:"d_wHoursMinus", plusId:"d_wHoursPlus", inputId:"d_wHours", step:0.5, min:0, max:24, isInt:false });
+
+  // =========================
+  // 日時：決定ボタン（確定したらロック）
+  // + カレンダー（決定ボタン付きモーダル）
+  // =========================
+  function createDatetimeController({ inputId, btnId, statusId }){
+    const input = document.getElementById(inputId);
+    const btn = document.getElementById(btnId);
+    const status = document.getElementById(statusId);
+
+    let locked = false;
+
+    function lock(){
+      if(!input.value){
+        showToast("日時未入力", "日時を選択してから「決定」を押してください");
+        return false;
+      }
+      locked = true;
+      input.setAttribute("disabled", "true");
+      btn.innerText = "変更";
+      status.innerText = `決定：${input.value.replace("T"," ")}（変更できます）`;
+      return true;
+    }
+    function unlock(){
+      locked = false;
+      input.removeAttribute("disabled");
+      btn.innerText = "決定";
+      status.innerText = "※日時は未決定でもOK（決定すると固定されます）";
+      return true;
+    }
+    function toggle(){
+      if(!locked) {
+        const ok = lock();
+        if(ok) showToast("日時を決定", "この内容で相談できます");
+      } else {
+        unlock();
+        showToast("変更できます", "日時を選び直してください");
+      }
+    }
+    function setValueISO(iso){
+      input.value = iso || "";
+    }
+    function getValue(){
+      return input.value ? input.value.replace("T"," ") : "";
+    }
+    function isLocked(){ return locked; }
+
+    btn.addEventListener("click", toggle);
+
+    return { input, lock, unlock, toggle, setValueISO, getValue, isLocked };
+  }
+
+  const H_DT = createDatetimeController({ inputId:"h_datetime", btnId:"h_dtConfirm", statusId:"h_dtStatus" });
+  const D_DT = createDatetimeController({ inputId:"d_datetime", btnId:"d_dtConfirm", statusId:"d_dtStatus" });
+
+  // モーダル本体
+  const dtOverlay = document.getElementById("dtOverlay");
+  const dtDate = document.getElementById("dt_date");
+  const dtTime = document.getElementById("dt_time");
+  const dtCancel = document.getElementById("dtCancel");
+  const dtConfirm = document.getElementById("dtConfirm");
+
+  let activeDT = null; // H_DT or D_DT
+
+  function openDtModal(controller){
+    activeDT = controller;
+
+    // 初期値：既存があればそれ、なければ「今日+1日 13:00」
+    let iso = controller.input.value;
+    if(!iso){
+      const now = new Date();
+      now.setDate(now.getDate() + 1);
+      now.setHours(13,0,0,0);
+      iso = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}T${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+    }
+    const [d,t] = iso.split("T");
+    dtDate.value = d;
+    dtTime.value = t ? t.slice(0,5) : "13:00";
+
+    dtOverlay.style.display = "flex";
+    dtOverlay.setAttribute("aria-hidden","false");
+  }
+
+  function closeDtModal(){
+    dtOverlay.style.display = "none";
+    dtOverlay.setAttribute("aria-hidden","true");
+    activeDT = null;
+  }
+
+  dtCancel.addEventListener("click", closeDtModal);
+  dtOverlay.addEventListener("click", (e)=>{
+    if(e.target === dtOverlay) closeDtModal();
+  });
+
+  dtConfirm.addEventListener("click", ()=>{
+    if(!activeDT) return;
+    if(!dtDate.value || !dtTime.value){
+      showToast("入力不足", "日付と時間を入れてください");
+      return;
+    }
+    const iso = `${dtDate.value}T${dtTime.value}`;
+    activeDT.setValueISO(iso);
+
+    // ここで「決定」を完結させる（ロック）
+    activeDT.unlock();
+    const ok = activeDT.lock();
+    closeDtModal();
+
+    if(ok) showToast("日時を決定", `${iso.replace("T"," ")} に固定しました`);
+  });
+
+  document.getElementById("h_dtPick").addEventListener("click", ()=>openDtModal(H_DT));
+  document.getElementById("d_dtPick").addEventListener("click", ()=>openDtModal(D_DT));
+
+  // =========================
+  // 草刈り：スライダー同期
+  // =========================
+  document.getElementById("g_rateLabel").innerText = `${PRICE.grassRatePerM2}円/㎡`;
+
+  const gArea = document.getElementById("g_area");
+  const gRange = document.getElementById("g_areaRange");
+
+  function syncGrassFromInput(){
+    const v = Math.max(0, num(gArea.value, 0));
+    gArea.value = String(v);
+    gRange.value = String(Math.max(0, Math.min(300, Math.round(v/5)*5)));
+  }
+  function syncGrassFromRange(){
+    const v = int(gRange.value, 0);
+    gArea.value = String(v);
+  }
+  gArea.addEventListener("input", ()=>{ const before=gArea.value; const after=z2h(before); if(before!==after) gArea.value=after; });
+  gArea.addEventListener("blur", syncGrassFromInput);
+  gRange.addEventListener("input", syncGrassFromRange);
+
+  // =========================
+  // 手伝う・作業：モード切替
+  // =========================
+  let helpingType = "light";
+  function setHelpingType(t){
+    helpingType = t;
+    document.getElementById("h_typeLight").setAttribute("aria-selected", t==="light" ? "true":"false");
+    document.getElementById("h_typeHard").setAttribute("aria-selected", t==="hard" ? "true":"false");
+  }
+  document.getElementById("h_typeLight").addEventListener("click", ()=>setHelpingType("light"));
+  document.getElementById("h_typeHard").addEventListener("click", ()=>setHelpingType("hard"));
+
+  function showHelpingMode(serviceKey){
+    const modes = ["grass","kerosene","estate","hourly","web"];
+    modes.forEach(m=>{
+      const el = document.getElementById(`h_mode_${m}`);
+      if(!el) return;
+      el.style.display = "none";
+    });
+
+    if(serviceKey === "grass"){
+      document.getElementById("h_mode_grass").style.display = "block";
+      return;
+    }
+    if(serviceKey === "kerosene"){
+      document.getElementById("h_mode_kerosene").style.display = "block";
+      return;
+    }
+    if(serviceKey === "estate"){
+      document.getElementById("h_mode_estate").style.display = "block";
+      syncEstateDefaults();
+      return;
+    }
+    if(serviceKey === "web"){
+      document.getElementById("h_mode_web").style.display = "block";
+      return;
+    }
+    document.getElementById("h_mode_hourly").style.display = "block";
+    if(serviceKey === "hard") setHelpingType("hard");
+    if(serviceKey === "light") setHelpingType("light");
+  }
+
+  function syncEstateDefaults(){
+    const vans = int(document.getElementById("e_vans").value, 1);
+    const heavy = int(document.getElementById("e_heavy").value, 0);
+    const base = (vans === 1) ? PRICE.estateBaseStaffFor1Van : PRICE.estateBaseStaffFor2Van;
+    const max = (vans === 1) ? PRICE.estateMaxStaffFor1Van : PRICE.estateMaxStaffFor2Van;
+
+    let staff = int(document.getElementById("e_staff").value, base);
+    const recommended = Math.min(max, base + (heavy ? 1 : 0));
+
+    if(staff < base || staff > max) staff = recommended;
+    document.getElementById("e_staff").value = String(staff);
+
+    document.getElementById("e_staffHint").innerText =
+      `※${vans}台=基本${base}名（最大${max}名）。重量物があると増員推奨：${recommended}名`;
+  }
+
+  document.getElementById("e_vans").addEventListener("change", syncEstateDefaults);
+  document.getElementById("e_heavy").addEventListener("change", syncEstateDefaults);
+
+  const hService = document.getElementById("h_service");
+  hService.addEventListener("change", ()=>showHelpingMode(hService.value));
+  showHelpingMode(hService.value);
+
+  // =========================
+  // 運ぶ・移動：サービスで表示調整
+  // =========================
+  function syncDrivingByService(){
+    const s = document.getElementById("d_service").value;
+    const hint = document.getElementById("d_serviceHint");
+
+    const haulBlock = document.getElementById("d_mode_haul");
+    const stairsBlock = document.getElementById("d_mode_stairs");
+
+    if(s === "haul"){
+      haulBlock.style.display = "block";
+      stairsBlock.style.display = "block";
+      hint.innerText = "※距離・階段（エレベーター無し）・車両台数・追加人員で変わります";
+      return;
+    }
+
+    haulBlock.style.display = "none";
+    stairsBlock.style.display = "none";
+
+    if(s === "shopping"){
+      hint.innerText = `※基本 ${yen(PRICE.shoppingBaseFee)}〜（目安）＋出張費（20kmまで無料）＋車両台数（2台は走行分×2）`;
+      return;
+    }
+    if(s === "carSupport"){
+      hint.innerText = `※基本 ${yen(PRICE.carSupportBaseFee)}（目安）＋出張費。法定費用・整備費は別途（最終見積）`;
+      return;
+    }
+  }
+  document.getElementById("d_service").addEventListener("change", syncDrivingByService);
+  syncDrivingByService();
+
+  document.getElementById("mapsStatus").innerText = "※距離は手入力でご入力ください";
+  document.getElementById("btnGetDistance").addEventListener("click", ()=>{
+    showToast("距離の入力", "積地・卸地の距離（km）を手入力してください");
+  });
+  document.getElementById("btnOpenMaps").addEventListener("click", ()=>{
+    showToast("距離の入力", "積地・卸地を確認のうえ、距離（km）を手入力してください");
+  });
+
+  // =========================
+  // 左クリック → 右に反映（左右連動 + ハイライト）
+  // =========================
+  function applyPreset(key){
+    document.getElementById("estimate").scrollIntoView({ behavior:"smooth", block:"start" });
+
+    if(key === "grass"){
+      setCategory("helping");
+      document.getElementById("h_service").value = "grass";
+      showHelpingMode("grass");
+      document.getElementById("g_area").value = "30";
+      document.getElementById("g_areaRange").value = "30";
+
+      flashElements([
+        document.getElementById("tabHelping"),
+        document.getElementById("h_service"),
+        document.getElementById("h_mode_grass"),
+        document.getElementById("g_area"),
+        document.getElementById("g_areaRange")
+      ]);
+
+      showToast("右に反映", "草刈り（面積）にセットしました");
+      return;
+    }
+
+    if(key === "kerosene"){
+      setCategory("helping");
+      document.getElementById("h_service").value = "kerosene";
+      showHelpingMode("kerosene");
+      document.getElementById("k_cans").value = "1";
+
+      flashElements([
+        document.getElementById("tabHelping"),
+        document.getElementById("h_service"),
+        document.getElementById("h_mode_kerosene"),
+        document.getElementById("k_cans")
+      ]);
+
+      showToast("右に反映", "灯油（ポリ缶数）にセットしました");
+      return;
+    }
+
+    if(key === "estate"){
+      setCategory("helping");
+      document.getElementById("h_service").value = "estate";
+      showHelpingMode("estate");
+      document.getElementById("e_vans").value = "1";
+      document.getElementById("e_heavy").value = "0";
+      document.getElementById("e_hours").value = "2";
+      syncEstateDefaults();
+
+      flashElements([
+        document.getElementById("tabHelping"),
+        document.getElementById("h_service"),
+        document.getElementById("h_mode_estate"),
+        document.getElementById("e_vans"),
+        document.getElementById("e_staff"),
+        document.getElementById("e_hours")
+      ]);
+
+      showToast("右に反映", "片付け相談（買取なし）にセットしました");
+      return;
+    }
+
+    if(key === "web"){
+      setCategory("helping");
+      document.getElementById("h_service").value = "web";
+      showHelpingMode("web");
+
+      flashElements([
+        document.getElementById("tabHelping"),
+        document.getElementById("h_service"),
+        document.getElementById("h_mode_web")
+      ]);
+
+      showToast("右に反映", "ホームページ制作にセットしました");
+      return;
+    }
+
+    if(key === "haul"){
+      setCategory("driving");
+      document.getElementById("d_service").value = "haul";
+      syncDrivingByService();
+      document.getElementById("d_vans").value = "1";
+      document.getElementById("d_pickFloor").value = "1";
+      document.getElementById("d_dropFloor").value = "1";
+      document.getElementById("d_pickElev").value = "yes";
+      document.getElementById("d_dropElev").value = "yes";
+
+      flashElements([
+        document.getElementById("tabDriving"),
+        document.getElementById("d_service"),
+        document.getElementById("d_vansWrap"),
+        document.getElementById("d_mode_haul"),
+        document.getElementById("d_mode_stairs"),
+        document.getElementById("d_mode_labor")
+      ]);
+
+      showToast("右に反映", "運搬（距離＆階段）にセットしました");
+      return;
+    }
+
+    if(key === "shopping"){
+      setCategory("driving");
+      document.getElementById("d_service").value = "shopping";
+      syncDrivingByService();
+      document.getElementById("d_vans").value = "1";
+      document.getElementById("d_workers").value = "0";
+      document.getElementById("d_wHours").value = "0";
+
+      flashElements([
+        document.getElementById("tabDriving"),
+        document.getElementById("d_service"),
+        document.getElementById("d_vansWrap"),
+        document.getElementById("d_mode_labor")
+      ]);
+
+      showToast("右に反映", "買い物代行（2,200円〜）にセットしました");
+      return;
+    }
+
+    if(key === "carSupport"){
+      setCategory("driving");
+      document.getElementById("d_service").value = "carSupport";
+      syncDrivingByService();
+      document.getElementById("d_vans").value = "1";
+      document.getElementById("d_workers").value = "0";
+      document.getElementById("d_wHours").value = "0";
+
+      flashElements([
+        document.getElementById("tabDriving"),
+        document.getElementById("d_service"),
+        document.getElementById("d_vansWrap"),
+        document.getElementById("d_mode_labor")
+      ]);
+
+      showToast("右に反映", "車検・整備（代行）にセットしました");
+      return;
+    }
+
+    showToast("反映できません", "このサービスは未設定です");
+  }
+
+  document.querySelectorAll("[data-preset]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const key = el.getAttribute("data-preset");
+      applyPreset(key);
+    });
+  });
+
+  // =========================
+  // 直近の見積テキスト（フッターへ自動反映）
+  // =========================
+  let lastQuoteText = "";
+  let lastHelping = null;
+  let lastDriving = null;
+
+  function setMessageBody(text){
+    lastQuoteText = text || "";
+    if(lastQuoteText){
+      document.getElementById("m_body").value = lastQuoteText; // ★計算時点で確実に流し込む
+    }
+  }
+
+  function moveToContactAndFill(text){
+    setMessageBody(text || lastQuoteText || "");
+    document.getElementById("contact").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  // =========================
+  // コピー文面（サービス別）
+  // =========================
+  function buildHelpingCopy(p){
+    const id = makeReservationId("help");
+    const lines = [];
+    lines.push("【見積｜手伝う・作業｜軽貨物TAKE】");
+    lines.push(`予約ID：${id}`);
+    lines.push(`サービス：${p.serviceLabel}`);
+    lines.push(`距離：${p.km}km`);
+    lines.push(`出張費：${yen(p.travelFee)}（${p.travelNote}）`);
+    if(p.datetime) lines.push(`希望日時：${p.datetime}`);
+    if(p.note) lines.push(`補足：${p.note}`);
+    lines.push("—");
+
+    if(p.serviceKey === "grass"){
+      lines.push(`広さ：${p.areaM2}㎡`);
+      lines.push(`草刈り：${yen(p.grassFee)}（${PRICE.grassRatePerM2}円/㎡｜最低${yen(PRICE.grassMinFee)}）`);
+      lines.push(`合計：${yen(p.total)}（税込概算）`);
+      lines.push("—");
+      lines.push("※草刈りは「袋詰め込」。回収・持ち帰り・処分は行いません（ゴミ出しはお客様へ）。");
+      lines.push("確定：LINE/メールで相談→合意後に本契約へ");
+      lines.push("支払い：当日決済（現金/振込）");
+      return { id, text: lines.join("\n") };
+    }
+
+    if(p.serviceKey === "kerosene"){
+      lines.push(`18Lポリ缶：${p.cans}個`);
+      lines.push(`灯油作業：${yen(p.keroseneFee)}（基本${yen(PRICE.keroseneBaseFee)} + 追加×${yen(PRICE.kerosenePerExtraCan)}）`);
+      lines.push(`合計：${yen(p.total)}（税込概算）`);
+      lines.push("—");
+      lines.push("※灯油代（商品代）は実費です（ここでは含めません）。");
+      lines.push("確定：LINE/メールで相談→合意後に本契約へ");
+      lines.push("支払い：当日決済（現金/振込）");
+      return { id, text: lines.join("\n") };
+    }
+
+    if(p.serviceKey === "estate"){
+      lines.push(`車両：${p.vans}台（車両費 ${yen(p.vanFee)}）`);
+      lines.push(`スタッフ：${p.staff}名 / 作業：${p.hours}時間`);
+      lines.push(`作業費：${yen(p.workFee)}（内訳は見積欄参照）`);
+      lines.push(`合計：${yen(p.total)}（税込概算）`);
+      lines.push("—");
+      lines.push("※名称は「相談（買取なし）」です。回収・処分は行いません（分別・袋詰め・排出段取り中心）。");
+      lines.push("確定：LINE/メールで相談→合意後に本契約へ");
+      lines.push("支払い：当日決済（現金/振込）");
+      return { id, text: lines.join("\n") };
+    }
+
+    if(p.serviceKey === "web"){
+      lines.push(`制作費（最低）：${yen(PRICE.webBaseMin)}（買い切り）`);
+      lines.push(`合計：${yen(p.total)}（税込概算）`);
+      lines.push("—");
+      lines.push("※内容で調整します（ページ数/構成/写真など）。");
+      lines.push("確定：LINE/メールで相談→合意後に本契約へ");
+      lines.push("支払い：当日決済（現金/振込）");
+      return { id, text: lines.join("\n") };
+    }
+
+    lines.push(`人数：${p.people}名 / 作業：${p.hours}時間`);
+    lines.push(`作業の種類：${p.typeLabel}`);
+    lines.push(`作業費：${yen(p.workFee)}`);
+    lines.push(`合計：${yen(p.total)}（税込概算）`);
+    lines.push("—");
+    lines.push("確定：LINE/メールで相談→合意後に本契約へ");
+    lines.push("支払い：当日決済（現金/振込）");
+    return { id, text: lines.join("\n") };
+  }
+
+  function buildDrivingCopy(p){
+    const id = makeReservationId("drive");
+    const lines = [];
+    lines.push("【見積｜運ぶ・移動｜軽貨物TAKE】");
+    lines.push(`予約ID：${id}`);
+    lines.push(`サービス：${p.serviceLabel}`);
+    lines.push(`車両台数：${p.vans}台（走行分×${p.vans}）`);
+    if(p.origin || p.destination){
+      lines.push(`積地：${p.origin || "(未入力)"} / 卸地：${p.destination || "(未入力)"}`);
+    }
+    lines.push(`距離：${p.km}km`);
+    lines.push(`出張費：${yen(p.travelFeeBase)}（${p.travelNote}）`);
+    if(p.datetime) lines.push(`希望日時：${p.datetime}`);
+    if(p.note) lines.push(`補足：${p.note}`);
+    lines.push("—");
+    lines.push(`走行分（基本＋出張）×台数：${yen(p.drivePart)}（基本${yen(p.baseFee)} + 出張${yen(p.travelFeeBase)}）×${p.vans}`);
+    if(p.stairsFee > 0) lines.push(`階段付帯：${yen(p.stairsFee)}`);
+    if(p.laborFee > 0) lines.push(`追加人件費：${yen(p.laborFee)}（${p.workers}人 × ${p.wHours}h × ${yen(PRICE.extraLaborPerHour)}）`);
+    lines.push(`合計：${yen(p.total)}（税込概算）`);
+    lines.push("—");
+    if(p.serviceKey === "shopping"){
+      lines.push("※商品代は実費です（ここでは含めません）。");
+    }
+    if(p.serviceKey === "carSupport"){
+      lines.push("※車検・整備は法定費用・整備費が別途で、最終見積になります。");
+    }
+    lines.push("確定：LINE/メールで相談→合意後に本契約へ");
+    lines.push("支払い：当日決済（現金/振込）");
+    return { id, text: lines.join("\n") };
+  }
+
+  // =========================
+  // 本契約へ（別ページ）— localStorage に下書き保存して移動
+  // =========================
+  const BOOKING_DRAFT_KEY = "TAKESAN_BOOKING_DRAFT";
+  function saveDraftAndGoBooking(draft){
+    const estimate = { ...(draft.estimate || {}), email: CFG.EMAIL_TO, lineUrl: CFG.LINE_URL };
+    const safe = { ...draft, estimate, createdAt: new Date().toISOString(), lineUrl: CFG.LINE_URL, emailTo: CFG.EMAIL_TO };
+    localStorage.setItem(BOOKING_DRAFT_KEY, JSON.stringify(safe));
+    const url = `${CFG.BOOKING_PAGE_URL}?type=${encodeURIComponent(draft.type)}`;
+    window.location.href = url;
+  }
+
+  // =========================
+  // 計算：手伝う・作業
+  // =========================
+  document.getElementById("btnCalcHelping").addEventListener("click", ()=>{
+    const serviceKey = document.getElementById("h_service").value;
+    const km = num(document.getElementById("h_km").value, 0);
+    const note = document.getElementById("h_note").value.trim();
+    const dt = H_DT.getValue();
+
+    const travel = calcTravelFee(km);
+
+    const labelMap = {
+      grass: "草刈り（袋詰め込｜面積）",
+      kerosene: "灯油買い出し＆給油（ポリ缶数）",
+      estate: "不用品仕分け・片付け相談（買取なし）",
+      light: "軽作業（掃除/電球交換/ゴミ出し準備）",
+      hard: "力仕事（家具移動/重量物）",
+      web: "ホームページ制作（買い切り）"
+    };
+
+    if(serviceKey === "grass"){
+      const areaM2 = Math.max(0, num(document.getElementById("g_area").value, 0));
+      const grassFee = Math.max(PRICE.grassMinFee, areaM2 * PRICE.grassRatePerM2);
+      const total = travel.fee + grassFee;
+
+      const breakdown = [
+        { k:"サービス", v: labelMap[serviceKey] },
+        { k:"距離", v: `${km || 0}km` },
+        { k:"出張費", v: yen(travel.fee) },
+        { k:"広さ", v: `${areaM2}㎡` },
+        { k:"草刈り", v: `${yen(grassFee)}（${PRICE.grassRatePerM2}円/㎡｜最低${yen(PRICE.grassMinFee)}）` },
+        { k:"合計", v: yen(total) }
+      ];
+
+      document.getElementById("resultHelping").style.display = "block";
+      document.getElementById("h_total").innerText = yen(total);
+      renderBreakdown(document.getElementById("h_breakdown"), breakdown);
+
+      const payload = {
+        type:"helping",
+        serviceKey,
+        serviceLabel: labelMap[serviceKey],
+        km: km || 0,
+        travelFee: travel.fee,
+        travelNote: travel.note,
+        datetime: dt,
+        note,
+        areaM2,
+        grassFee,
+        total,
+        breakdown
+      };
+
+      const pack = buildHelpingCopy(payload);
+      lastHelping = { payload, copyText: pack.text };
+      setMessageBody(pack.text);
+
+      bounceShow(document.getElementById("h_booking"));
+      showToast("計算OK", "見積がLINE/メール本文に入りました");
+      return;
+    }
+
+    if(serviceKey === "kerosene"){
+      const cans = Math.max(1, int(document.getElementById("k_cans").value, 1));
+      const extra = Math.max(0, cans - 1);
+      const keroseneFee = PRICE.keroseneBaseFee + extra * PRICE.kerosenePerExtraCan;
+      const total = travel.fee + keroseneFee;
+
+      const breakdown = [
+        { k:"サービス", v: labelMap[serviceKey] },
+        { k:"距離", v: `${km || 0}km` },
+        { k:"出張費", v: yen(travel.fee) },
+        { k:"18Lポリ缶", v: `${cans}個` },
+        { k:"灯油作業", v: `${yen(keroseneFee)}（基本${yen(PRICE.keroseneBaseFee)} + 追加×${yen(PRICE.kerosenePerExtraCan)}）` },
+        { k:"合計", v: yen(total) }
+      ];
+
+      document.getElementById("resultHelping").style.display = "block";
+      document.getElementById("h_total").innerText = yen(total);
+      renderBreakdown(document.getElementById("h_breakdown"), breakdown);
+
+      const payload = {
+        type:"helping",
+        serviceKey,
+        serviceLabel: labelMap[serviceKey],
+        km: km || 0,
+        travelFee: travel.fee,
+        travelNote: travel.note,
+        datetime: dt,
+        note,
+        cans,
+        keroseneFee,
+        total,
+        breakdown
+      };
+
+      const pack = buildHelpingCopy(payload);
+      lastHelping = { payload, copyText: pack.text };
+      setMessageBody(pack.text);
+
+      bounceShow(document.getElementById("h_booking"));
+      showToast("計算OK", "見積がLINE/メール本文に入りました");
+      return;
+    }
+
+    if(serviceKey === "estate"){
+      const vans = Math.max(1, int(document.getElementById("e_vans").value, 1));
+      const heavy = int(document.getElementById("e_heavy").value, 0);
+      const hours = roundToHalfHourHours(num(document.getElementById("e_hours").value, 2));
+      syncEstateDefaults();
+      const staff = int(document.getElementById("e_staff").value, 1);
+
+      const baseStaff = (vans === 1) ? PRICE.estateBaseStaffFor1Van : PRICE.estateBaseStaffFor2Van;
+      const maxStaff = (vans === 1) ? PRICE.estateMaxStaffFor1Van : PRICE.estateMaxStaffFor2Van;
+
+      const staffClamped = Math.max(baseStaff, Math.min(maxStaff, staff));
+      document.getElementById("e_staff").value = String(staffClamped);
+
+      const vanFee = vans * PRICE.vanFeePerUnit;
+
+      const extraStaff = Math.max(0, staffClamped - baseStaff);
+      const baseWork = hours * PRICE.lightPerHour * baseStaff;
+      const extraRate = (heavy ? PRICE.hardPerHour : PRICE.lightPerHour);
+      const extraWork = hours * extraRate * extraStaff;
+      const workFee = baseWork + extraWork;
+
+      const total = travel.fee + vanFee + workFee;
+
+      const breakdown = [
+        { k:"サービス", v: labelMap[serviceKey] },
+        { k:"距離", v: `${km || 0}km` },
+        { k:"出張費", v: yen(travel.fee) },
+        { k:"車両", v: `${vans}台（${yen(vanFee)}）` },
+        { k:"スタッフ", v: `${staffClamped}名（基本${baseStaff}名 + 追加${extraStaff}名）` },
+        { k:"作業時間", v: `${hours}時間` },
+        { k:"作業費", v: `${yen(workFee)}（基本：${yen(baseWork)} / 追加：${yen(extraWork)}）` },
+        { k:"合計", v: yen(total) }
+      ];
+
+      document.getElementById("resultHelping").style.display = "block";
+      document.getElementById("h_total").innerText = yen(total);
+      renderBreakdown(document.getElementById("h_breakdown"), breakdown);
+
+      const payload = {
+        type:"helping",
+        serviceKey,
+        serviceLabel: labelMap[serviceKey],
+        km: km || 0,
+        travelFee: travel.fee,
+        travelNote: travel.note,
+        datetime: dt,
+        note,
+        vans,
+        vanFee,
+        heavy: !!heavy,
+        staff: staffClamped,
+        baseStaff,
+        extraStaff,
+        hours,
+        workFee,
+        total,
+        breakdown
+      };
+
+      const pack = buildHelpingCopy(payload);
+      lastHelping = { payload, copyText: pack.text };
+      setMessageBody(pack.text);
+
+      bounceShow(document.getElementById("h_booking"));
+      showToast("計算OK", "見積がLINE/メール本文に入りました");
+      return;
+    }
+
+    if(serviceKey === "web"){
+      const total = travel.fee + PRICE.webBaseMin;
+
+      const breakdown = [
+        { k:"サービス", v: labelMap[serviceKey] },
+        { k:"距離", v: `${km || 0}km` },
+        { k:"出張費", v: yen(travel.fee) },
+        { k:"制作費（最低）", v: yen(PRICE.webBaseMin) },
+        { k:"合計", v: yen(total) }
+      ];
+
+      document.getElementById("resultHelping").style.display = "block";
+      document.getElementById("h_total").innerText = yen(total);
+      renderBreakdown(document.getElementById("h_breakdown"), breakdown);
+
+      const payload = {
+        type:"helping",
+        serviceKey,
+        serviceLabel: labelMap[serviceKey],
+        km: km || 0,
+        travelFee: travel.fee,
+        travelNote: travel.note,
+        datetime: dt,
+        note,
+        total,
+        breakdown
+      };
+
+      const pack = buildHelpingCopy(payload);
+      lastHelping = { payload, copyText: pack.text };
+      setMessageBody(pack.text);
+
+      bounceShow(document.getElementById("h_booking"));
+      showToast("計算OK", "見積がLINE/メール本文に入りました");
+      return;
+    }
+
+    // hourly
+    const people = int(document.getElementById("h_people").value, 1);
+    const hours = roundToHalfHourHours(num(document.getElementById("h_hours").value, 1));
+    if(hours <= 0){
+      showToast("入力不足", "作業時間を入れてください（0.5時間以上）");
+      return;
+    }
+    const typeForCalc = (serviceKey === "hard") ? "hard" : (serviceKey === "light" ? "light" : helpingType);
+    const work = calcHourlyFee(hours, typeForCalc, people);
+    const typeLabel = (typeForCalc === "hard") ? "力仕事（3,300円/時）" : "軽作業（2,200円/時）";
+    const total = travel.fee + work.fee;
+
+    const breakdown = [
+      { k:"サービス", v: labelMap[serviceKey] || serviceKey },
+      { k:"距離", v: `${km || 0}km` },
+      { k:"出張費", v: yen(travel.fee) },
+      { k:"人数", v: `${work.people}名` },
+      { k:"作業時間", v: `${work.hours}時間` },
+      { k:"作業の種類", v: typeLabel },
+      { k:"作業費", v: yen(work.fee) },
+      { k:"合計", v: yen(total) }
+    ];
+
+    document.getElementById("resultHelping").style.display = "block";
+    document.getElementById("h_total").innerText = yen(total);
+    renderBreakdown(document.getElementById("h_breakdown"), breakdown);
+
+    const payload = {
+      type:"helping",
+      serviceKey,
+      serviceLabel: labelMap[serviceKey] || serviceKey,
+      km: km || 0,
+      travelFee: travel.fee,
+      travelNote: travel.note,
+      datetime: dt,
+      note,
+      people: work.people,
+      hours: work.hours,
+      typeLabel,
+      workFee: work.fee,
+      total,
+      breakdown
+    };
+
+    const pack = buildHelpingCopy(payload);
+    lastHelping = { payload, copyText: pack.text };
+    setMessageBody(pack.text);
+
+    bounceShow(document.getElementById("h_booking"));
+    showToast("計算OK", "見積がLINE/メール本文に入りました");
+  });
+
+  document.getElementById("h_copy").addEventListener("click", async ()=>{
+    if(!lastHelping){ showToast("先に計算してください", "計算→コピーの順です"); return; }
+    const ok = await copyToClipboard(lastHelping.copyText);
+    showToast(ok ? "コピーしました" : "コピー失敗", "LINE/メールに貼り付けできます");
+  });
+
+  document.getElementById("h_toContact").addEventListener("click", async ()=>{
+    if(!lastHelping){ showToast("先に計算してください", "計算→連絡の順です"); return; }
+    await copyToClipboard(lastHelping.copyText);
+    moveToContactAndFill(lastHelping.copyText);
+    showToast("連絡へ", "本文はコピー済み＆メール欄にも入れました。LINE/メールを押してください。");
+  });
+
+  document.getElementById("h_booking").addEventListener("click", ()=>{
+    if(!lastHelping){ showToast("先に計算してください", "計算→本契約の順です"); return; }
+    saveDraftAndGoBooking({
+      type: "helping",
+      quoteText: lastHelping.copyText,
+      estimate: lastHelping.payload
+    });
+  });
+
+  // =========================
+  // 計算：運ぶ・移動（車両台数×走行分 + 追加人件費）
+  // =========================
+  document.getElementById("btnCalcDriving").addEventListener("click", ()=>{
+    const serviceKey = document.getElementById("d_service").value;
+    const km = num(document.getElementById("d_km").value, 0);
+    const vans = Math.max(1, Math.min(2, int(document.getElementById("d_vans").value, 1)));
+    const note = document.getElementById("d_note").value.trim();
+    const dt = D_DT.getValue();
+
+    const travel = calcTravelFee(km);
+
+    const labelMap = {
+      haul: "運搬（距離＆階段）",
+      shopping: "買い物代行（2,200円〜）",
+      carSupport: "車検・整備（ユーザー車検代行／搬入）"
+    };
+
+    let baseFee = PRICE.haulBaseFee;
+    if(serviceKey === "shopping") baseFee = PRICE.shoppingBaseFee;
+    if(serviceKey === "carSupport") baseFee = PRICE.carSupportBaseFee;
+
+    // ★走行分（基本＋出張）を車両台数で倍化
+    const travelFeeBase = travel.fee;
+    const drivePart = (baseFee + travelFeeBase) * vans;
+
+    // 付帯：運搬のみ階段計算
+    let stairsFee = 0;
+    let origin = "";
+    let destination = "";
+    if(serviceKey === "haul"){
+      origin = document.getElementById("d_origin").value.trim();
+      destination = document.getElementById("d_destination").value.trim();
+
+      const pickFloor = int(document.getElementById("d_pickFloor").value, 1);
+      const dropFloor = int(document.getElementById("d_dropFloor").value, 1);
+      const pickElev = document.getElementById("d_pickElev").value === "yes";
+      const dropElev = document.getElementById("d_dropElev").value === "yes";
+
+      const feePick = calcStairsFee(pickFloor, pickElev);
+      const feeDrop = calcStairsFee(dropFloor, dropElev);
+      stairsFee = feePick + feeDrop;
+    }
+
+    // 追加人件費（ドライバー以外） 2,200円/人・時
+    const workers = Math.max(0, int(document.getElementById("d_workers").value, 0));
+    const wHours = roundToHalfHourHours(num(document.getElementById("d_wHours").value, 0));
+    const laborFee = workers * wHours * PRICE.extraLaborPerHour;
+
+    const total = drivePart + stairsFee + laborFee;
+
+    const breakdown = [
+      { k:"サービス", v: labelMap[serviceKey] || serviceKey },
+      { k:"車両台数", v: `${vans}台（走行分×${vans}）` },
+      { k:"距離", v: `${km || 0}km` },
+      { k:"走行分（基本＋出張）×台数", v: `${yen(drivePart)}（基本${yen(baseFee)} + 出張${yen(travelFeeBase)}）×${vans}` },
+    ];
+    if(serviceKey === "haul"){
+      breakdown.push({ k:"階段付帯", v: stairsFee ? yen(stairsFee) : "なし（エレベーター/1階）" });
+    }
+    breakdown.push({ k:"追加人件費（ドライバー以外）", v: laborFee ? `${yen(laborFee)}（${workers}人 × ${wHours}h × ${yen(PRICE.extraLaborPerHour)}）` : "なし" });
+    breakdown.push({ k:"合計", v: yen(total) });
+
+    document.getElementById("resultDriving").style.display = "block";
+    document.getElementById("d_total").innerText = yen(total);
+    renderBreakdown(document.getElementById("d_breakdown"), breakdown);
+
+    const payload = {
+      type:"driving",
+      serviceKey,
+      serviceLabel: labelMap[serviceKey] || serviceKey,
+      vans,
+      origin, destination,
+      km: km || 0,
+      travelFeeBase,
+      travelNote: travel.note,
+      datetime: dt,
+      note,
+      baseFee,
+      drivePart,
+      stairsFee,
+      workers,
+      wHours,
+      laborFee,
+      total,
+      breakdown
+    };
+
+    const pack = buildDrivingCopy(payload);
+    lastDriving = { payload, copyText: pack.text };
+    setMessageBody(pack.text);
+
+    bounceShow(document.getElementById("d_booking"));
+    showToast("計算OK", "見積がLINE/メール本文に入りました");
+  });
+
+  document.getElementById("d_copy").addEventListener("click", async ()=>{
+    if(!lastDriving){ showToast("先に計算してください", "計算→コピーの順です"); return; }
+    const ok = await copyToClipboard(lastDriving.copyText);
+    showToast(ok ? "コピーしました" : "コピー失敗", "LINE/メールに貼り付けできます");
+  });
+
+  document.getElementById("d_toContact").addEventListener("click", async ()=>{
+    if(!lastDriving){ showToast("先に計算してください", "計算→連絡の順です"); return; }
+    await copyToClipboard(lastDriving.copyText);
+    moveToContactAndFill(lastDriving.copyText);
+    showToast("連絡へ", "本文はコピー済み＆メール欄にも入れました。LINE/メールを押してください。");
+  });
+
+  document.getElementById("d_booking").addEventListener("click", ()=>{
+    if(!lastDriving){ showToast("先に計算してください", "計算→本契約の順です"); return; }
+    saveDraftAndGoBooking({
+      type: "driving",
+      quoteText: lastDriving.copyText,
+      estimate: lastDriving.payload
+    });
+  });
+
+  // =========================
+  // フッター：メール / 直近コピー / LINEへ流し込み
+  // =========================
+  document.getElementById("btnMailJump").addEventListener("click", ()=>{
+    document.getElementById("mailForm").scrollIntoView({ behavior:"smooth", block:"start" });
+  });
+
+  document.getElementById("btnCopyLast").addEventListener("click", async ()=>{
+    if(!lastQuoteText){
+      showToast("まだ見積がありません", "右の計算機で計算してください");
+      return;
+    }
+    const ok = await copyToClipboard(lastQuoteText);
+    showToast(ok ? "コピーしました" : "コピー失敗", "LINE/メールに貼り付けできます");
+  });
+
+  // LINE：見積があれば本文を開く（なければ友だち追加リンク）
+  document.getElementById("btnLineOpen").addEventListener("click", async (e)=>{
+    e.preventDefault();
+    if(!lastQuoteText){
+      window.open(CFG.LINE_URL, "_blank", "noopener,noreferrer");
+      showToast("LINE", "友だち追加リンクを開きました");
+      return;
+    }
+    // まずコピー（失敗しても続行）
+    await copyToClipboard(lastQuoteText);
+
+    // LINEの“本文付き”起動（share）
+    const shareUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(lastQuoteText.slice(0, 5000));
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
+    showToast("LINEを開きました", "本文はコピー済みです（貼り付けもできます）");
+  });
+
+  document.getElementById("btnMailCopy").addEventListener("click", async ()=>{
+    const body = document.getElementById("m_body").value.trim();
+    if(!body){ showToast("本文なし", "相談内容を入れてください"); return; }
+    const ok = await copyToClipboard(body);
+    showToast(ok ? "コピーしました" : "コピー失敗", "メール本文に貼り付けできます");
+  });
+
+  document.getElementById("btnMailSend").addEventListener("click", async ()=>{
+    const name = document.getElementById("m_name").value.trim();
+    const reply = document.getElementById("m_reply").value.trim();
+    const bodyRaw = document.getElementById("m_body").value.trim();
+    if(!bodyRaw){ showToast("本文なし", "相談内容を入れてください"); return; }
+
+    const lines = [];
+    lines.push("【軽貨物TAKE 相談】");
+    if(name) lines.push(`お名前：${name}`);
+    if(reply) lines.push(`返信用メール：${reply}`);
+    lines.push("—");
+    lines.push(bodyRaw);
+
+    const body = lines.join("\n");
+    await copyToClipboard(body);
+
+    const url = buildMailto("軽貨物TAKE｜相談", body);
+    window.open(url, "_blank");
+    showToast("メールを作成", "本文はコピー済みです（必要なら貼り付けて送信）");
+  });
+
+  // =========================
+  // ナビ：確実に動くスムーススクロール（固定ヘッダー分のオフセット）
+  // =========================
+  function smoothScrollToTarget(target){
+    const header = document.querySelector("header");
+    const offset = (header?.offsetHeight || 0) + 10;
+    const rect = target.getBoundingClientRect();
+    const top = window.pageYOffset + rect.top - offset;
+    window.scrollTo({ top, behavior:"smooth" });
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener("click", (e)=>{
+      const href = a.getAttribute("href");
+      if(!href || href === "#") return;
+      const target = document.querySelector(href);
+      if(!target) return;
+      e.preventDefault();
+      smoothScrollToTarget(target);
+    });
+  });
+
+  // =========================
+  // UI：上へ戻る
+  // =========================
+  const fabTop = document.getElementById("fabTop");
+  window.addEventListener("scroll", ()=>{
+    fabTop.style.display = (window.scrollY > 420) ? "block" : "none";
+  }, {passive:true});
+
+  // =========================
+  // ヘルプ「？」：説明は既存本文からの引用のみ
+  // =========================
+  var helpTitles = { hero: "このページについて", calc: "見積（計算機）", services: "できること", faq: "よくある質問", contact: "連絡（LINE / メール）" };
+  var helpBodies = {
+    hero: "左のサービスを押すと、右の計算機が自動で切り替わります。まずは「いくらか？」を出して、ページ下のLINEかメールで送ってください。流れ：①見積（右） → ②下のLINE/メールで相談・合意 → ③本契約（別ページ） → ④当日作業・当日決済",
+    calc: "20km圏内：出張無料。超過は5kmごとに+550円（税込）。結果に「いくらか？」を表示 → LINE/メールへ自動反映。概算です。現地状況で調整が入る場合があります。当日決済（現金/振込）。確定は下のLINE/メールで合意後に本契約へ。",
+    services: "できること（押すと右に反映）。草刈り・灯油買い出し・不用品仕分け・片付け相談・運搬・買い物代行・車検・整備・ホームページ制作など。各項目を開くと説明があります。",
+    faq: "よくある質問は下の折りたたみでご確認ください。支払い方法・出張費・草刈りのゴミ・灯油の商品代・片付けの範囲・連絡手段など。",
+    contact: "連絡（LINE / メール）。計算した見積が自動で本文に入ります。電話番号は非掲載です（履歴が残るLINE/メールを優先）。当日決済（現金/振込）。確定は合意後に本契約（別ページ）へ。"
+  };
+  document.querySelectorAll(".helpBtn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var id = this.getAttribute("data-help");
+      var title = helpTitles[id] || "説明";
+      var body = helpBodies[id] || "";
+      document.getElementById("helpTitle").textContent = title;
+      document.getElementById("helpContent").innerHTML = "<p>" + (body.replace(/</g,"&lt;").replace(/>/g,"&gt;")) + "</p>";
+      var overlay = document.getElementById("helpOverlay");
+      overlay.setAttribute("aria-hidden", "false");
+      overlay.style.display = "flex";
+    });
+  });
+  document.getElementById("helpClose").addEventListener("click", function(){
+    document.getElementById("helpOverlay").setAttribute("aria-hidden", "true");
+    document.getElementById("helpOverlay").style.display = "none";
+  });
+  document.getElementById("helpOverlay").addEventListener("click", function(e){
+    if (e.target === this) {
+      this.setAttribute("aria-hidden", "true");
+      this.style.display = "none";
+    }
+  });
+</script>
+<script src="assets/sakura.js"></script>
+</body>
+</html>
