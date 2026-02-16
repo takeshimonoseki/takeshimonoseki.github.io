@@ -98,23 +98,25 @@ h1, h2, h3, h4, h5, h6 {
 .delay-200 { transition-delay: 200ms; }
 .delay-300 { transition-delay: 300ms; }
 
-/* --- ヘッダーナビ：hover/active/focusで幅・高さ・位置が変わらない --- */
-/* ナビリンク共通：border幅固定・transform禁止・box-shadowのみ変化 */
+/* --- ヘッダーナビ：hover/active/focusで幅・高さ・余白が変わらない --- */
+/* ナビリンク：border幅1px固定・transform禁止・min-width/min-heightでズレ防止 */
 .nav-link-fixed,
-header nav a[href] {
+header nav a[href],
+header nav span[aria-current] {
   display: inline-block;
   padding: 8px 16px;
-  min-width: 0;
+  min-width: 4rem;
+  min-height: 2.25rem;
   box-sizing: border-box;
   border: 1px solid transparent;
   transition: color 0.16s ease, background-color 0.16s ease;
+  transform: none !important;
 }
 .nav-link-fixed:hover,
 header nav a[href]:hover {
   color: #fff;
   background-color: rgba(255,255,255,0.05);
   border-color: transparent;
-  transform: none;
   box-shadow: none;
 }
 .nav-link-fixed:active,
@@ -122,14 +124,22 @@ header nav a[href]:hover {
 header nav a[href]:active,
 header nav a[href]:focus {
   outline: none;
-  transform: none;
   border-width: 1px;
 }
 .nav-link-fixed[aria-current="page"],
-header nav a[href][aria-current="page"] {
+header nav a[href][aria-current="page"],
+header nav span[aria-current="page"] {
   background: #fff;
   color: #000;
   border-color: transparent;
+}
+/* ヘッダー右側の連絡ボタンもズレ防止 */
+header [aria-label="連絡先"] a {
+  display: inline-block;
+  min-height: 1.5rem;
+  border: 1px solid transparent;
+  padding: 2px 0;
+  transform: none !important;
 }
 
 /* ロゴ・アイコン hover で scale しない（崩れ防止） */

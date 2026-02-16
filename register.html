@@ -294,22 +294,24 @@
                 <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
               </div>
               <div class="choice-radio" id="preferredContactRow">
-                <label><input type="radio" name="preferredContact" value="メール" />メール</label>
                 <label><input type="radio" name="preferredContact" value="LINE" />LINE</label>
+                <label><input type="radio" name="preferredContact" value="メール" />メール</label>
+                <label><input type="radio" name="preferredContact" value="電話" />電話</label>
                 <label><input type="radio" name="preferredContact" value="どれでも" checked />どれでも</label>
               </div>
             </div>
 
-            <!-- Contact Info（メール or LINE表示名） -->
+            <!-- Contact Info（どれか1つでOK） -->
             <div>
               <div class="flex items-center gap-2 mb-2">
                 <label class="text-sm font-bold">連絡先（どれか1つでOK）</label>
                 <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400">非公開</span>
                 <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <input type="email" id="contactEmail" name="contactEmail" autocomplete="email" placeholder="メール（例：mail@example.com）" class="field-input" />
                 <input type="text" id="contactLineName" name="contactLineName" autocomplete="off" placeholder="LINE表示名（例：たけ さん）" class="field-input" />
+                <input type="text" id="contactPhone" name="contactPhone" inputmode="tel" autocomplete="tel" placeholder="電話番号（例：090-xxxx-xxxx）" class="field-input" />
               </div>
               <div class="text-xs text-muted mt-1">サイトには公開しません（代表たけだけが控えます）。</div>
             </div>
@@ -490,6 +492,7 @@
     const vehicleModelEl = document.getElementById("vehicleModel");
     const contactEmailEl = document.getElementById("contactEmail");
     const contactLineNameEl = document.getElementById("contactLineName");
+    const contactPhoneEl = document.getElementById("contactPhone");
     const preferredContactEls = document.querySelectorAll('input[name="preferredContact"]');
     const agreeTermsEl = document.getElementById("agreeTerms");
     const agreeLabelEl = document.getElementById("agreeLabel");
@@ -618,11 +621,13 @@
 
       var contactEmail = (contactEmailEl.value || "").trim();
       var contactLineName = (contactLineNameEl.value || "").trim();
-      if (!contactEmail && !contactLineName) {
-        errors.push("連絡先（メール or LINE表示名）のどれか1つを入力してください。");
+      var contactPhone = (contactPhoneEl.value || "").trim();
+      if (!contactEmail && !contactLineName && !contactPhone) {
+        errors.push("連絡先（メール／LINE表示名／電話番号）のどれか1つを入力してください。");
         if (paintUI) {
           addFieldError_(contactEmailEl);
-          addFieldError_(contactLineNameEl, "どれか1つ必須です");
+          addFieldError_(contactLineNameEl);
+          addFieldError_(contactPhoneEl, "どれか1つ必須です");
           setFirst(contactEmailEl);
         }
       }
@@ -640,6 +645,7 @@
         preferredContact: getPreferredContact(),
         contactEmail: contactEmail,
         contactLineName: contactLineName,
+        contactPhone: contactPhone,
         messageToTake: (document.getElementById("messageToTake").value || "").trim(),
         profile: (document.getElementById("profile").value || "").trim(),
         dispatchHope: (document.getElementById("dispatchHope").value || "").trim(),
@@ -675,7 +681,8 @@
 
       var mail = (contactEmailEl.value || "").trim();
       var line = (contactLineNameEl.value || "").trim();
-      var contactOk = !!(mail || line);
+      var phone = (contactPhoneEl.value || "").trim();
+      var contactOk = !!(mail || line || phone);
       if (!contactOk) missing.push("連絡先(どれか1つ)");
 
       var agreed = !!(agreeTermsEl && agreeTermsEl.checked);
@@ -699,6 +706,7 @@
       if (vehicleModelEl) vehicleModelEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       contactEmailEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       contactLineNameEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
+      contactPhoneEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       agreeTermsEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       preferredContactEls.forEach(function(el){ el.addEventListener(ev, function(){ updateSubmitHint(); }); });
     });
@@ -715,6 +723,7 @@
       lines.push("連絡先：");
       if (payload.contactEmail) lines.push("・メール：" + payload.contactEmail);
       if (payload.contactLineName) lines.push("・LINE表示名：" + payload.contactLineName);
+      lines.push("・電話：" + (payload.contactPhone || "未入力"));
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);
       if (payload.profile) lines.push("ひとこと：" + payload.profile);
       if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);
@@ -732,6 +741,7 @@
       lines.push("希望連絡：" + payload.preferredContact);
       lines.push("メール：" + (payload.contactEmail || "—"));
       lines.push("LINE表示名：" + (payload.contactLineName || "—"));
+      lines.push("電話：" + (payload.contactPhone || "未入力"));
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);
       if (payload.profile) lines.push("ひとこと：" + payload.profile);
       if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);
