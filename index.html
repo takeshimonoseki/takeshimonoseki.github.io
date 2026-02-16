@@ -550,18 +550,10 @@
         }
 
         var mailLink = document.getElementById("headerMailLink");
-        var telLink = document.getElementById("headerTelLink");
         var email = window.CONFIG.EMAIL_TO || "";
-        var tel = window.CONFIG.TEL || "";
 
-        // LINE links
-        var lineUrl = window.CONFIG.LINE_URL || "#";
-        [
-          "headerLineLink",
-          "heroLineBtn",
-          "contactLineBtn",
-          "footerLineBtn",
-        ].forEach(function (id) {
+        var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
+        ["headerLineLink", "heroLineBtn", "contactLineBtn", "footerLineBtn"].forEach(function (id) {
           var el = document.getElementById(id);
           if (el) el.href = lineUrl;
         });
@@ -570,19 +562,6 @@
           mailLink.href = "mailto:" + email;
           mailLink.textContent = email;
         }
-        if (telLink && tel) {
-          telLink.href = "tel:" + tel.replace(/[^0-9+]/g, "");
-          telLink.textContent = tel.replace(
-            /(\d{3})(\d{4})(\d{4})/,
-            "$1-$2-$3",
-          );
-        }
-
-        // Tel buttons
-        ["heroTelBtn", "contactTelBtn", "footerTelBtn"].forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el && tel) el.href = "tel:" + tel.replace(/[^0-9+]/g, "");
-        });
 
         // Mail buttons
         var contactMailBtn = document.getElementById("contactMailBtn");
