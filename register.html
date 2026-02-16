@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>協力ドライバー登録フォーム｜drivers-site（山口県）</title>
+  <title>協力ドライバー登録フォーム｜軽貨物TAKE（山口県）</title>
   <meta name="description" content="山口県エリアの協力ドライバー登録フォーム。ニックネーム・拠点市町村・連絡先などを入力して登録できます。" />
   <link rel="canonical" href="https://takeshimonoseki.github.io/register.html" />
   <meta property="og:title" content="協力ドライバー登録フォーム｜drivers-site（山口県）" />
   <meta property="og:url" content="https://takeshimonoseki.github.io/register.html" />
   <meta property="og:type" content="website" />
 
-  <!-- Fonts -->
+  <!-- Fonts: Nunito (rounded, friendly) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,139 +22,93 @@
       theme: {
         extend: {
           colors: {
-            deep: '#050505',
-            muted: '#94A3B8',
+            warm: '#FAFAF9',
+            cream: '#FDFBF7',
+            blush: { 100: '#FFE4E6', 200: '#FECDD3', 300: '#FDA4AF', 400: '#FB7185', 500: '#F43F5E' },
+            skin: '#44403C',
           },
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Nunito', 'Rounded Mplus 1c', 'sans-serif'],
           }
         }
       }
     }
   </script>
 
-  <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./customer.css" />
   <script src="./config.js"></script>
 
   <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* Form-specific dark-mode overrides */
-    .field-input {
-      width: 100%;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 10px 14px;
-      color: white;
-      font-size: 14px;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Form overrides — warm theme (most styles from customer.css) */
+    .driver-banner {
+      background: linear-gradient(135deg, #FFE4E6, #FECDD3);
+      border: 1px solid rgba(254,205,211,0.5);
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #44403C;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .field-input:focus {
-      outline: none;
-      border-color: rgba(56,189,248,0.5);
-      box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
-    }
-    .field-input::placeholder { color: rgba(255,255,255,0.25); }
-    select.field-input { appearance: none; cursor: pointer; }
-    select.field-input option { background: #1e293b; color: white; }
-    textarea.field-input { resize: vertical; min-height: 80px; }
 
-    .is-invalid { border-color: rgba(239,68,68,0.6) !important; }
-    .is-invalid:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.15) !important; }
+    .is-invalid { border-color: #EF4444 !important; }
+    .is-invalid:focus { box-shadow: 0 0 0 4px rgba(239,68,68,0.12) !important; }
     .field-error-text { color: #f87171; font-size: 12px; margin-top: 4px; }
 
-    .choice-radio { display: flex; flex-wrap: wrap; gap: 8px; }
-    .choice-radio label {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 14px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      cursor: pointer; font-size: 13px; font-weight: 600;
-      transition: all 0.2s ease;
-    }
-    .choice-radio label:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
-    .choice-radio label:has(:checked) { border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.05); }
-    .choice-radio input[type="radio"],
-    .choice-radio input[type="checkbox"] { accent-color: #38bdf8; }
+    /* choice-radio now in customer.css */
 
-    .error-banner {
-      padding: 16px; border-radius: 16px;
-      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
-      color: #fca5a5; font-size: 14px;
-    }
-    .error-banner strong { color: #f87171; }
-    .error-banner ul { margin-top: 8px; padding-left: 18px; }
-    .error-banner li { margin-bottom: 4px; }
+    /* error/success banners now in customer.css */
 
-    .success-banner {
-      padding: 20px; border-radius: 16px;
-      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
-      color: #86efac; font-size: 14px;
-    }
-    .success-banner strong { color: #4ade80; }
+
     .summary-list { list-style: none; padding: 0; margin-top: 8px; }
-    .summary-list li {
-      padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 13px; color: rgba(255,255,255,0.7);
-    }
+    /* summary-list in customer.css */
 
-    .terms-box {
-      padding: 16px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.02);
-    }
-    .terms-box .terms-title { font-weight: 800; font-size: 14px; margin-bottom: 8px; }
-    .terms-box .terms-list { padding-left: 18px; font-size: 13px; color: rgba(255,255,255,0.6); }
-    .terms-box .terms-list li { margin-bottom: 6px; }
-    .terms-box .terms-note { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 8px; }
-    .terms-box .terms-note a { color: #38bdf8; text-decoration: underline; }
+    /* terms-box in customer.css */
 
     #agreeLabel { font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-    #agreeLabel.is-invalid { color: #f87171; }
-    #agreeLabel input { accent-color: #38bdf8; }
-
-    .submit-hint { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
-    .is-disabled { opacity: 0.4; pointer-events: none; }
+    #agreeLabel.is-invalid { color: #EF4444; }
+    #agreeLabel input { accent-color: #FB7185; }
   </style>
 </head>
-<body class="bg-deep text-white min-h-screen">
+<body class="bg-warm text-skin min-h-screen">
 
   <!-- ═══════════════════════════════════════════════════════ -->
   <!-- HEADER -->
   <!-- ═══════════════════════════════════════════════════════ -->
-  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
+  <header class="site-header">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="./index.html" class="flex items-center gap-3 group">
-        <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
-          <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
-          <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
+      <a href="./index.html" class="brand group">
+        <div class="hidden sm:flex region-badge" aria-label="対応地域">
+          <div class="region-en" id="regionEn">YAMAGUCHI</div>
+          <div class="region-ja" id="regionJa">山口県</div>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
-          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        <div class="brand-mark group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+          <span class="brand-mark-inner"></span>
         </div>
         <div>
           <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
-          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">REGISTRATION</div>
+          <div class="text-[10px] text-stone-400 font-bold mt-0.5">ドライバー登録</div>
         </div>
       </a>
 
       <div class="flex items-center gap-4">
-        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="#" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerTelLink" class="hover:text-white transition-colors">090-XXXX-XXXX</a>
+        <div class="hidden lg:flex items-center gap-3 text-xs text-stone-400" aria-label="連絡先">
+          <a href="#" id="headerLineLink" class="hover:text-blush-500 transition-colors">相談する</a>
+          <span class="text-stone-300">|</span>
+          <a href="#" id="headerMailLink" class="hover:text-blush-500 transition-colors">takeshimonoseki@gmail.com</a>
+          <span class="text-stone-300">|</span>
+          <a href="#" id="headerTelLink" class="hover:text-blush-500 transition-colors">090-XXXX-XXXX</a>
         </div>
 
         <nav class="hidden md:flex gap-1" aria-label="メイン">
-          <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
-          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">登録</a>
+          <a href="./index.html" class="nav-link">トップ</a>
+          <a href="./register.html" class="nav-link active" aria-current="page">ドライバー登録</a>
         </nav>
       </div>
     </div>
@@ -165,18 +119,24 @@
   <!-- ═══════════════════════════════════════════════════════ -->
   <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
 
+    <!-- Driver Banner -->
+    <div class="driver-banner">
+      <i data-lucide="truck" class="w-5 h-5 flex-shrink-0" style="color: #F43F5E;"></i>
+      このページは<strong>協力ドライバー登録</strong>用です。配送のご依頼は<a href="./index.html#request-form" style="color: #F43F5E; text-decoration: underline;">こちら</a>から。
+    </div>
+
     <!-- Intro -->
     <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden relative overflow-hidden">
-      <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-blush-200/30 to-transparent rounded-full blur-3xl pointer-events-none"></div>
       <div class="relative z-10">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-bold text-muted mb-4">
+        <span class="kicker mb-4">
           <i data-lucide="info" class="w-3 h-3"></i> 求人ではなく「登録プール」です
         </span>
         <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">協力ドライバー登録フォーム</h1>
-        <p class="text-sm text-muted leading-relaxed mb-2">
-          お客さまとドライバーさんを<strong class="text-white">直接つながず</strong>、代表たけが間に入る前提の登録フォームです。
+        <p class="text-sm text-stone-500 leading-relaxed mb-2">
+          お客さまとドライバーさんを<strong class="text-skin">直接つながず</strong>、代表たけが間に入る前提の登録フォームです。
         </p>
-        <p class="text-xs text-white/40">
+        <p class="text-xs text-stone-400">
           ※ここでは「どんな方か」「どの時間帯が合いそうか」を把握する目的です。<br>
           ※登録内容は後から変更・削除の依頼が可能です（LINEからご連絡ください）。
         </p>
@@ -184,7 +144,7 @@
     </div>
 
     <!-- Registration Form -->
-    <div class="glass-card p-6 md:p-10 reveal-hidden delay-100">
+    <div class="glass-card p-6 md:p-10 reveal-hidden delay-100" style="background: rgba(255,255,255,0.8);">
       <form id="registerForm" novalidate>
 
         <!-- Error Banner -->
@@ -195,11 +155,11 @@
         </div>
 
         <!-- Required Fields Box -->
-        <div class="p-5 rounded-2xl border border-amber-500/20 bg-amber-500/5 mb-6">
+        <div class="p-5 rounded-2xl border" style="border-color: rgba(254,205,211,0.4); background: rgba(255,228,230,0.15);" class="mb-6">
           <div class="flex items-center gap-2 mb-5">
-            <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+            <i data-lucide="zap" class="w-4 h-4" style="color: #FB7185;"></i>
             <span class="font-bold text-sm">まずここだけ入力</span>
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">必須まとめ</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background: rgba(254,205,211,0.2); color: #F43F5E;">必須まとめ</span>
           </div>
 
           <div class="space-y-5">
@@ -318,7 +278,7 @@
             <!-- Submit -->
             <div class="flex flex-col items-end gap-2">
               <div class="submit-hint" id="submitHint" aria-live="polite"></div>
-              <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all active:scale-95" id="submitBtn">
+              <button type="submit" class="btn btn-primary" id="submitBtn">
                 <i data-lucide="send" class="w-4 h-4"></i> 登録する
               </button>
             </div>
@@ -372,7 +332,7 @@
           取りこぼし防止のため、下のボタンから<strong>内容をLINEメッセージとして送ってください</strong>。
         </div>
         <div class="mt-3">
-          <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all" id="btnLineFallback">
+          <button type="button" class="btn btn-line btn-sm" id="btnLineFallback">
             <i data-lucide="message-circle" class="w-4 h-4"></i> LINEで内容を送る
           </button>
         </div>
@@ -403,10 +363,11 @@
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 mt-12 pt-8 pb-4 text-center">
-      <div class="text-xs text-muted" id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
-      <div class="text-[11px] text-white/30 mt-1">フォームからの登録に加え、LINE経由での登録内容修正・削除依頼も受け付けます。</div>
-      <p class="text-[11px] text-muted mt-2"><a href="./privacy.html" class="underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors">プライバシー・個人情報の取扱い</a></p>
+    <footer class="site-footer">
+      <div class="text-xs text-stone-400" id="footerCompany">軽貨物TAKE｜協力ドライバー登録プール（山口県）</div>
+      <div class="text-[11px] text-stone-400 mt-1">フォームからの登録に加え、LINE経由での登録内容修正・削除依頼も受け付けます。</div>
+      <p class="text-[11px] text-stone-400 mt-2"><a href="./privacy.html" class="underline underline-offset-4 hover:text-blush-500 transition-colors">プライバシー・個人情報の取扱い</a></p>
+      <p class="text-[11px] text-stone-300 mt-2"><a href="./index.html" class="underline underline-offset-4 hover:text-stone-500 transition-colors">← 配送サービストップに戻る</a></p>
     </footer>
   </main>
 

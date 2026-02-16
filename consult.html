@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>相談スタート｜drivers-site（山口県）</title>
+  <title>相談スタート｜軽貨物TAKE（山口県）</title>
   <meta name="description" content="どの相談から始めるか選び、内容をまとめてLINEの送信欄に下書きとして入れます。" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,62 +18,61 @@
       theme: {
         extend: {
           colors: {
-            deep: '#050505',
-            muted: '#94A3B8',
+            warm: '#FAFAF9',
+            cream: '#FDFBF7',
+            blush: { 100: '#FFE4E6', 200: '#FECDD3', 300: '#FDA4AF', 400: '#FB7185', 500: '#F43F5E' },
+            skin: '#44403C',
           },
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['Nunito', 'Rounded Mplus 1c', 'sans-serif'],
           }
         }
       }
     }
   </script>
 
-  <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./customer.css" />
   <script src="./config.js"></script>
 
   <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-deep text-white min-h-screen">
+<body class="bg-warm text-skin min-h-screen">
   <div id="top"></div>
 
   <!-- ═══════════════════════════════════════════════════════ -->
   <!-- HEADER — Fixed, Glassmorphism -->
   <!-- ═══════════════════════════════════════════════════════ -->
-  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
+  <header class="site-header">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- Left: Brand -->
-      <a href="./index.html" class="flex items-center gap-3 group">
-        <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-          <span class="text-[9px] tracking-widest font-extrabold text-white/80">YAMAGUCHI</span>
-          <span class="text-[9px] font-bold text-white/50">山口県</span>
+      <a href="./index.html" class="brand group">
+        <div class="hidden sm:flex region-badge">
+          <span class="region-en">YAMAGUCHI</span>
+          <span class="region-ja">山口県</span>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
-          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        <div class="brand-mark group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+          <span class="brand-mark-inner"></span>
         </div>
         <div>
           <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
-          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS SITE</div>
+          <div class="text-[10px] text-stone-400 font-bold mt-0.5">開業相談</div>
         </div>
       </a>
 
-      <!-- Right -->
       <div class="flex items-center gap-4">
-        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="./consult.html" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">MAIL</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerTelLink" class="hover:text-white transition-colors">TEL</a>
+        <div class="hidden lg:flex items-center gap-3 text-xs text-stone-400" aria-label="連絡先">
+          <a href="./consult.html" id="headerLineLink" class="hover:text-blush-500 transition-colors">相談する</a>
+          <span class="text-stone-300">|</span>
+          <a href="#" id="headerMailLink" class="hover:text-blush-500 transition-colors">MAIL</a>
+          <span class="text-stone-300">|</span>
+          <a href="#" id="headerTelLink" class="hover:text-blush-500 transition-colors">TEL</a>
         </div>
 
         <nav class="hidden md:flex gap-1" aria-label="メイン">
-          <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">開業相談</a>
-          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">登録</a>
+          <a href="./index.html" class="nav-link">トップ</a>
+          <a href="./consult.html" class="nav-link active" aria-current="page">開業相談</a>
+          <a href="./vehicle.html" class="nav-link">車両の相談</a>
+          <a href="./register.html" class="nav-link">登録</a>
         </nav>
       </div>
     </div>

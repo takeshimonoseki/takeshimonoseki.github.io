@@ -1,17 +1,20 @@
 /**
  * 参考用：Google Apps Script Webアプリ
  * 貼り付け場所：Apps Script エディタの「コード.gs」にそのまま貼る（または新規 .gs ファイルを作成して貼る）
- * 出力先：下記 DRIVE_FOLDER_ID のフォルダに画像保存、SHEET_ID のスプレッドシート・SHEET_TAB のシートに行追加
+ * 出力先：下記 DRIVE_FOLDER_ID のフォルダに画像保存、SHEET_ID のスプレッドシート
+ *   - ドライバー登録 → DRIVER_SHEET_TAB（登録一覧）
+ *   - お客様依頼     → CUSTOMER_SHEET_TAB（Customer_Registry）
  * デプロイ手順：
  *   1. script.google.com で新規プロジェクト作成
- *   2. このコードを貼り付け、DRIVE_FOLDER_ID / SHEET_ID / SHEET_TAB を自分のID・シート名に変更
+ *   2. このコードを貼り付け、DRIVE_FOLDER_ID / SHEET_ID を自分のIDに変更
  *   3. デプロイ → 新しいデプロイ → 種類「Web アプリ」→ 実行ユーザー「自分」→ アクセス「全員」
  *   4. デプロイ後表示される Web アプリの URL を config.js の GAS_ENDPOINT / GAS_WEBAPP_URL に貼る
  */
 
 var DRIVE_FOLDER_ID = "ここにDriveフォルダIDを貼る";
 var SHEET_ID = "ここにスプレッドシートIDを貼る";
-var SHEET_TAB = "登録一覧";
+var DRIVER_SHEET_TAB = "登録一覧";
+var CUSTOMER_SHEET_TAB = "Customer_Registry";
 var MAX_FILE_BYTES = 5 * 1024 * 1024;
 var ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 var ALLOWED_EXT = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf"];
@@ -27,6 +30,8 @@ function doPost(e) {
       result = handleDriverRegister(body);
     } else if (type === "driver_files") {
       result = handleDriverFiles(body);
+    } else if (type === "customer_request") {
+      result = handleCustomerRequest(body);
     } else {
       result.error = "unknown_type";
     }
@@ -39,10 +44,47 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+// ─── お客様からの配送依頼 → Customer_Registry シートに追記 ───
+function handleCustomerRequest(body) {
+  var data = body.data || {};
+  var receiptId = body.receiptId || ("CR" + new Date().getTime() + "-" + Math.random().toString(36).slice(2, 8));
+
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(CUSTOMER_SHEET_TAB);
+
+  // シートが無ければ自動作成（ヘッダー付き）
+  if (!sheet) {
+    sheet = ss.insertSheet(CUSTOMER_SHEET_TAB);
+    sheet.appendRow([
+      "受付番号", "受付日時", "お名前", "電話番号", "メール",
+      "LINE ID", "集荷場所", "届け先", "配送区分", "希望日時", "備考", "UserAgent"
+    ]);
+  }
+
+  var row = [
+    receiptId,
+    new Date().toISOString(),
+    data.customerName || "",
+    data.phone || "",
+    data.email || "",
+    data.lineId || "",
+    data.pickupLocation || "",
+    data.dropoffLocation || "",
+    data.deliveryType || "",
+    data.preferredDate || "",
+    (data.notes || "").slice(0, 1000),
+    data.userAgent || ""
+  ];
+  sheet.appendRow(row);
+
+  return { ok: true, receiptId: receiptId };
+}
+
+// ─── ドライバー登録（既存ロジック保持） ───
 function handleDriverRegister(body) {
   var data = body.data || {};
   var receiptId = "R" + new Date().getTime() + "-" + Math.random().toString(36).slice(2, 8);
-  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_TAB);
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(DRIVER_SHEET_TAB);
   if (!sheet) return { ok: false, error: "sheet_not_found" };
 
   var row = [
@@ -99,7 +141,7 @@ function handleDriverFiles(body) {
   if (body.extraFile2 && body.extraFile2.data) saveBase64(folder, "追加2_" + (body.extraFile2.name || "file"), body.extraFile2.data);
   if (body.extraFile3 && body.extraFile3.data) saveBase64(folder, "追加3_" + (body.extraFile3.name || "file"), body.extraFile3.data);
 
-  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_TAB);
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(DRIVER_SHEET_TAB);
   if (sheet) {
     var lastRow = sheet.getLastRow();
     for (var r = 1; r <= lastRow; r++) {

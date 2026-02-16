@@ -3,38 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>協力ドライバー登録規約｜drivers-site</title>
+  <title>協力ドライバー登録規約｜軽貨物TAKE</title>
   <meta name="description" content="協力ドライバー登録に際して同意いただく規約です。" />
   <link rel="canonical" href="https://takeshimonoseki.github.io/terms.html" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = { theme: { extend: { colors: { deep: '#050505', muted: '#94A3B8' }, fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] } } } }
+    tailwind.config = { theme: { extend: { colors: { warm: '#FAFAF9', blush: { 100: '#FFE4E6', 200: '#FECDD3', 400: '#FB7185', 500: '#F43F5E' }, skin: '#44403C' }, fontFamily: { sans: ['Nunito', 'sans-serif'] } } } }
   </script>
-  <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./customer.css" />
   <script src="./config.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-deep text-white min-h-screen">
+<body class="bg-warm text-skin min-h-screen">
 
-  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
+  <header class="site-header">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="./index.html" class="flex items-center gap-3 group">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
-          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+      <a href="./index.html" class="brand group">
+        <div class="brand-mark group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+          <span class="brand-mark-inner"></span>
         </div>
         <div>
           <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
-          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">TERMS</div>
+          <div class="text-[10px] text-stone-400 font-bold mt-0.5">登録規約</div>
         </div>
       </a>
       <nav class="hidden md:flex gap-1" aria-label="メイン">
-        <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-        <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-        <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">登録</a>
+        <a href="./index.html" class="nav-link">トップ</a>
+        <a href="./register.html" class="nav-link">ドライバー登録</a>
       </nav>
     </div>
   </header>
@@ -42,44 +41,44 @@
   <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
     <div class="glass-card p-6 md:p-10 reveal-hidden">
       <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-2">協力ドライバー登録規約</h1>
-      <p class="text-sm text-muted mb-8">登録フォーム送信前にご一読いただき、同意のうえでチェックを入れて送信してください。</p>
+      <p class="text-sm text-stone-500 mb-8">登録フォーム送信前にご一読いただき、同意のうえでチェックを入れて送信してください。</p>
 
       <div class="space-y-6">
-        <section class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+        <section class="p-4 rounded-xl border border-stone-200 bg-white/60">
           <h2 class="text-sm font-bold mb-2">第1条（登録の性格）</h2>
-          <p class="text-sm text-white/70 leading-relaxed">本登録は、求人への応募ではなく「協力ドライバー登録プール」への登録である。登録により就労義務や稼働保証は生じず、案件の紹介・依頼は運営の判断により随時行う。</p>
+          <p class="text-sm text-stone-500 leading-relaxed">本登録は、求人への応募ではなく「協力ドライバー登録プール」への登録である。登録により就労義務や稼働保証は生じず、案件の紹介・依頼は運営の判断により随時行う。</p>
         </section>
-        <section class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+        <section class="p-4 rounded-xl border border-stone-200 bg-white/60">
           <h2 class="text-sm font-bold mb-2">第2条（窓口）</h2>
-          <p class="text-sm text-white/70 leading-relaxed">お客さまとドライバーを直接つなぐことはせず、連絡・調整はすべて運営（代表たけ）を窓口として行う。登録者とお客様との直接取引・連絡は禁止する。</p>
+          <p class="text-sm text-stone-500 leading-relaxed">お客さまとドライバーを直接つなぐことはせず、連絡・調整はすべて運営（代表たけ）を窓口として行う。登録者とお客様との直接取引・連絡は禁止する。</p>
         </section>
-        <section class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+        <section class="p-4 rounded-xl border border-stone-200 bg-white/60">
           <h2 class="text-sm font-bold mb-2">第3条（登録情報の取扱い）</h2>
-          <p class="text-sm text-white/70 leading-relaxed">登録内容（氏名・住所・連絡先・口座情報等）は運営が厳重に管理し、お客様や第三者に開示しない。公開されるのはニックネーム・拠点市町村・稼働時間帯・得意分野・プロフィール等、運営が指定する項目に限る。</p>
+          <p class="text-sm text-stone-500 leading-relaxed">登録内容（氏名・住所・連絡先・口座情報等）は運営が厳重に管理し、お客様や第三者に開示しない。公開されるのはニックネーム・拠点市町村・稼働時間帯・得意分野・プロフィール等、運営が指定する項目に限る。</p>
         </section>
-        <section class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+        <section class="p-4 rounded-xl border border-stone-200 bg-white/60">
           <h2 class="text-sm font-bold mb-2">第4条（車両・保険）</h2>
-          <p class="text-sm text-white/70 leading-relaxed">登録時点で、事業用（黒ナンバー）であることおよび必要な保険（自動車保険・貨物保険等）に加入していることを申告する。実際に案件をお願いする前に、運営が書類等で確認することがある。</p>
+          <p class="text-sm text-stone-500 leading-relaxed">登録時点で、事業用（黒ナンバー）であることおよび必要な保険（自動車保険・貨物保険等）に加入していることを申告する。実際に案件をお願いする前に、運営が書類等で確認することがある。</p>
         </section>
-        <section class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+        <section class="p-4 rounded-xl border border-stone-200 bg-white/60">
           <h2 class="text-sm font-bold mb-2">第5条（変更・削除）</h2>
-          <p class="text-sm text-white/70 leading-relaxed">登録内容の変更・削除は、LINE・メール等で運営に依頼することで随時受け付ける。</p>
+          <p class="text-sm text-stone-500 leading-relaxed">登録内容の変更・削除は、LINE・メール等で運営に依頼することで随時受け付ける。</p>
         </section>
-        <section class="p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+        <section class="p-4 rounded-xl border border-stone-200 bg-white/60">
           <h2 class="text-sm font-bold mb-2">第6条（規約の変更）</h2>
-          <p class="text-sm text-white/70 leading-relaxed">運営は本規約を変更できる。変更後はサイト上で告知し、登録継続をもって同意したものとする。</p>
+          <p class="text-sm text-stone-500 leading-relaxed">運営は本規約を変更できる。変更後はサイト上で告知し、登録継続をもって同意したものとする。</p>
         </section>
       </div>
 
       <div class="mt-8">
-        <a href="./register.html" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all">
+        <a href="./register.html" class="btn btn-primary">
           <i data-lucide="arrow-left" class="w-4 h-4"></i> 登録フォームに戻る
         </a>
       </div>
     </div>
 
-    <footer class="border-t border-white/5 mt-12 pt-8 pb-4 text-center">
-      <p class="text-[11px] text-muted"><a href="./privacy.html" class="underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors">プライバシー・個人情報の取扱い</a></p>
+    <footer class="site-footer">
+      <p class="text-[11px] text-stone-400"><a href="./privacy.html" class="underline underline-offset-4 hover:text-blush-500 transition-colors">プライバシー・個人情報の取扱い</a></p>
     </footer>
   </main>
 
