@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /main-register.html
 
 Sitemap: https://takeshimonoseki.github.io/sitemap.xml

@@ -4,7 +4,9 @@ window.CONFIG = {
   REGION_CODE: "YAMAGUCHI",
   REGIONS: ["山口県", "福岡県"],
   COMPANY_NAME: "軽貨物TAKE",
-  // ✅ LINE（公式アカウント・固定）
+  TEL: "09078834125",
+
+  // ✅ LINE（公式アカウント）
   LINE_URL: "https://line.me/R/ti/p/%40277rcesk",
   LINE_OA_ID: "@277rcesk",
 
