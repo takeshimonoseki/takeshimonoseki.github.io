@@ -13,6 +13,14 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://takeshimonoseki.github.io/startup.html</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://takeshimonoseki.github.io/consult.html</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://takeshimonoseki.github.io/privacy.html</loc>
     <changefreq>yearly</changefreq>
   </url>

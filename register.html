@@ -36,6 +36,7 @@
 
   <link rel="stylesheet" href="./drivers.css" />
   <script src="./config.js"></script>
+  <script src="./drivers.js" defer></script>
 
   <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -126,13 +127,13 @@
   <!-- HEADER -->
   <!-- ═══════════════════════════════════════════════════════ -->
   <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
           <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div>
@@ -143,18 +144,16 @@
 
       <div class="flex items-center gap-4">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="#" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerTelLink" class="hover:text-white transition-colors">090-XXXX-XXXX</a>
         </div>
 
         <nav class="hidden md:flex gap-1" aria-label="メイン">
           <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">登録</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">仮登録</a>
         </nav>
       </div>
     </div>
@@ -251,6 +250,42 @@
               </div>
             </div>
 
+            <!-- 車種（メーカー＋車種自由入力） -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <label class="text-sm font-bold" for="vehicleMaker">メーカー</label>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400">公開</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
+                </div>
+                <select id="vehicleMaker" name="vehicleMaker" class="field-input">
+                  <option value="">選択してください</option>
+                  <option value="トヨタ">トヨタ</option>
+                  <option value="ホンダ">ホンダ</option>
+                  <option value="日産">日産</option>
+                  <option value="スズキ">スズキ</option>
+                  <option value="ダイハツ">ダイハツ</option>
+                  <option value="マツダ">マツダ</option>
+                  <option value="三菱">三菱</option>
+                  <option value="スバル">スバル</option>
+                  <option value="いすゞ">いすゞ</option>
+                  <option value="その他">その他</option>
+                </select>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <label class="text-sm font-bold" for="vehicleModel">車種</label>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400">公開</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
+                </div>
+                <input type="text" id="vehicleModel" name="vehicleModel" list="vehicleModelList" autocomplete="off" placeholder="例：ハイゼットカーゴ／N-BOX／NV200" class="field-input" />
+                <datalist id="vehicleModelList">
+                  <option value="ハイゼットカーゴ"><option value="ハイゼット"><option value="N-BOX"><option value="N-VAN"><option value="NV200"><option value="NV350"><option value="エブリイ"><option value="キャリイ"><option value="タント"><option value="ムーヴ"><option value="軽自動車（車種未定）">
+                </datalist>
+                <div class="text-xs text-muted mt-1">軽自動車も含めてご記入ください。</div>
+              </div>
+            </div>
+
             <!-- Preferred Contact -->
             <div>
               <div class="flex items-center gap-2 mb-2">
@@ -259,14 +294,13 @@
                 <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
               </div>
               <div class="choice-radio" id="preferredContactRow">
-                <label><input type="radio" name="preferredContact" value="電話" />電話</label>
                 <label><input type="radio" name="preferredContact" value="メール" />メール</label>
                 <label><input type="radio" name="preferredContact" value="LINE" />LINE</label>
                 <label><input type="radio" name="preferredContact" value="どれでも" checked />どれでも</label>
               </div>
             </div>
 
-            <!-- Contact Info -->
+            <!-- Contact Info（メール or LINE表示名） -->
             <div>
               <div class="flex items-center gap-2 mb-2">
                 <label class="text-sm font-bold">連絡先（どれか1つでOK）</label>
@@ -274,9 +308,8 @@
                 <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input type="tel" id="contactPhone" name="contactPhone" autocomplete="tel" placeholder="電話（例：090-xxxx-xxxx）" class="field-input" />
                 <input type="email" id="contactEmail" name="contactEmail" autocomplete="email" placeholder="メール（例：mail@example.com）" class="field-input" />
-                <input type="text" id="contactLineName" name="contactLineName" autocomplete="off" placeholder="LINE表示名（例：たけ さん）" class="field-input sm:col-span-2" />
+                <input type="text" id="contactLineName" name="contactLineName" autocomplete="off" placeholder="LINE表示名（例：たけ さん）" class="field-input" />
               </div>
               <div class="text-xs text-muted mt-1">サイトには公開しません（代表たけだけが控えます）。</div>
             </div>
@@ -430,29 +463,31 @@
           (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
       }
 
+      var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
       var lineLink = document.getElementById("headerLineLink");
       var mailLink = document.getElementById("headerMailLink");
-      var telLink = document.getElementById("headerTelLink");
-
-      var startUrl = "./consult.html";
       var email = window.CONFIG.EMAIL_TO || "";
-      var tel = window.CONFIG.TEL || "";
 
-      if (lineLink) lineLink.href = startUrl;
+      if (lineLink) lineLink.href = lineUrl;
       if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
-      if (telLink && tel) { telLink.href = "tel:" + tel.replace(/[^0-9+]/g, ""); telLink.textContent = tel; }
     })();
 
     function openLineShareWithText(text) {
-      var shareUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(text.slice(0, 5000));
-      window.open(shareUrl, "_blank", "noopener,noreferrer");
+      var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
+      var msg = encodeURIComponent(text.slice(0, 5000));
+      var oa = (window.CONFIG && window.CONFIG.LINE_OA_ID) ? window.CONFIG.LINE_OA_ID : "@277rcesk";
+      if (oa[0] !== "@") oa = "@" + oa;
+      var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent || "");
+      var base = isMobile ? "line://oaMessage/" : "https://line.me/R/oaMessage/";
+      window.open(base + oa + "/?" + msg, "_blank", "noopener,noreferrer");
     }
 
     const nicknameEl = document.getElementById("nickname");
     const cityEl = document.getElementById("city");
     const cityOtherRow = document.getElementById("cityOtherRow");
     const cityOtherEl = document.getElementById("cityOther");
-    const contactPhoneEl = document.getElementById("contactPhone");
+    const vehicleMakerEl = document.getElementById("vehicleMaker");
+    const vehicleModelEl = document.getElementById("vehicleModel");
     const contactEmailEl = document.getElementById("contactEmail");
     const contactLineNameEl = document.getElementById("contactLineName");
     const preferredContactEls = document.querySelectorAll('input[name="preferredContact"]');
@@ -484,6 +519,13 @@
       updateSubmitHint();
       if (hasTriedSubmit) validateAndPaint_();
     });
+
+    if (vehicleMakerEl && vehicleModelEl && window.DriversRegister && window.DriversRegister.updatePurchaseModelDatalist) {
+      var datalistEl = document.getElementById("vehicleModelList");
+      vehicleMakerEl.addEventListener("change", function () {
+        window.DriversRegister.updatePurchaseModelDatalist(vehicleMakerEl, datalistEl);
+      });
+    }
     if (cityOtherEl) cityOtherEl.addEventListener("input", function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
 
     if (profileEl && profileCounterEl) {
@@ -563,16 +605,25 @@
         }
       }
 
-      var contactPhone = (contactPhoneEl.value || "").trim();
+      var vehicleMaker = (vehicleMakerEl && vehicleMakerEl.value || "").trim();
+      var vehicleModel = (vehicleModelEl && vehicleModelEl.value || "").trim();
+      if (!vehicleMaker) {
+        errors.push("メーカーを選択してください。");
+        if (paintUI && vehicleMakerEl) { addFieldError_(vehicleMakerEl, "必須です"); setFirst(vehicleMakerEl); }
+      }
+      if (!vehicleModel) {
+        errors.push("車種を入力してください。");
+        if (paintUI && vehicleModelEl) { addFieldError_(vehicleModelEl, "必須です"); setFirst(vehicleModelEl); }
+      }
+
       var contactEmail = (contactEmailEl.value || "").trim();
       var contactLineName = (contactLineNameEl.value || "").trim();
-      if (!contactPhone && !contactEmail && !contactLineName) {
-        errors.push("連絡先（電話／メール／LINE表示名）のどれか1つを入力してください。");
+      if (!contactEmail && !contactLineName) {
+        errors.push("連絡先（メール or LINE表示名）のどれか1つを入力してください。");
         if (paintUI) {
-          addFieldError_(contactPhoneEl);
           addFieldError_(contactEmailEl);
           addFieldError_(contactLineNameEl, "どれか1つ必須です");
-          setFirst(contactPhoneEl);
+          setFirst(contactEmailEl);
         }
       }
 
@@ -584,8 +635,9 @@
       var payload = {
         nickname: nickname,
         city: city,
+        vehicleMaker: vehicleMaker,
+        vehicleModel: vehicleModel,
         preferredContact: getPreferredContact(),
-        contactPhone: contactPhone,
         contactEmail: contactEmail,
         contactLineName: contactLineName,
         messageToTake: (document.getElementById("messageToTake").value || "").trim(),
@@ -618,10 +670,12 @@
       if (city === "その他" && (cityOtherEl.value || "").trim()) cityOk = true;
       if (!cityOk) missing.push("市町村");
 
-      var phone = (contactPhoneEl.value || "").trim();
+      var vehicleOk = !!(vehicleMakerEl && vehicleMakerEl.value && vehicleModelEl && vehicleModelEl.value.trim());
+      if (!vehicleOk) missing.push("メーカー・車種");
+
       var mail = (contactEmailEl.value || "").trim();
       var line = (contactLineNameEl.value || "").trim();
-      var contactOk = !!(phone || mail || line);
+      var contactOk = !!(mail || line);
       if (!contactOk) missing.push("連絡先(どれか1つ)");
 
       var agreed = !!(agreeTermsEl && agreeTermsEl.checked);
@@ -641,7 +695,8 @@
 
     ["input","change"].forEach(function(ev){
       nicknameEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
-      contactPhoneEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
+      if (vehicleMakerEl) vehicleMakerEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
+      if (vehicleModelEl) vehicleModelEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       contactEmailEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       contactLineNameEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       agreeTermsEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
@@ -655,9 +710,9 @@
       lines.push("受付番号：" + receiptId);
       lines.push("ニックネーム：" + (payload.nickname || ""));
       lines.push("市町村：" + (payload.city || ""));
+      lines.push("車種：" + (payload.vehicleMaker || "") + " " + (payload.vehicleModel || ""));
       lines.push("希望連絡：" + (payload.preferredContact || "どれでも"));
       lines.push("連絡先：");
-      if (payload.contactPhone) lines.push("・電話：" + payload.contactPhone);
       if (payload.contactEmail) lines.push("・メール：" + payload.contactEmail);
       if (payload.contactLineName) lines.push("・LINE表示名：" + payload.contactLineName);
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);
@@ -673,8 +728,8 @@
       var lines = [];
       lines.push("ニックネーム：" + payload.nickname);
       lines.push("市町村：" + payload.city);
+      lines.push("車種：" + (payload.vehicleMaker || "") + " " + (payload.vehicleModel || ""));
       lines.push("希望連絡：" + payload.preferredContact);
-      lines.push("電話：" + (payload.contactPhone || "—"));
       lines.push("メール：" + (payload.contactEmail || "—"));
       lines.push("LINE表示名：" + (payload.contactLineName || "—"));
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);

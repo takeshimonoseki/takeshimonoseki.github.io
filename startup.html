@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>開業トータル相談｜drivers-site（山口県）</title>
+  <meta name="description" content="軽貨物開業の悩み（黒ナンバー・確定申告・仕事の取り方・保険・車両）をまとめてLINEで相談。" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/startup.html" />
+  <meta property="og:title" content="開業トータル相談｜drivers-site（山口県）" />
+  <meta property="og:url" content="https://takeshimonoseki.github.io/startup.html" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { deep: '#050505', muted: '#94A3B8' },
+          fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="./drivers.css" />
+  <script src="./config.js"></script>
+  <script src="./line-consult.js" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-deep text-white min-h-screen">
+
+  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3 group">
+        <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
+          <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
+          <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
+          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        </div>
+        <div>
+          <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
+          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS SITE</div>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-4">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <span class="text-white/20">|</span>
+          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
+        </div>
+
+        <nav class="hidden md:flex gap-1" aria-label="メイン">
+          <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">開業トータル相談</a>
+          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
+        </nav>
+
+        <a href="./startup.html" class="md:hidden p-2 text-white bg-white/10 rounded-full" aria-label="メニュー">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-2xl mx-auto" role="main">
+
+    <div class="mb-12 text-center max-w-2xl mx-auto reveal-hidden">
+      <h1 class="text-4xl sm:text-5xl font-black tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+        開業トータル相談
+      </h1>
+      <p class="text-muted text-sm sm:text-base leading-relaxed">
+        悩みを選んで入力 → LINEで相談内容が送れます。
+      </p>
+    </div>
+
+    <div class="glass-card p-6 md:p-8 reveal-hidden delay-100">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+          <i data-lucide="rocket" class="w-6 h-6"></i>
+        </div>
+        <h2 class="text-xl font-bold">相談内容を選ぶ</h2>
+      </div>
+
+      <form id="startupForm">
+        <div class="space-y-6">
+          <fieldset class="border border-white/10 rounded-xl p-4">
+            <legend class="text-xs font-bold text-muted px-2">悩み（複数選択可）</legend>
+            <div class="grid grid-cols-2 gap-3 mt-2">
+              <label class="flex items-center text-sm"><input type="checkbox" name="startupTopics" value="黒ナンバー" /> 黒ナンバー</label>
+              <label class="flex items-center text-sm"><input type="checkbox" name="startupTopics" value="確定申告" /> 確定申告</label>
+              <label class="flex items-center text-sm"><input type="checkbox" name="startupTopics" value="仕事の取り方" /> 仕事の取り方</label>
+              <label class="flex items-center text-sm"><input type="checkbox" name="startupTopics" value="保険" /> 保険</label>
+              <label class="flex items-center text-sm"><input type="checkbox" name="startupTopics" value="車両" /> 車両</label>
+            </div>
+          </fieldset>
+
+          <div>
+            <label class="field-label block mb-2" for="startupWhen">いつ頃から始めたいか</label>
+            <select id="startupWhen" name="startupWhen" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
+              <option value="">選択</option>
+              <option value="すぐ">すぐ</option>
+              <option value="1ヶ月以内">1ヶ月以内</option>
+              <option value="3ヶ月以内">3ヶ月以内</option>
+              <option value="未定">未定</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="field-label block mb-2">備考（任意）</label>
+            <textarea class="js-line-note w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-white/30" data-line-note rows="3" placeholder="状況／困っていること"></textarea>
+          </div>
+
+          <button type="button" class="btn btn-line js-line-send w-full" id="btnLineStartup" data-line-title="開業トータル相談">
+            <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i> LINEで相談する
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a class="inline-flex items-center justify-center px-6 py-3 border border-white/10 rounded-full text-sm font-bold text-muted hover:text-white hover:bg-white/5 transition-all" href="./index.html">
+        <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> トップに戻る
+      </a>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    (function () {
+      if (!window.CONFIG) return;
+      var r = document.getElementById("regionJa");
+      var e = document.getElementById("regionEn");
+      var c = document.getElementById("companyName");
+      var ml = document.getElementById("headerMailLink");
+      var ll = document.getElementById("headerLineLink");
+      if (r) r.textContent = window.CONFIG.REGION_LABEL || "山口県";
+      if (e) e.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
+      if (c) c.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+      var email = window.CONFIG.EMAIL_TO || "";
+      var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
+      if (ml && email) { ml.href = "mailto:" + email; ml.textContent = email; }
+      if (ll) ll.href = lineUrl;
+    })();
+    document.addEventListener('mousemove', function(e) {
+      document.querySelectorAll('.glass-card').forEach(function(card) {
+        var rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+        card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+      });
+    });
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) {
+        if (en.isIntersecting) { en.target.classList.add('reveal-visible'); obs.unobserve(en.target); }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.reveal-hidden').forEach(function(el) { obs.observe(el); });
+  </script>
+</body>
+</html>

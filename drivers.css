@@ -1,6 +1,7 @@
 /* 
   Neo-Brutalism "Deep Space" Theme (Hybrid)
   Target: drivers-site-from-github 2Refactor
+  ※ ヘッダーナビ: hover/active/focusで幅・高さ・位置が変わらないよう固定
 */
 
 :root {
@@ -96,6 +97,50 @@ h1, h2, h3, h4, h5, h6 {
 .delay-100 { transition-delay: 100ms; }
 .delay-200 { transition-delay: 200ms; }
 .delay-300 { transition-delay: 300ms; }
+
+/* --- ヘッダーナビ：hover/active/focusで幅・高さ・位置が変わらない --- */
+/* ナビリンク共通：border幅固定・transform禁止・box-shadowのみ変化 */
+.nav-link-fixed,
+header nav a[href] {
+  display: inline-block;
+  padding: 8px 16px;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  transition: color 0.16s ease, background-color 0.16s ease;
+}
+.nav-link-fixed:hover,
+header nav a[href]:hover {
+  color: #fff;
+  background-color: rgba(255,255,255,0.05);
+  border-color: transparent;
+  transform: none;
+  box-shadow: none;
+}
+.nav-link-fixed:active,
+.nav-link-fixed:focus,
+header nav a[href]:active,
+header nav a[href]:focus {
+  outline: none;
+  transform: none;
+  border-width: 1px;
+}
+.nav-link-fixed[aria-current="page"],
+header nav a[href][aria-current="page"] {
+  background: #fff;
+  color: #000;
+  border-color: transparent;
+}
+
+/* ロゴ・アイコン hover で scale しない（崩れ防止） */
+header a.group .w-9,
+header .group-hover\\:scale-110 {
+  transition: none;
+}
+header a.group:hover .w-9,
+header a.group:hover [class*="scale-110"] {
+  transform: none;
+}
 
 /* --- LEGACY STYLES (Preserved but Dark-Mode Adapted via Variables) --- */
 
@@ -295,15 +340,14 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--muted);
   background: transparent;
   cursor: pointer;
-  transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+  transition: background 0.16s ease, border-color 0.16s ease;
 }
 
 /* NOTE: primary(現在地)は白文字なので、hoverで白背景になると文字が消える。
-   そのため、通常リンクのみhover背景を付ける */
+   そのため、通常リンクのみhover背景を付ける。transform禁止で崩れ防止 */
 .nav-link:not(.nav-link-primary):hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--line);
-  transform: translateY(-1px);
 }
 
 .nav-link-primary {
@@ -314,7 +358,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-link-primary:hover {
-  transform: translateY(-1px) scale(1.01);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
 }
 
 /* ヒーロー */
@@ -891,7 +935,6 @@ details.faq summary::-webkit-details-marker {
 }
 
 input[type="text"],
-input[type="tel"],
 input[type="email"],
 select,
 textarea {

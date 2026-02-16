@@ -35,7 +35,7 @@
 </head>
 
 <body class="bg-deep text-white min-h-screen">
-  <!-- HEADER（register.html / main-register.html と同じ構造） -->
+  <!-- HEADER（全ページ共通・同一構造） -->
   <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
     <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
@@ -43,7 +43,7 @@
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
           <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div>
@@ -54,20 +54,19 @@
 
       <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="#" id="headerLineLink" class="hover:text-white transition-colors">LINE</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
 
         <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
           <a href="#top" data-scroll-top class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">トップ</a>
-          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
           <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
-          <a href="./main-register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">本登録</a>
         </nav>
 
-        <a href="./consult.html" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="メニュー">
+        <a href="./startup.html" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="メニュー">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </a>
       </div>
@@ -91,8 +90,12 @@
 
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[1.1] mb-6">
             <span class="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/40">協力ドライバー</span><br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">仮登録</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-300">募集中</span>
           </h1>
+
+          <p class="text-sm sm:text-base text-white/80 mb-6 max-w-xl">
+            軽貨物ドライバーとして登録し、合うタイミングで配送案件に参加できます。運営が窓口となり、お客さまと直接やり取りすることはありません。誰でも参加でき、メリットは柔軟な働き方と地域密着の仕事です。
+          </p>
 
           <div class="space-y-3 mb-8 max-w-xl">
             <div class="flex items-start gap-3">
@@ -123,20 +126,19 @@
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-xl">
-            <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 hover:-translate-y-0.5 transition-all col-span-2 sm:col-span-1" href="./register.html">
+            <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 transition-all col-span-2 sm:col-span-1" href="./register.html">
               <i data-lucide="user-plus" class="w-4 h-4"></i> 仮登録
             </a>
-            <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:shadow-green-500/40 hover:-translate-y-0.5 transition-all" id="heroLineBtn" href="#" target="_blank" rel="noopener noreferrer">
+            <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 transition-all" id="heroLineBtn" href="https://line.me/R/ti/p/%40277rcesk" target="_blank" rel="noopener noreferrer">
               <i data-lucide="message-circle" class="w-4 h-4"></i> LINE
             </a>
-            <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-600/20 hover:-translate-y-0.5 transition-all" id="heroMailBtn" href="#">
+            <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-600/20 transition-all" id="heroMailBtn" href="#">
               <i data-lucide="mail" class="w-4 h-4"></i> メール
             </a>
           </div>
 
           <div class="mt-5 max-w-xl text-xs text-white/70">
-            本登録（本人確認・書類など）もあります：
-            <a href="./main-register.html" class="underline underline-offset-4 decoration-white/30 hover:decoration-white/60 transition-colors">本登録ページを見る</a>
+            仮登録後、必要に応じて本登録（本人確認・書類など）をご案内します。本登録のご案内はLINE・メールで送付します。
           </div>
         </div>
       </div>
@@ -175,11 +177,8 @@
         </div>
 
         <div class="mt-6 flex flex-wrap gap-3">
-          <a class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 hover:-translate-y-0.5 transition-all" href="./register.html">
+          <a class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 transition-all" href="./register.html">
             <i data-lucide="user-plus" class="w-4 h-4"></i> 仮登録へ
-          </a>
-          <a class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 hover:-translate-y-0.5 transition-all" href="./main-register.html">
-            <i data-lucide="file-check" class="w-4 h-4"></i> 本登録へ
           </a>
         </div>
       </div>
@@ -188,19 +187,19 @@
     <section class="mb-12 reveal-hidden" id="contact">
       <div class="glass-card p-6 text-center">
         <h2 class="text-lg font-bold mb-2">問い合わせ</h2>
-        <p class="text-sm text-muted mb-6">登録前に不安があれば、下のボタンからLINE・メールでご相談ください。</p>
+        <p class="text-sm text-muted mb-6">登録前に不安があれば、LINE・メールでご相談ください。</p>
       </div>
     </section>
 
     <footer class="border-t border-white/5 pt-10 pb-8">
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto mb-8">
-        <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all" id="footerLineBtn" href="#" target="_blank" rel="noopener noreferrer">
+        <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 transition-all" id="footerLineBtn" href="https://line.me/R/ti/p/%40277rcesk" target="_blank" rel="noopener noreferrer">
           <i data-lucide="message-circle" class="w-4 h-4"></i> LINE
         </a>
-        <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-600/20 hover:-translate-y-0.5 transition-all" id="footerMailBtn" href="#">
+        <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-blue-600 text-white font-bold text-sm shadow-lg shadow-blue-600/20 transition-all" id="footerMailBtn" href="#">
           <i data-lucide="mail" class="w-4 h-4"></i> メール
         </a>
-        <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all" href="./register.html">
+        <a class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 transition-all" href="./register.html">
           <i data-lucide="user-plus" class="w-4 h-4"></i> 仮登録
         </a>
       </div>
@@ -237,14 +236,13 @@
       var mailLink = document.getElementById("headerMailLink");
       if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
 
-      // LINEは「相談ページ」へ
-      var startUrl = "./consult.html";
+      var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
       var headerLineLink = document.getElementById("headerLineLink");
       var heroLineBtn = document.getElementById("heroLineBtn");
       var footerLineBtn = document.getElementById("footerLineBtn");
-      if (headerLineLink) headerLineLink.href = startUrl;
-      if (heroLineBtn) heroLineBtn.href = startUrl;
-      if (footerLineBtn) footerLineBtn.href = startUrl;
+      if (headerLineLink) headerLineLink.href = lineUrl;
+      if (heroLineBtn) heroLineBtn.href = lineUrl;
+      if (footerLineBtn) footerLineBtn.href = lineUrl;
 
       var heroMailBtn = document.getElementById("heroMailBtn");
       var footerMailBtn = document.getElementById("footerMailBtn");

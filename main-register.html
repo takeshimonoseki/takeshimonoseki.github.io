@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>本登録｜協力ドライバー登録フォーム｜drivers-site（山口県）</title>
   <meta name="description" content="山口県エリアの協力ドライバー本登録フォーム。本人確認・必要書類の入力です。" />
   <link rel="canonical" href="https://takeshimonoseki.github.io/main-register.html" />
@@ -143,17 +144,17 @@
 
       <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="#" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
 
         <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
           <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
           <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
-          <a href="./main-register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">本登録</a>
+          <span class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">本登録</span>
         </nav>
       </div>
     </div>
@@ -173,7 +174,7 @@
         </span>
         <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">協力ドライバー登録フォーム（本登録）</h1>
         <p class="text-sm text-muted leading-relaxed mb-2">
-          本人確認・必要書類の入力です。仮登録後に案内する場合もあります。
+          本人確認・必要書類の入力です。本登録のご案内は仮登録者にだけLINE・メールでリンクを送付します。
         </p>
         <p class="text-xs text-white/40">
           登録内容は後から変更・削除の依頼が可能です（LINEからご連絡ください）。
@@ -327,9 +328,9 @@
 
       var lineLink = document.getElementById("headerLineLink");
       var mailLink = document.getElementById("headerMailLink");
-      var startUrl = "./consult.html";
+      var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
       var email = window.CONFIG.EMAIL_TO || "";
-      if (lineLink) lineLink.href = startUrl;
+      if (lineLink) lineLink.href = lineUrl;
       if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
     })();
 

@@ -4,91 +4,76 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>車両の相談｜drivers-site（山口県）</title>
-  <meta name="description" content="車両購入・修理・車検・開業トータル相談。協力ドライバー登録サイト。" />
+  <meta name="description" content="車両購入・修理・車検の相談。協力ドライバー登録サイト。" />
   <link rel="canonical" href="https://takeshimonoseki.github.io/vehicle.html" />
   <meta property="og:title" content="車両の相談｜drivers-site（山口県）" />
   <meta property="og:url" content="https://takeshimonoseki.github.io/vehicle.html" />
   <meta property="og:type" content="website" />
-  
-  <!-- Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            deep: '#050505',
-            muted: '#94A3B8',
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          }
+          colors: { deep: '#050505', muted: '#94A3B8' },
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
         }
       }
     }
   </script>
-
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="./drivers.css" />
-  
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
   <script src="./line-consult.js" defer></script>
-  
-  <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-deep text-white min-h-screen">
 
-  <!-- Header -->
-  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-md border-b border-white/5 transition-all duration-300" id="top">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- Left: Brand -->
-      <div class="flex items-center gap-4">
-        <div class="region-badge hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
+  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-md border-b border-white/5" id="top">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3 group">
+        <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
+          <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
-        
-        <div class="flex items-center gap-3 group cursor-pointer">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-red-900 to-red-600 flex items-center justify-center shadow-lg shadow-red-900/20 group-hover:scale-105 transition-transform" aria-hidden="true">
-            <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
-          </div>
-          <div>
-            <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
-            <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS SITE</div>
-          </div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/20" aria-hidden="true">
+          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
-      </div>
+        <div>
+          <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
+          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS SITE</div>
+        </div>
+      </a>
 
-      <!-- Right: Nav -->
-      <div class="flex items-center gap-6">
+      <div class="flex items-center gap-4">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <span class="text-white/20">|</span>
+          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
+        </div>
+
         <nav class="hidden md:flex gap-1" aria-label="メイン">
           <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">車両の相談</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">登録</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
         </nav>
-        
-        <!-- Mobile Menu Button (Hamburger) - Simple layout for now -->
-        <a href="./consult.html" class="md:hidden p-2 text-white bg-white/10 rounded-full">
-           <i data-lucide="message-circle" class="w-5 h-5"></i>
+
+        <a href="./startup.html" class="md:hidden p-2 text-white bg-white/10 rounded-full" aria-label="メニュー">
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
         </a>
       </div>
     </div>
   </header>
 
   <main class="pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" role="main">
-    
-    <!-- Hero Section -->
+
     <div class="mb-12 text-center max-w-2xl mx-auto reveal-hidden">
       <h1 class="text-4xl sm:text-5xl font-black tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
-        Vehicle Support
+        車両の相談
       </h1>
       <p class="text-muted text-sm sm:text-base leading-relaxed">
         内容を選んで入力 → LINEを開くと、<span class="text-white font-bold border-b border-white/20">相談内容が自動入力</span>されます。<br class="hidden sm:block" />
@@ -96,18 +81,9 @@
       </p>
     </div>
 
-    <!-- IDs for Links config (Hidden but functional) -->
-    <div style="display:none;">
-      <span id="regionJa">山口県</span>
-      <a href="#" id="headerLineLink"></a>
-      <a href="#" id="headerMailLink"></a>
-      <a href="#" id="headerTelLink"></a>
-    </div>
-
-    <!-- BENTO GRID LAYOUT -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min">
 
-      <!-- 1) 車両購入 (Large Card) -->
+      <!-- 1) 車両購入 -->
       <section class="glass-card p-6 md:p-8 lg:col-span-2 reveal-hidden" id="card-purchase">
         <div class="flex items-center gap-3 mb-6">
           <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
@@ -117,11 +93,10 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <!-- Left Column -->
           <div class="space-y-4">
             <div>
-              <label class="field-label" for="purchaseUse">用途</label>
-              <select id="purchaseUse">
+              <label class="field-label block mb-2" for="purchaseUse">用途</label>
+              <select id="purchaseUse" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
                 <option value="">選択してください</option>
                 <option value="軽貨物">軽貨物</option>
                 <option value="プライベート">プライベート</option>
@@ -129,25 +104,22 @@
                 <option value="未定">未定</option>
               </select>
             </div>
-            
             <div>
-              <label class="field-label" for="purchaseBudget">予算帯（任意）</label>
-              <select id="purchaseBudget">
+              <label class="field-label block mb-2" for="purchaseBudget">予算帯（任意）</label>
+              <select id="purchaseBudget" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
                 <option value="">未選択でもOK</option>
                 <option value="〜30万">〜30万円</option>
                 <option value="〜50万">〜50万円</option>
                 <option value="〜80万">〜80万円</option>
                 <option value="〜150万">〜150万円</option>
                 <option value="〜300万">〜300万円</option>
-                <option value="〜500万">〜500万円</option>
                 <option value="それ以上">それ以上</option>
                 <option value="未定">未定</option>
               </select>
             </div>
-
             <div>
-              <label class="field-label" for="purchaseDelivery">希望納期</label>
-              <select id="purchaseDelivery">
+              <label class="field-label block mb-2" for="purchaseDelivery">希望納期</label>
+              <select id="purchaseDelivery" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
                 <option value="">選択</option>
                 <option value="すぐ">すぐ</option>
                 <option value="1ヶ月以内">1ヶ月以内</option>
@@ -156,12 +128,10 @@
               </select>
             </div>
           </div>
-
-          <!-- Right Column -->
           <div class="space-y-4">
             <div>
-              <label class="field-label" for="purchaseMaker">メーカー（任意）</label>
-              <select id="purchaseMaker">
+              <label class="field-label block mb-2" for="purchaseMaker">メーカー（任意）</label>
+              <select id="purchaseMaker" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
                 <option value="">選択</option>
                 <optgroup label="国産">
                   <option value="トヨタ">トヨタ</option>
@@ -172,32 +142,20 @@
                   <option value="マツダ">マツダ</option>
                   <option value="スバル">スバル</option>
                   <option value="三菱">三菱</option>
-                  <option value="その他国産">その他国産</option>
-                </optgroup>
-                <optgroup label="輸入">
-                  <option value="メルセデス・ベンツ">メルセデス・ベンツ</option>
-                  <option value="BMW">BMW</option>
-                  <option value="アウディ">アウディ</option>
-                  <option value="フォルクスワーゲン">フォルクスワーゲン</option>
-                  <option value="ボルボ">ボルボ</option>
-                  <option value="その他輸入">その他輸入</option>
                 </optgroup>
               </select>
             </div>
-
             <div>
-              <label class="field-label" for="purchaseModel">車種（モデル）</label>
-              <select id="purchaseModel">
+              <label class="field-label block mb-2" for="purchaseModel">車種（任意）</label>
+              <select id="purchaseModel" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
                 <option value="">メーカーを選択すると車種が出ます</option>
               </select>
             </div>
-
             <div>
-              <label class="field-label" for="purchaseContact">連絡希望（任意）</label>
-              <select id="purchaseContact">
+              <label class="field-label block mb-2" for="purchaseContact">連絡希望（任意）</label>
+              <select id="purchaseContact" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
                 <option value="">選択</option>
                 <option value="LINE">LINE</option>
-                <option value="電話">電話</option>
                 <option value="メール">メール</option>
               </select>
             </div>
@@ -205,8 +163,8 @@
         </div>
 
         <div class="mt-6">
-          <label class="field-label">備考（任意）</label>
-          <textarea class="js-line-note w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-white/30 transition-colors" data-line-note rows="3" placeholder="例：希望の車種／走行距離／急ぎ度／今の車の状況など"></textarea>
+          <label class="field-label block mb-2">備考（任意）</label>
+          <textarea class="js-line-note w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-white/30" data-line-note rows="3" placeholder="例：希望の車種／走行距離／急ぎ度／今の車の状況など"></textarea>
         </div>
 
         <div class="mt-8 flex justify-end">
@@ -216,7 +174,7 @@
         </div>
       </section>
 
-      <!-- 2) 修理・整備 (Standard Card) -->
+      <!-- 2) 修理・整備（簡素化） -->
       <section class="glass-card p-6 lg:col-span-1 reveal-hidden delay-100" id="card-repair">
         <div class="flex items-center gap-3 mb-6">
           <div class="p-2 rounded-lg bg-orange-500/10 text-orange-400">
@@ -227,45 +185,28 @@
 
         <div class="space-y-4">
           <div>
-            <label class="field-label" for="repairCar">車種（ざっくり）</label>
-            <select id="repairCar">
+            <label class="field-label block mb-2" for="repairWhen">いつから</label>
+            <select id="repairWhen" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
               <option value="">選択</option>
-              <option value="軽バン">軽バン</option>
-              <option value="軽トラ">軽トラ</option>
-              <option value="普通車">普通車</option>
-              <option value="その他">その他</option>
+              <option value="今日">今日</option>
+              <option value="数日前">数日前</option>
+              <option value="1週間以上前">1週間以上前</option>
             </select>
           </div>
 
           <div>
-            <fieldset class="border border-white/10 rounded-xl p-4">
-              <legend class="text-xs font-bold text-muted px-2">症状（複数OK）</legend>
-              <div class="grid grid-cols-2 gap-2 mt-2">
-                <label class="flex items-center text-sm"><input type="checkbox" name="repairSym" value="異音" /> 異音</label>
-                <label class="flex items-center text-sm"><input type="checkbox" name="repairSym" value="警告灯" /> 警告灯</label>
-                <label class="flex items-center text-sm"><input type="checkbox" name="repairSym" value="エアコン" /> エアコン</label>
-                <label class="flex items-center text-sm"><input type="checkbox" name="repairSym" value="ブレーキ" /> ブレーキ</label>
-                <label class="flex items-center text-sm"><input type="checkbox" name="repairSym" value="エンジン" /> エンジン</label>
-                <label class="flex items-center text-sm"><input type="checkbox" name="repairSym" value="足回り" /> 足回り</label>
-                <label class="flex items-center text-sm"><input type="checkbox" name="repairSym" value="その他" /> その他</label>
-              </div>
-            </fieldset>
-          </div>
-
-          <div>
-            <label class="field-label" for="repairUrgency">急ぎ度</label>
-            <select id="repairUrgency">
+            <label class="field-label block mb-2" for="repairLight">警告灯</label>
+            <select id="repairLight" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
               <option value="">選択</option>
-              <option value="今日〜明日">今日〜明日</option>
-              <option value="今週中">今週中</option>
-              <option value="急ぎではない">急ぎではない</option>
-              <option value="未定">未定</option>
+              <option value="点灯（ずっと）">点灯（ずっと）</option>
+              <option value="点灯（一時的）">点灯（一時的）</option>
+              <option value="なし">なし</option>
             </select>
           </div>
 
           <div>
-            <label class="field-label">備考（任意）</label>
-            <textarea class="js-line-note w-full" data-line-note rows="3" placeholder="詳細..."></textarea>
+            <label class="field-label block mb-2" for="repairSymptom">症状・備考（自由記述）</label>
+            <textarea id="repairSymptom" class="js-line-note w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30" data-line-note rows="3" placeholder="例：異音がする／エアコンが効かない／ブレーキの音"></textarea>
           </div>
 
           <div class="pt-2">
@@ -276,7 +217,7 @@
         </div>
       </section>
 
-      <!-- 3) 車検 (Standard Card) -->
+      <!-- 3) 車検 -->
       <section class="glass-card p-6 lg:col-span-1 reveal-hidden delay-200" id="card-shaken">
         <div class="flex items-center gap-3 mb-6">
           <div class="p-2 rounded-lg bg-green-500/10 text-green-400">
@@ -287,8 +228,8 @@
 
         <div class="space-y-4">
           <div>
-            <label class="field-label" for="shakenWhen">車検時期</label>
-            <select id="shakenWhen">
+            <label class="field-label block mb-2" for="shakenWhen">車検時期</label>
+            <select id="shakenWhen" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
               <option value="">選択</option>
               <option value="今月">今月</option>
               <option value="来月">来月</option>
@@ -296,22 +237,19 @@
               <option value="未定">未定</option>
             </select>
           </div>
-
           <div>
-            <label class="field-label" for="shakenType">希望</label>
-            <select id="shakenType">
+            <label class="field-label block mb-2" for="shakenType">希望</label>
+            <select id="shakenType" class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30">
               <option value="">選択</option>
               <option value="最低限でOK">最低限でOK</option>
               <option value="しっかり整備も">しっかり整備も</option>
               <option value="相談して決めたい">相談して決めたい</option>
             </select>
           </div>
-
           <div>
-            <label class="field-label">備考（任意）</label>
-            <textarea class="js-line-note w-full" data-line-note rows="3" placeholder="車種／要望など"></textarea>
+            <label class="field-label block mb-2" for="shakenNote">備考（任意）</label>
+            <textarea id="shakenNote" class="js-line-note w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30" data-line-note rows="2" placeholder="車種／要望など"></textarea>
           </div>
-
           <div class="pt-2">
             <button type="button" class="btn btn-line js-line-send w-full" id="btnLineShaken" data-line-title="車検の相談">
               LINEで相談
@@ -319,144 +257,59 @@
           </div>
         </div>
       </section>
-
-      <!-- 4) 開業トータル (Standard Card) -->
-      <section class="glass-card p-6 lg:col-span-2 reveal-hidden delay-300" id="card-startup">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="p-2 rounded-lg bg-purple-500/10 text-purple-400">
-            <i data-lucide="rocket" class="w-6 h-6"></i>
-          </div>
-          <h2 class="text-xl font-bold">開業トータル相談</h2>
-          <span class="text-xs text-muted font-mono ml-auto">黒ナンバー・保険・確定申告</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-4">
-            <fieldset class="border border-white/10 rounded-xl p-4 h-full">
-              <legend class="text-xs font-bold text-muted px-2">トピック（複数OK）</legend>
-              <div class="grid grid-cols-2 gap-3 mt-2">
-                <label class="flex items-center offset-checkbox"><input type="checkbox" name="startupTopics" value="黒ナンバー" /> 黒ナンバー</label>
-                <label class="flex items-center offset-checkbox"><input type="checkbox" name="startupTopics" value="保険" /> 保険</label>
-                <label class="flex items-center offset-checkbox"><input type="checkbox" name="startupTopics" value="確定申告" /> 確定申告</label>
-                <label class="flex items-center offset-checkbox"><input type="checkbox" name="startupTopics" value="車両" /> 車両</label>
-                <label class="flex items-center offset-checkbox text-nowrap"><input type="checkbox" name="startupTopics" value="仕事の取り方" /> 仕事の取り方</label>
-              </div>
-            </fieldset>
-          </div>
-
-          <div class="space-y-4">
-             <div>
-              <label class="field-label" for="startupWhen">始めたい時期</label>
-              <select id="startupWhen">
-                <option value="">選択</option>
-                <option value="すぐ">すぐ</option>
-                <option value="1ヶ月以内">1ヶ月以内</option>
-                <option value="3ヶ月以内">3ヶ月以内</option>
-                <option value="未定">未定</option>
-              </select>
-            </div>
-            
-            <div>
-              <label class="field-label">備考（任意）</label>
-              <textarea class="js-line-note w-full" data-line-note rows="3" placeholder="状況／困っていること"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-6 flex justify-end">
-          <button type="button" class="btn btn-line js-line-send w-full md:w-auto" id="btnLineStartup" data-line-title="開業トータル相談">
-            LINEで相談する
-          </button>
-        </div>
-      </section>
-
-    </div><!-- End Grid -->
+    </div>
 
     <div class="mt-16 text-center">
       <a class="inline-flex items-center justify-center px-6 py-3 border border-white/10 rounded-full text-sm font-bold text-muted hover:text-white hover:bg-white/5 transition-all" href="./index.html">
         <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> トップに戻る
       </a>
     </div>
-
   </main>
 
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
-
-    // 1. Config Injection (Legacy Support)
-    (function applyConfig() {
+    (function () {
       if (!window.CONFIG) return;
       var regionJa = document.getElementById("regionJa");
       var regionEn = document.getElementById("regionEn");
       var companyName = document.getElementById("companyName");
-
+      var mailLink = document.getElementById("headerMailLink");
       if (regionJa) regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
       if (regionEn) regionEn.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
       if (companyName) companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
-
-      var lineLink = document.getElementById("headerLineLink");
-      var mailLink = document.getElementById("headerMailLink");
-      var telLink = document.getElementById("headerTelLink");
-      var startUrl = "./consult.html";
       var email = window.CONFIG.EMAIL_TO || "";
-      var tel = window.CONFIG.TEL || "";
-
-      if (lineLink) lineLink.href = startUrl;
-      if (mailLink && email) {
-        mailLink.href = "mailto:" + email;
-        mailLink.textContent = email;
-      }
-      if (telLink && tel) {
-        telLink.href = "tel:" + tel.replace(/[^0-9+]/g, "");
-        telLink.textContent = tel.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-      }
+      var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
+      if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
     })();
 
-    // 2. Legacy Select Logic
     (function () {
       var maker = document.getElementById("purchaseMaker");
       var model = document.getElementById("purchaseModel");
       if (!maker || !model) return;
-      // Wait for drivers.js to load
-      window.onload = function() {
+      window.addEventListener("load", function() {
         if (window.DriversRegister && window.DriversRegister.updatePurchaseModelSelect) {
-           maker.addEventListener("change", function () {
+          maker.addEventListener("change", function () {
             window.DriversRegister.updatePurchaseModelSelect(maker, model);
           });
           window.DriversRegister.updatePurchaseModelSelect(maker, model);
         }
-      };
+      });
     })();
 
-    // 3. Spotlight Effect (Mouse Tracking)
-    document.addEventListener('mousemove', (e) => {
-      const cards = document.querySelectorAll('.glass-card');
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+    document.addEventListener('mousemove', function(e) {
+      document.querySelectorAll('.glass-card').forEach(function(card) {
+        var rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+        card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
       });
     });
 
-    // 4. Entrance Animation (Intersection Observer)
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal-visible');
-          observer.unobserve(entry.target);
-        }
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) {
+        if (en.isIntersecting) { en.target.classList.add('reveal-visible'); obs.unobserve(en.target); }
       });
-    }, {
-      threshold: 0.1,
-      rootMargin: "0px 0px -50px 0px"
-    });
-
-    document.querySelectorAll('.reveal-hidden').forEach((el) => {
-      observer.observe(el);
-    });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+    document.querySelectorAll('.reveal-hidden').forEach(function(el) { obs.observe(el); });
   </script>
 </body>
 </html>

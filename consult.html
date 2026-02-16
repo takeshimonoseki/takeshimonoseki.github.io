@@ -6,51 +6,35 @@
   <title>相談スタート｜drivers-site（山口県）</title>
   <meta name="description" content="どの相談から始めるか選び、内容をまとめてLINEの送信欄に下書きとして入れます。" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            deep: '#050505',
-            muted: '#94A3B8',
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          }
+          colors: { deep: '#050505', muted: '#94A3B8' },
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
         }
       }
     }
   </script>
-
   <link rel="stylesheet" href="./drivers.css" />
   <script src="./config.js"></script>
-
-  <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-deep text-white min-h-screen">
   <div id="top"></div>
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- HEADER — Fixed, Glassmorphism -->
-  <!-- ═══════════════════════════════════════════════════════ -->
   <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- Left: Brand -->
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full">
           <span class="text-[9px] tracking-widest font-extrabold text-white/80">YAMAGUCHI</span>
           <span class="text-[9px] font-bold text-white/50">山口県</span>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div>
@@ -59,32 +43,26 @@
         </div>
       </a>
 
-      <!-- Right -->
       <div class="flex items-center gap-4">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="./consult.html" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
-          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">MAIL</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerTelLink" class="hover:text-white transition-colors">TEL</a>
+          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">メール</a>
         </div>
 
         <nav class="hidden md:flex gap-1" aria-label="メイン">
           <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">開業相談</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">登録</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
+          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">相談スタート</a>
         </nav>
       </div>
     </div>
   </header>
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- MAIN -->
-  <!-- ═══════════════════════════════════════════════════════ -->
   <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
 
-    <!-- Hero intro -->
     <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden relative overflow-hidden">
       <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-green-600/15 to-transparent rounded-full blur-3xl pointer-events-none"></div>
       <div class="relative z-10">
@@ -100,7 +78,6 @@
       </div>
     </div>
 
-    <!-- Priority: Registration CTA -->
     <div class="glass-card p-6 mb-6 reveal-hidden delay-100 relative overflow-hidden">
       <div class="absolute -bottom-10 -left-10 w-[200px] h-[200px] bg-gradient-to-tr from-white/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
       <div class="relative z-10">
@@ -110,13 +87,12 @@
         </div>
         <h2 class="text-lg font-bold mb-2">まず登録フォームへ（1分）</h2>
         <p class="text-sm text-muted mb-4">登録が一番うれしいので、相談より先にここだけでもOKです。</p>
-        <a class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all" href="./register.html">
+        <a class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 transition-all" href="./register.html">
           <i data-lucide="user-plus" class="w-4 h-4"></i> 協力ドライバー登録フォームへ
         </a>
       </div>
     </div>
 
-    <!-- Consultation Card -->
     <div class="glass-card p-6 md:p-10 reveal-hidden delay-200" id="consultCard">
       <div class="flex items-center gap-3 mb-6">
         <div class="p-2 rounded-lg bg-sky-500/10 text-sky-400">
@@ -126,8 +102,6 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-        <!-- Left: Form -->
         <section>
           <h3 class="text-sm font-bold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[11px] font-bold">①</span>
@@ -195,10 +169,10 @@
           </details>
 
           <div class="flex flex-wrap gap-3 mt-6">
-            <a class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 hover:-translate-y-0.5 transition-all" id="btnAddFriend" href="#" target="_blank" rel="noopener noreferrer">
+            <a class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 transition-all" id="btnAddFriend" href="https://line.me/R/ti/p/%40277rcesk" target="_blank" rel="noopener noreferrer">
               <i data-lucide="user-plus" class="w-4 h-4"></i> まず友だち追加
             </a>
-            <button class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all active:scale-95" type="button" id="btnBuild">
+            <button class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 transition-all active:scale-95" type="button" id="btnBuild">
               <i data-lucide="sparkles" class="w-4 h-4"></i> この内容で作る
             </button>
           </div>
@@ -208,7 +182,6 @@
           </p>
         </section>
 
-        <!-- Right: Preview -->
         <section>
           <h3 class="text-sm font-bold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[11px] font-bold">③</span>
@@ -227,7 +200,7 @@
                 <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 transition-all" type="button" id="btnEdit">
                   <i data-lucide="pencil" class="w-3.5 h-3.5"></i> 修正する
                 </button>
-                <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all active:scale-95" type="button" id="btnSend">
+                <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 transition-all active:scale-95" type="button" id="btnSend">
                   <i data-lucide="send" class="w-3.5 h-3.5"></i> LINEで送る
                 </button>
               </div>
@@ -238,7 +211,6 @@
             </div>
           </div>
 
-          <!-- Empty state before build -->
           <div id="previewEmpty" class="p-8 rounded-2xl border border-dashed border-white/10 text-center">
             <i data-lucide="file-text" class="w-8 h-8 mx-auto text-white/10 mb-3"></i>
             <p class="text-xs text-muted">「この内容で作る」を押すとプレビューが表示されます</p>
@@ -249,27 +221,19 @@
   </main>
 
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
-
     (function(){
       var C = window.CONFIG || {};
-
-      // header
       var companyName = document.getElementById('companyName');
       if (companyName && C.COMPANY_NAME) companyName.textContent = C.COMPANY_NAME;
 
       var mail = (C.EMAIL_TO || '').trim();
-      var tel = (C.TEL || '').trim();
       var headerMailLink = document.getElementById('headerMailLink');
-      var headerTelLink = document.getElementById('headerTelLink');
       if (headerMailLink && mail) headerMailLink.href = 'mailto:' + mail;
-      if (headerTelLink && tel) headerTelLink.href = 'tel:' + tel.replace(/[^0-9+]/g,'');
 
-      // add friend
-      var addUrl = (C.LINE_URL || '').trim();
+      var addUrl = (C.LINE_URL || 'https://line.me/R/ti/p/%40277rcesk').trim();
       var btnAddFriend = document.getElementById('btnAddFriend');
-      if (btnAddFriend) btnAddFriend.href = addUrl || '#';
+      if (btnAddFriend) btnAddFriend.href = addUrl;
 
       function getSelectedType(){
         var el = document.querySelector('input[name="consultType"]:checked');
@@ -292,19 +256,13 @@
 
       function openLineWithText(text){
         var msg = encodeURIComponent(String(text || '').slice(0, 5000));
-        var oa = (C.LINE_OA_ID || '').trim();
-        if (oa) {
-          if (oa[0] !== '@') oa = '@' + oa;
-          var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent || '');
-          var base = isMobile ? 'line://oaMessage/' : 'https://line.me/R/oaMessage/';
-          location.href = base + oa + '/?' + msg;
-          return;
-        }
-        // fallback: share text
-        location.href = 'https://line.me/R/msg/text/?' + msg;
+        var oa = (C.LINE_OA_ID || '@277rcesk').trim();
+        if (oa[0] !== '@') oa = '@' + oa;
+        var isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent || '');
+        var base = isMobile ? 'line://oaMessage/' : 'https://line.me/R/oaMessage/';
+        location.href = base + oa + '/?' + msg;
       }
 
-      // UI actions
       var btnBuild = document.getElementById('btnBuild');
       var btnSend = document.getElementById('btnSend');
       var btnEdit = document.getElementById('btnEdit');
@@ -330,7 +288,6 @@
       });
     })();
 
-    // Spotlight Effect
     document.addEventListener('mousemove', (e) => {
       document.querySelectorAll('.glass-card').forEach(card => {
         const rect = card.getBoundingClientRect();
@@ -339,7 +296,6 @@
       });
     });
 
-    // Entrance Animation
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -348,7 +304,6 @@
         }
       });
     }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
-
     document.querySelectorAll('.reveal-hidden').forEach(el => observer.observe(el));
   </script>
 </body>

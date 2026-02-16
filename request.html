@@ -20,13 +20,13 @@
 <body class="bg-deep text-white min-h-screen">
 
   <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
           <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div>
@@ -37,15 +37,15 @@
 
       <div class="flex items-center gap-4">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="#" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
-          <span class="text-white/20">|</span>
-          <a href="#" id="headerTelLink" class="hover:text-white transition-colors">090-XXXX-XXXX</a>
         </div>
         <nav class="hidden md:flex gap-1" aria-label="メイン">
           <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">登録</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
+          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
           <span class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">連絡</span>
         </nav>
       </div>
@@ -54,7 +54,6 @@
 
   <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
 
-    <!-- Intro -->
     <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden relative overflow-hidden">
       <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-orange-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
       <div class="relative z-10">
@@ -74,7 +73,6 @@
       </div>
     </div>
 
-    <!-- Message Form -->
     <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden delay-100">
       <h2 class="text-base font-bold mb-2 flex items-center gap-2">
         <i data-lucide="edit-3" class="w-4 h-4 text-sky-400"></i> 送信したい内容（メモ）
@@ -88,13 +86,12 @@
       <p class="text-[11px] text-muted mt-1">※ここで書いた内容は、ブラウザ内の一時メモです。送信されるのは、LINEで送信ボタンを押した内容のみです。</p>
 
       <div class="mt-5">
-        <button type="button" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all active:scale-95" id="btnLineSend">
+        <button type="button" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 transition-all active:scale-95" id="btnLineSend">
           <i data-lucide="send" class="w-4 h-4"></i> LINEでこの内容を送る
         </button>
       </div>
     </div>
 
-    <!-- Guidelines -->
     <div class="glass-card p-6 reveal-hidden delay-200">
       <h2 class="text-base font-bold mb-3 flex items-center gap-2">
         <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i> 運用上のお願い
@@ -114,8 +111,6 @@
 
   <script>
     lucide.createIcons();
-
-    // CONFIG からヘッダー・フッター情報を反映
     (function applyConfig() {
       if (!window.CONFIG) return;
       var regionJa = document.getElementById("regionJa");
@@ -130,22 +125,15 @@
         footerCompany.textContent = (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
       }
 
+      var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
+      var email = window.CONFIG.EMAIL_TO || "";
       var lineLink = document.getElementById("headerLineLink");
       var mailLink = document.getElementById("headerMailLink");
-      var telLink = document.getElementById("headerTelLink");
 
-      var lineUrl = window.CONFIG.LINE_ADD_FRIEND_URL || window.CONFIG.LINE_URL || "";
-      var email = window.CONFIG.EMAIL_TO || "";
-      var tel = window.CONFIG.TEL || "";
-
-      if (lineLink && lineUrl) lineLink.href = lineUrl;
+      if (lineLink) lineLink.href = lineUrl;
       if (mailLink && email) {
         mailLink.href = "mailto:" + email;
         mailLink.textContent = email;
-      }
-      if (telLink && tel) {
-        telLink.href = "tel:" + tel.replace(/[^0-9+]/g, "");
-        telLink.textContent = tel;
       }
     })();
 
@@ -168,7 +156,6 @@
       openLineWithText(text);
     });
 
-    // Spotlight
     document.addEventListener('mousemove', (e) => {
       document.querySelectorAll('.glass-card').forEach(card => {
         const r = card.getBoundingClientRect();
@@ -176,7 +163,6 @@
         card.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
       });
     });
-    // Reveal
     const obs = new IntersectionObserver(e => e.forEach(en => { if(en.isIntersecting){ en.target.classList.add('reveal-visible'); obs.unobserve(en.target); } }), {threshold:0.05});
     document.querySelectorAll('.reveal-hidden').forEach(el => obs.observe(el));
   </script>
