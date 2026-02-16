@@ -19,14 +19,8 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            deep: '#050505',
-            muted: '#94A3B8',
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          }
+          colors: { deep: '#050505', muted: '#94A3B8' },
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
         }
       }
     }
@@ -71,6 +65,18 @@
     .error-banner ul { margin-top: 8px; padding-left: 18px; }
     .error-banner li { margin-bottom: 4px; }
 
+    .success-banner {
+      padding: 20px; border-radius: 16px;
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+      color: #86efac; font-size: 14px;
+    }
+    .success-banner strong { color: #4ade80; }
+    .summary-list { list-style: none; padding: 0; margin-top: 8px; }
+    .summary-list li {
+      padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px; color: rgba(255,255,255,0.7);
+    }
+
     .terms-box {
       padding: 16px; border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.1);
@@ -93,8 +99,8 @@
 <body class="bg-deep text-white min-h-screen">
 
   <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
-    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="./index.html" class="flex items-center gap-3 group">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 flex-wrap">
+      <a href="./index.html" class="flex items-center gap-3 group flex-shrink-0">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
           <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
@@ -108,20 +114,24 @@
         </div>
       </a>
 
-      <div class="flex items-center gap-4 flex-wrap">
-        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
+      <div class="flex items-center gap-3 flex-wrap justify-end min-w-0">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-muted shrink-0" aria-label="連絡先">
           <a href="#" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
 
-        <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
+        <nav class="hidden md:flex gap-1 flex-wrap justify-end" aria-label="メイン">
           <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
           <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
           <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
           <a href="./main-register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">本登録</a>
         </nav>
+
+        <a href="./consult.html" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors flex-shrink-0" aria-label="メニュー">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </a>
       </div>
     </div>
   </header>
@@ -156,7 +166,7 @@
         <div class="p-5 rounded-2xl border border-amber-500/20 bg-amber-500/5 mb-6">
           <div class="flex items-center gap-2 mb-5">
             <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
-            <span class="font-bold text-sm">必須項目</span>
+            <span class="font-bold text-sm">まずここだけ入力</span>
             <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-bold">必須まとめ</span>
           </div>
 
@@ -238,16 +248,40 @@
           </div>
         </div>
 
-        <div class="mt-6">
-          <a href="./register.html" class="inline-flex items-center gap-2 text-sm text-muted hover:text-white transition-colors">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> まずは仮登録へ
-          </a>
-        </div>
+        <details class="group mt-6">
+          <summary class="cursor-pointer text-sm font-bold text-white/60 hover:text-white transition-colors flex items-center gap-2 select-none p-4 rounded-2xl border border-white/10 bg-white/[0.02]">
+            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180"></i>
+            まずは仮登録へ
+          </summary>
+          <div class="mt-4 p-4 rounded-2xl border border-white/5 bg-white/[0.01]">
+            <a href="./register.html" class="inline-flex items-center gap-2 text-sm text-muted hover:text-white transition-colors">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i> 仮登録フォームを開く
+            </a>
+          </div>
+        </details>
       </form>
+
+      <div id="successBox" class="success-banner mt-6" style="display:none;">
+        <strong>送信を受け付けました。</strong>
+        <div class="mt-2">
+          受付番号：<span id="receiptId" class="font-mono text-white"></span>
+        </div>
+        <p class="text-xs text-muted mt-2">※代表たけからご連絡します。</p>
+        <div class="mt-4 p-4 rounded-xl border border-white/5 bg-white/[0.02]">
+          <div class="text-xs font-bold text-muted uppercase tracking-wider mb-2">送信内容（確認用）</div>
+          <ul id="publicSummary" class="summary-list"></ul>
+        </div>
+        <div class="mt-3">
+          <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 transition-all" id="btnResetForm">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> もう一度入力する
+          </button>
+        </div>
+      </div>
     </div>
 
     <footer class="border-t border-white/5 mt-12 pt-8 pb-4 text-center">
       <div class="text-xs text-muted" id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
+      <div class="text-[11px] text-white/30 mt-1">フォームからの登録に加え、LINE経由での登録内容修正・削除依頼も受け付けます。</div>
       <p class="text-[11px] text-muted mt-2"><a href="./privacy.html" class="underline underline-offset-4 decoration-white/20 hover:decoration-white/50 transition-colors">プライバシー・個人情報の取扱い</a></p>
     </footer>
   </main>
@@ -289,9 +323,13 @@
     var submitHintEl = document.getElementById("submitHint");
     var errorBox = document.getElementById("errorBox");
     var errorListEl = document.getElementById("errorList");
+    var successBox = document.getElementById("successBox");
+    var receiptIdEl = document.getElementById("receiptId");
+    var publicSummaryEl = document.getElementById("publicSummary");
+    var btnResetForm = document.getElementById("btnResetForm");
 
     function clearValidationUI_() {
-      document.querySelectorAll(".is-invalid").forEach(function(el){ el.classList.remove("is-invalid"); });
+      document.querySelectorAll(".is-invalid").forEach(function(el){ el.classList.remove("is-invalid"); try { el.removeAttribute("aria-invalid"); } catch(_) {} });
       document.querySelectorAll(".field-error-text").forEach(function(el){ el.remove(); });
       if (agreeLabelEl) agreeLabelEl.classList.remove("is-invalid");
     }
@@ -299,6 +337,7 @@
     function addFieldError_(el, msg) {
       if (!el) return;
       el.classList.add("is-invalid");
+      el.setAttribute("aria-invalid", "true");
       if (msg) {
         var div = document.createElement("div");
         div.className = "field-error-text";
@@ -319,9 +358,11 @@
         if (missing.length === 0) {
           submitHintEl.textContent = "必須OK。送信できます。";
           submitBtn.classList.remove("is-disabled");
+          submitBtn.setAttribute("aria-disabled", "false");
         } else {
           submitHintEl.textContent = "未入力： " + missing.join(" / ");
           submitBtn.classList.add("is-disabled");
+          submitBtn.setAttribute("aria-disabled", "true");
         }
       }
     }
@@ -341,6 +382,7 @@
       clearValidationUI_();
       errorBox.style.display = "none";
       errorListEl.innerHTML = "";
+      successBox.style.display = "none";
 
       var errors = [];
       var firstInvalid = null;
@@ -358,7 +400,23 @@
         return;
       }
 
-      alert("送信処理は次ステップでGAS/LINE通知に接続します。");
+      var rid = "MR-" + Date.now().toString(36) + "-" + Math.floor(Math.random() * 1e6).toString(36).padStart(4, "0");
+      receiptIdEl.textContent = rid;
+      publicSummaryEl.innerHTML = "";
+      ["ニックネーム：" + nicknameEl.value, "苗字：" + lastNameEl.value, "名前：" + firstNameEl.value].forEach(function(t){
+        var li = document.createElement("li"); li.textContent = t; publicSummaryEl.appendChild(li);
+      });
+      successBox.style.display = "";
+      successBox.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    if (btnResetForm) btnResetForm.addEventListener("click", function() {
+      document.getElementById("mainRegisterForm").reset();
+      clearValidationUI_();
+      errorBox.style.display = "none";
+      successBox.style.display = "none";
+      updateSubmitHint();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     document.addEventListener('mousemove', (e) => {

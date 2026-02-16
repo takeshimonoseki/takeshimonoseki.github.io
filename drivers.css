@@ -99,16 +99,33 @@ h1, h2, h3, h4, h5, h6 {
 
 /* --- LEGACY STYLES (Preserved but Dark-Mode Adapted via Variables) --- */
 
-/* ヘッダー内側：PC/スマホで横並び・折り返し・余白を安定 */
+/* ヘッダー内側：PC/スマホで横並び・折り返し・余白を安定（375px / 1280px 対応） */
 .header-inner {
+  display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
+  min-height: 4rem;
+}
+.header-inner > *:first-child {
+  flex-shrink: 0;
+}
+.header-inner > *:last-child {
+  flex-shrink: 1;
+  min-width: 0;
 }
 @media (max-width: 375px) {
   .header-inner {
     gap: 0.375rem;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+    min-height: 3.5rem;
+  }
+}
+@media (min-width: 1280px) {
+  .header-inner {
+    flex-wrap: nowrap;
   }
 }
 

@@ -19,10 +19,7 @@
   <script>
     tailwind.config = {
       theme: {
-        extend: {
-          colors: { deep: '#050505', muted: '#94A3B8' },
-          fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] }
-        }
+        extend: { colors: { deep: '#050505', muted: '#94A3B8' }, fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] } }
       }
     }
   </script>
@@ -36,32 +33,29 @@
 
 <body class="bg-deep text-white min-h-screen">
   <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
-    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-4">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 flex-wrap">
+      <a href="./index.html" class="flex items-center gap-3 group flex-shrink-0">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
           <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        </div>
+        <div>
+          <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
+          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS SITE</div>
+        </div>
+      </a>
 
-        <a href="#top" data-scroll-top class="flex items-center gap-3 group">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
-            <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
-          </div>
-          <div>
-            <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
-            <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS SITE</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="flex items-center gap-4 flex-wrap">
-        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
+      <div class="flex items-center gap-3 flex-wrap justify-end min-w-0">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-muted shrink-0" aria-label="連絡先">
           <a href="#" id="headerLineLink" class="hover:text-white transition-colors">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
 
-        <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
+        <nav class="hidden md:flex gap-1 flex-wrap justify-end" aria-label="メイン">
           <a href="#top" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" data-scroll-top aria-current="page">トップ</a>
           <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
@@ -69,7 +63,7 @@
           <a href="./main-register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">本登録</a>
         </nav>
 
-        <a href="./consult.html" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="メニュー">
+        <a href="./consult.html" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors flex-shrink-0" aria-label="メニュー">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </a>
       </div>
@@ -239,7 +233,6 @@
       var mailLink = document.getElementById("headerMailLink");
       if (mailLink && email) { mailLink.href = "mailto:" + email; mailLink.textContent = email; }
 
-      // LINEは「相談ページ」へ
       var startUrl = "./consult.html";
       var headerLineLink = document.getElementById("headerLineLink");
       var heroLineBtn = document.getElementById("heroLineBtn");
