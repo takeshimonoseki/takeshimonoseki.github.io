@@ -924,61 +924,170 @@ details.faq .faq-body {
   padding-top: 14px;
 }
 
-/* ─── 運賃計算機 ─── */
-.fare-calc-title {
-  font-size: 1.25rem;
+/* ─── 見積計算機（メインHP同様） ─── */
+.calc-head {
+  padding: 16px 18px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, rgba(254, 205, 211, 0.06), transparent);
+}
+.calc-head .fare-calc-title {
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--text-primary);
   margin: 0;
 }
-.fare-calc-lead {
+.calc-head .fare-calc-lead {
   font-size: 12px;
   color: var(--text-secondary);
   margin: 4px 0 0;
   line-height: 1.5;
 }
-.fare-calc-form .fare-field {
+.calc-body {
+  padding: 16px 18px;
+}
+.calc-body .fare-field {
   margin-top: 10px;
 }
-.fare-calc-form .fare-row {
+.calc-body .fare-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-top: 10px;
 }
-.fare-check {
-  display: inline-flex;
+.calc-body .grid-4 {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 400px) {
+  .calc-body .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+.calc-body .grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+.section-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 14px;
+  margin-bottom: 4px;
+}
+.small-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+.fare-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.btn-ghost {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+.btn-ghost:hover {
+  background: var(--blush-100);
+  border-color: var(--blush-200);
+  color: var(--text-primary);
+}
+.stepper {
+  display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
 }
-.fare-result-row {
+.stepper .stepper-btn {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  flex-shrink: 0;
+}
+.stepper .stepper-input {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-weight: 700;
+}
+.calc-submit {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.fare-calc-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.fare-result-box {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: rgba(254, 205, 211, 0.04);
+}
+.fare-result-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
-  color: var(--text-secondary);
+  flex-wrap: wrap;
+  gap: 6px;
 }
-.fare-result-row strong { color: var(--text-primary); }
-.fare-result-rec {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+.plan-badge {
+  font-size: 12px;
+  font-weight: 800;
   color: var(--text-primary);
 }
-.fare-result-rec strong { color: var(--blush-500); }
-.fare-breakdown summary {
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
+.fare-total {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--blush-500);
+  margin: 8px 0 6px;
 }
-.fare-breakdown-body { padding: 0; }
+.fare-result-box .fare-breakdown {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-subtle);
+}
+.fare-result-box .fare-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.fare-result-box .fare-result-row strong {
+  color: var(--text-primary);
+}
+.fare-result-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* トースト（計算機のメッセージ） */
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  max-width: 320px;
+  padding: 14px 16px;
+  background: var(--bg-card-solid);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+.toast b { display: block; font-size: 14px; }
 
 /* ─── Footer（英語羅列・謎の大余白を除去） ─── */
 .site-footer {

@@ -1,265 +1,376 @@
 /**
- * app.js — お客様用HP: 運賃計算機（純粋関数＋UI）・送信同梱用payload
- * 式はメインホームページに無かったため暫定式で実装（定数化で差し替え可）
+ * app.js — お客様用HP: 見積計算機（メインHP同様・運ぶ・移動）
+ * 計算式はメインホームページ index.html から移植。距離取得は Google API オプション。
  */
 (function () {
   "use strict";
 
-  /* ─── 暫定定数（後で差し替え） ─── */
-  var FARE = {
-    A_BASE_KM: 20,
-    A_BASE_UPTO_20: 6600,
-    A_21_100_PER_KM: 220,
-    A_100_KM: 80,
-    A_OVER_100_PER_KM: 180,
-    A_WORK_UNIT_MIN: 30,
-    A_WORK_RATE: 1650,
-    A_WAIT_FREE_MIN: 30,
-    A_WAIT_RATE: 1650,
-    B_BASE_HOURS: 8,
-    B_BASE_KM: 100,
-    B_BASE: 44000,
-    B_OVER_TIME_UNIT: 30,
-    B_OVER_TIME_RATE: 2750,
-    B_OVER_KM_RATE: 220,
-    C_BASE_HOURS: 8,
-    C_BASE: 66000,
-    C_OVER_TIME_UNIT: 30,
-    C_OVER_TIME_RATE: 3300,
-    NIGHT_RATIO: 1.2,
-    LOAD_HOURS: { small: 0.5, medium: 1.0, large: 2.0 },
-    STAIRS_HOUR_PER_FLOOR: 0.25
+  var PRICE = {
+    travelFreeKm: 20,
+    travelStepKm: 5,
+    travelStepYen: 550,
+    haulBaseFee: 3300,
+    shoppingBaseFee: 2200,
+    carSupportBaseFee: 3300,
+    stairsPerFloor: 1100,
+    extraLaborPerHour: 2200
   };
 
-  /**
-   * 純粋関数: 入力 → A/B/C 金額と推奨
-   * @param {Object} input - { distanceKm, driveHr, loadSize, pickupFloors, dropoffFloors, waitMin, night }
-   * @returns {{ planA: number, planB: number, planC: number, recommended: 'A'|'B'|'C', recommendedAmount: number, breakdown: Object }}
-   */
-  function calculateFare(input) {
-    var d = Number(input.distanceKm) || 0;
-    var driveHr = Number(input.driveHr) || 0;
-    var loadSize = (input.loadSize || "small").toLowerCase();
-    var pickupFloors = Math.max(0, Math.floor(Number(input.pickupFloors) || 0));
-    var dropoffFloors = Math.max(0, Math.floor(Number(input.dropoffFloors) || 0));
-    var waitMin = Math.max(0, Math.floor(Number(input.waitMin) || 0));
-    var night = !!input.night;
-
-    var baseHr = FARE.LOAD_HOURS[loadSize] !== undefined ? FARE.LOAD_HOURS[loadSize] : FARE.LOAD_HOURS.small;
-    var stairsHr = (Math.max(0, pickupFloors - 1) + Math.max(0, dropoffFloors - 1)) * FARE.STAIRS_HOUR_PER_FLOOR;
-    var workHr = baseHr + stairsHr;
-
-    function ceilToHalf(h) {
-      return Math.ceil(h * 2) / 2;
-    }
-    function ceilTo30Min(min) {
-      return Math.ceil(min / 30) * 30;
-    }
-
-    /* プランA */
-    var planA = 0;
-    if (d <= FARE.A_BASE_KM) {
-      planA = FARE.A_BASE_UPTO_20;
-    } else if (d <= 100) {
-      planA = FARE.A_BASE_UPTO_20 + (d - FARE.A_BASE_KM) * FARE.A_21_100_PER_KM;
-    } else {
-      planA = FARE.A_BASE_UPTO_20 + (100 - FARE.A_BASE_KM) * FARE.A_21_100_PER_KM + (d - 100) * FARE.A_OVER_100_PER_KM;
-    }
-    var workUnits = Math.ceil((workHr * 60) / FARE.A_WORK_UNIT_MIN);
-    planA += workUnits * FARE.A_WORK_RATE;
-    if (waitMin > FARE.A_WAIT_FREE_MIN) {
-      var billableWait = ceilTo30Min(waitMin - FARE.A_WAIT_FREE_MIN);
-      planA += (billableWait / 30) * FARE.A_WAIT_RATE;
-    }
-    planA = Math.round(planA);
-
-    /* プランB */
-    var planB = FARE.B_BASE;
-    var overTimeB = Math.max(0, (driveHr + workHr) - FARE.B_BASE_HOURS);
-    if (overTimeB > 0) {
-      planB += Math.ceil((overTimeB * 60) / FARE.B_OVER_TIME_UNIT) * FARE.B_OVER_TIME_RATE;
-    }
-    if (d > FARE.B_BASE_KM) {
-      planB += (d - FARE.B_BASE_KM) * FARE.B_OVER_KM_RATE;
-    }
-    planB = Math.round(planB);
-
-    /* プランC */
-    var planC = FARE.C_BASE;
-    var overTimeC = Math.max(0, (driveHr + workHr) - FARE.C_BASE_HOURS);
-    if (overTimeC > 0) {
-      planC += Math.ceil((overTimeC * 60) / FARE.C_OVER_TIME_UNIT) * FARE.C_OVER_TIME_RATE;
-    }
-    planC = Math.round(planC);
-
-    if (night) {
-      planA = Math.round(planA * FARE.NIGHT_RATIO);
-      planB = Math.round(planB * FARE.NIGHT_RATIO);
-      planC = Math.round(planC * FARE.NIGHT_RATIO);
-    }
-
-    var a = planA, b = planB, c = planC;
-    var recommended = "A";
-    var recommendedAmount = a;
-    if (b < recommendedAmount) { recommended = "B"; recommendedAmount = b; }
-    if (c < recommendedAmount) { recommended = "C"; recommendedAmount = c; }
-
-    return {
-      planA: a,
-      planB: b,
-      planC: c,
-      recommended: recommended,
-      recommendedAmount: recommendedAmount,
-      breakdown: {
-        workHr: workHr,
-        baseHr: baseHr,
-        stairsHr: stairsHr,
-        driveHr: driveHr,
-        waitMin: waitMin,
-        night: night
-      }
-    };
+  function z2h(str) {
+    if (str == null) return "";
+    return String(str)
+      .replace(/[０-９]/g, function (s) { return String.fromCharCode(s.charCodeAt(0) - 0xFEE0); })
+      .replace(/[．。]/g, ".")
+      .replace(/[ー−―]/g, "-")
+      .trim();
+  }
+  function num(v, fallback) {
+    if (fallback === undefined) fallback = 0;
+    var n = parseFloat(z2h(v));
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function int(v, fallback) {
+    if (fallback === undefined) fallback = 0;
+    var n = parseInt(z2h(v), 10);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  function yen(n) {
+    return Math.floor(n).toLocaleString() + "円";
+  }
+  function roundToHalfHourHours(x) {
+    var v = Math.max(0, Number(x) || 0);
+    return Math.round(v * 2) / 2;
   }
 
-  /**
-   * 見積テキスト（LINE貼り付け用）
-   */
-  function formatEstimateText(result, input) {
+  function calcTravelFee(distanceKm) {
+    var km = Math.max(0, num(distanceKm, 0));
+    if (km <= PRICE.travelFreeKm) {
+      return { fee: 0, note: PRICE.travelFreeKm + "km圏内：無料" };
+    }
+    var over = km - PRICE.travelFreeKm;
+    var steps = Math.ceil(over / PRICE.travelStepKm);
+    var fee = steps * PRICE.travelStepYen;
+    return { fee: fee, note: "超過 " + over.toFixed(1) + "km → " + steps + "段（" + PRICE.travelStepKm + "kmごと）" };
+  }
+
+  function calcStairsFee(floor, hasElev) {
+    var f = Math.max(1, int(floor, 1));
+    if (hasElev) return 0;
+    return Math.max(0, f - 1) * PRICE.stairsPerFloor;
+  }
+
+  function makeReservationId(prefix) {
+    var d = new Date();
+    var y = d.getFullYear();
+    var mo = ("0" + (d.getMonth() + 1)).slice(-2);
+    var da = ("0" + d.getDate()).slice(-2);
+    var hh = ("0" + d.getHours()).slice(-2);
+    var mm = ("0" + d.getMinutes()).slice(-2);
+    var rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return "TK-" + y + mo + da + "-" + hh + mm + "-" + prefix + "-" + rand;
+  }
+
+  function buildDrivingCopy(p) {
+    var id = makeReservationId("drive");
     var lines = [];
-    lines.push("【運賃目安】");
-    lines.push("距離: " + (input.distanceKm || "—") + "km");
-    if (input.driveHr) lines.push("走行時間: " + input.driveHr + "h");
-    lines.push("荷物: " + (input.loadSize === "medium" ? "中" : input.loadSize === "large" ? "大" : "小"));
-    lines.push("プランA: ¥" + result.planA.toLocaleString());
-    lines.push("プランB: ¥" + result.planB.toLocaleString());
-    lines.push("プランC: ¥" + result.planC.toLocaleString());
-    lines.push("推奨: プラン" + result.recommended + " ¥" + result.recommendedAmount.toLocaleString());
-    return lines.join("\n");
+    lines.push("【見積｜運ぶ・移動｜軽貨物TAKE】");
+    lines.push("予約ID：" + id);
+    lines.push("サービス：" + (p.serviceLabel || ""));
+    lines.push("車両台数：" + p.vans + "台（走行分×" + p.vans + "）");
+    if (p.origin || p.destination) {
+      lines.push("積地：" + (p.origin || "(未入力)") + " / 卸地：" + (p.destination || "(未入力)"));
+    }
+    lines.push("距離：" + p.km + "km");
+    lines.push("出張費：" + yen(p.travelFeeBase) + "（" + p.travelNote + "）");
+    if (p.datetime) lines.push("希望日時：" + p.datetime);
+    if (p.note) lines.push("補足：" + p.note);
+    lines.push("—");
+    lines.push("走行分（基本＋出張）×台数：" + yen(p.drivePart) + "（基本" + yen(p.baseFee) + " + 出張" + yen(p.travelFeeBase) + "）×" + p.vans);
+    if (p.stairsFee > 0) lines.push("階段付帯：" + yen(p.stairsFee));
+    if (p.laborFee > 0) lines.push("追加人件費：" + yen(p.laborFee) + "（" + p.workers + "人 × " + p.wHours + "h × " + yen(PRICE.extraLaborPerHour) + "）");
+    lines.push("合計：" + yen(p.total) + "（税込概算）");
+    lines.push("—");
+    lines.push("確定：LINE/メールで相談→合意後に本契約へ");
+    lines.push("支払い：当日決済（現金/振込）");
+    return { id: id, text: lines.join("\n") };
   }
 
-  /* ─── DOM と UI 初期化 ─── */
+  function showToast(title, msg) {
+    var el = document.getElementById("toast");
+    if (!el) return;
+    var t = document.getElementById("toastTitle");
+    var m = document.getElementById("toastMsg");
+    if (t) t.textContent = title || "";
+    if (m) m.textContent = msg || "";
+    el.style.display = "block";
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(function () {
+      el.style.display = "none";
+    }, 2600);
+  }
+
+  function renderBreakdown(container, rows) {
+    if (!container) return;
+    container.innerHTML = "";
+    (rows || []).forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "fare-result-row";
+      row.innerHTML = "<span>" + String(r.k).replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</span><strong>" + String(r.v).replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</strong>";
+      container.appendChild(row);
+    });
+  }
+
   var calcEl = document.getElementById("fareCalculator");
   if (!calcEl) return;
 
-  var distanceEl = document.getElementById("fareDistance");
-  var driveHrEl = document.getElementById("fareDriveHr");
-  var loadSizeEl = document.getElementById("fareLoadSize");
-  var pickupFloorsEl = document.getElementById("farePickupFloors");
-  var dropoffFloorsEl = document.getElementById("fareDropoffFloors");
-  var waitMinEl = document.getElementById("fareWaitMin");
-  var nightEl = document.getElementById("fareNight");
-  var outA = document.getElementById("fareOutA");
-  var outB = document.getElementById("fareOutB");
-  var outC = document.getElementById("fareOutC");
-  var outRec = document.getElementById("fareOutRecommended");
-  var outRecAmount = document.getElementById("fareOutRecommendedAmount");
-  var breakdownWrap = document.getElementById("fareBreakdownWrap");
   var payloadHidden = document.getElementById("fareEstimatePayload");
-  var btnCopy = document.getElementById("fareCopyText");
 
-  function getInput() {
-    return {
-      distanceKm: distanceEl ? distanceEl.value : "",
-      driveHr: driveHrEl ? driveHrEl.value : "0",
-      loadSize: loadSizeEl ? loadSizeEl.value : "small",
-      pickupFloors: pickupFloorsEl ? pickupFloorsEl.value : "0",
-      dropoffFloors: dropoffFloorsEl ? dropoffFloorsEl.value : "0",
-      waitMin: waitMinEl ? waitMinEl.value : "0",
-      night: nightEl ? nightEl.checked : false
-    };
+  function bindStepper(minusId, plusId, inputId, opts) {
+    opts = opts || {};
+    var step = opts.step !== undefined ? opts.step : 1;
+    var min = opts.min !== undefined ? opts.min : 0;
+    var max = opts.max !== undefined ? opts.max : 999;
+    var isInt = opts.isInt !== false;
+    var minus = document.getElementById(minusId);
+    var plus = document.getElementById(plusId);
+    var input = document.getElementById(inputId);
+    if (!minus || !plus || !input) return;
+    function getVal() {
+      return isInt ? int(input.value, min) : num(input.value, min);
+    }
+    function setVal(v) {
+      v = Math.max(min, Math.min(max, v));
+      if (isInt) v = Math.round(v);
+      input.value = String(v);
+    }
+    minus.addEventListener("click", function () {
+      setVal(getVal() - step);
+    });
+    plus.addEventListener("click", function () {
+      setVal(getVal() + step);
+    });
   }
 
-  function updateUI() {
-    var input = getInput();
-    var dist = parseFloat(input.distanceKm, 10);
-    if (isNaN(dist) || dist <= 0) {
-      if (outA) outA.textContent = "—";
-      if (outB) outB.textContent = "—";
-      if (outC) outC.textContent = "—";
-      if (outRec) outRec.textContent = "—";
-      if (outRecAmount) outRecAmount.textContent = "距離を入力";
-      if (payloadHidden) payloadHidden.value = "";
+  bindStepper("d_workersMinus", "d_workersPlus", "d_workers", { step: 1, min: 0, max: 9, isInt: true });
+  bindStepper("d_wHoursMinus", "d_wHoursPlus", "d_wHours", { step: 0.5, min: 0, max: 24, isInt: false });
+
+  document.getElementById("btnGetDistance").addEventListener("click", function () {
+    var cfg = window.CONFIG || {};
+    var apiKey = (cfg.GMAPS_API_KEY || "").trim();
+    var origin = (document.getElementById("d_origin") && document.getElementById("d_origin").value) || "";
+    var destination = (document.getElementById("d_destination") && document.getElementById("d_destination").value) || "";
+
+    if (!apiKey) {
+      showToast("距離の入力", "積地・卸地の距離（km）を手入力してください。APIキーを設定すると自動取得できます。");
+      if (document.getElementById("mapsStatus")) {
+        document.getElementById("mapsStatus").textContent = "※距離は手入力でOK（config.js に GMAPS_API_KEY を設定すると自動取得）";
+      }
       return;
     }
-    var numInput = {
-      distanceKm: dist,
-      driveHr: parseFloat(input.driveHr, 10) || 0,
-      loadSize: input.loadSize,
-      pickupFloors: parseInt(input.pickupFloors, 10) || 0,
-      dropoffFloors: parseInt(input.dropoffFloors, 10) || 0,
-      waitMin: parseInt(input.waitMin, 10) || 0,
-      night: input.night
+    if (!origin.trim() || !destination.trim()) {
+      showToast("積地・卸地を入力", "積地と卸地を入力してから「距離を取得」を押してください。");
+      return;
+    }
+
+    var url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
+      encodeURIComponent(origin) + "&destination=" + encodeURIComponent(destination) +
+      "&key=" + encodeURIComponent(apiKey) + "&mode=driving";
+
+    document.getElementById("btnGetDistance").disabled = true;
+    document.getElementById("btnGetDistance").textContent = "取得中…";
+
+    fetch(url)
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.status === "OK" && data.routes && data.routes[0] && data.routes[0].legs && data.routes[0].legs[0]) {
+          var meters = data.routes[0].legs[0].distance && data.routes[0].legs[0].distance.value;
+          if (meters != null) {
+            var kmVal = Math.round(meters / 1000 * 10) / 10;
+            document.getElementById("d_km").value = String(kmVal);
+            showToast("距離を取得しました", kmVal + " km");
+            if (document.getElementById("mapsStatus")) {
+              document.getElementById("mapsStatus").textContent = "※" + kmVal + "km を自動で入れました";
+            }
+          } else {
+            showToast("距離を取得できませんでした", "手入力でお願いします");
+          }
+        } else {
+          showToast("距離を取得できませんでした", data.status || "手入力でお願いします");
+        }
+      })
+      .catch(function () {
+        showToast("通信エラー", "距離は手入力でお願いします");
+      })
+      .finally(function () {
+        var btn = document.getElementById("btnGetDistance");
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "距離を取得（Google）";
+        }
+      });
+  });
+
+  document.getElementById("btnOpenMaps").addEventListener("click", function () {
+    var origin = (document.getElementById("d_origin") && document.getElementById("d_origin").value) || "";
+    var destination = (document.getElementById("d_destination") && document.getElementById("d_destination").value) || "";
+    var q = (origin.trim() ? "origin=" + encodeURIComponent(origin) : "") +
+      (destination.trim() ? (origin.trim() ? "&" : "") + "destination=" + encodeURIComponent(destination) : "");
+    var url = "https://www.google.com/maps/dir/";
+    if (q) url = "https://www.google.com/maps/dir/?api=1&" + q;
+    window.open(url, "_blank", "noopener,noreferrer");
+    if (!origin.trim() && !destination.trim()) {
+      showToast("Googleマップを開きました", "積地・卸地を入力するとルート検索できます");
+    }
+  });
+
+  var lastDriving = null;
+
+  document.getElementById("btnCalcDriving").addEventListener("click", function () {
+    var serviceKey = document.getElementById("d_service").value;
+    var km = num(document.getElementById("d_km").value, 0);
+    var vans = Math.max(1, Math.min(2, int(document.getElementById("d_vans").value, 1)));
+    var note = (document.getElementById("d_note") && document.getElementById("d_note").value) || "";
+    var dtEl = document.getElementById("d_datetime");
+    var datetime = dtEl && dtEl.value ? dtEl.value.replace("T", " ") : "";
+
+    var travel = calcTravelFee(km);
+    var labelMap = {
+      haul: "運搬（距離＆階段）",
+      shopping: "買い物代行（2,200円〜）",
+      carSupport: "車検・整備（代行／搬入）"
     };
-    var result = calculateFare(numInput);
-    if (outA) outA.textContent = "¥" + result.planA.toLocaleString();
-    if (outB) outB.textContent = "¥" + result.planB.toLocaleString();
-    if (outC) outC.textContent = "¥" + result.planC.toLocaleString();
-    if (outRec) outRec.textContent = "プラン" + result.recommended;
-    if (outRecAmount) outRecAmount.textContent = "¥" + result.recommendedAmount.toLocaleString();
+    var baseFee = PRICE.haulBaseFee;
+    if (serviceKey === "shopping") baseFee = PRICE.shoppingBaseFee;
+    if (serviceKey === "carSupport") baseFee = PRICE.carSupportBaseFee;
+
+    var travelFeeBase = travel.fee;
+    var drivePart = (baseFee + travelFeeBase) * vans;
+
+    var stairsFee = 0;
+    var origin = "";
+    var destination = "";
+    if (serviceKey === "haul") {
+      var oEl = document.getElementById("d_origin");
+      var dEl = document.getElementById("d_destination");
+      origin = oEl ? oEl.value.trim() : "";
+      destination = dEl ? dEl.value.trim() : "";
+      var pickFloor = int(document.getElementById("d_pickFloor").value, 1);
+      var dropFloor = int(document.getElementById("d_dropFloor").value, 1);
+      var pickElev = document.getElementById("d_pickElev").value === "yes";
+      var dropElev = document.getElementById("d_dropElev").value === "yes";
+      stairsFee = calcStairsFee(pickFloor, pickElev) + calcStairsFee(dropFloor, dropElev);
+    }
+
+    var workers = Math.max(0, int(document.getElementById("d_workers").value, 0));
+    var wHours = roundToHalfHourHours(num(document.getElementById("d_wHours").value, 0));
+    var laborFee = workers * wHours * PRICE.extraLaborPerHour;
+
+    var total = drivePart + stairsFee + laborFee;
+
+    var breakdown = [
+      { k: "サービス", v: labelMap[serviceKey] || serviceKey },
+      { k: "車両台数", v: vans + "台（走行分×" + vans + "）" },
+      { k: "距離", v: (km || 0) + "km" },
+      { k: "走行分（基本＋出張）×台数", v: yen(drivePart) + "（基本" + yen(baseFee) + " + 出張" + yen(travelFeeBase) + "）×" + vans }
+    ];
+    if (serviceKey === "haul") {
+      breakdown.push({ k: "階段付帯", v: stairsFee ? yen(stairsFee) : "なし（エレベーター/1階）" });
+    }
+    breakdown.push({ k: "追加人件費（ドライバー以外）", v: laborFee ? yen(laborFee) + "（" + workers + "人×" + wHours + "h×" + yen(PRICE.extraLaborPerHour) + "）" : "なし" });
+    breakdown.push({ k: "合計", v: yen(total) });
+
+    var resultEl = document.getElementById("resultDriving");
+    var totalEl = document.getElementById("d_total");
+    var breakdownEl = document.getElementById("d_breakdown");
+    if (resultEl) resultEl.style.display = "block";
+    if (totalEl) totalEl.textContent = yen(total);
+    renderBreakdown(breakdownEl, breakdown);
+
+    var payload = {
+      type: "driving",
+      serviceKey: serviceKey,
+      serviceLabel: labelMap[serviceKey] || serviceKey,
+      vans: vans,
+      origin: origin,
+      destination: destination,
+      km: km || 0,
+      travelFeeBase: travelFeeBase,
+      travelNote: travel.note,
+      datetime: datetime,
+      note: note,
+      baseFee: baseFee,
+      drivePart: drivePart,
+      stairsFee: stairsFee,
+      workers: workers,
+      wHours: wHours,
+      laborFee: laborFee,
+      total: total,
+      breakdown: breakdown
+    };
+
+    var pack = buildDrivingCopy(payload);
+    lastDriving = { payload: payload, copyText: pack.text };
+
     if (payloadHidden) {
       try {
-        payloadHidden.value = JSON.stringify({
-          planA: result.planA,
-          planB: result.planB,
-          planC: result.planC,
-          recommended: result.recommended,
-          recommendedAmount: result.recommendedAmount,
-          text: formatEstimateText(result, numInput)
-        });
+        payloadHidden.value = JSON.stringify({ text: pack.text, payload: payload });
       } catch (e) {
-        payloadHidden.value = "";
+        payloadHidden.value = pack.text;
       }
     }
-  }
 
-  function addListeners() {
-    var inputs = [distanceEl, driveHrEl, loadSizeEl, pickupFloorsEl, dropoffFloorsEl, waitMinEl, nightEl];
-    inputs.forEach(function (el) {
-      if (!el) return;
-      el.addEventListener("input", updateUI);
-      el.addEventListener("change", updateUI);
-    });
-    if (nightEl) nightEl.addEventListener("change", updateUI);
-  }
+    showToast("計算OK", "見積がLINE/メール用に準備できました");
+  });
 
-  if (btnCopy) {
-    btnCopy.addEventListener("click", function () {
-      var input = getInput();
-      var dist = parseFloat(input.distanceKm, 10);
-      if (isNaN(dist) || dist <= 0) return;
-      var numInput = {
-        distanceKm: dist,
-        driveHr: parseFloat(input.driveHr, 10) || 0,
-        loadSize: input.loadSize,
-        pickupFloors: parseInt(input.pickupFloors, 10) || 0,
-        dropoffFloors: parseInt(input.dropoffFloors, 10) || 0,
-        waitMin: parseInt(input.waitMin, 10) || 0,
-        night: input.night
-      };
-      var result = calculateFare(numInput);
-      var text = formatEstimateText(result, numInput);
+  document.getElementById("d_copy").addEventListener("click", function () {
+    if (!lastDriving) {
+      showToast("先に計算してください", "「計算する」を押してからコピーできます");
+      return;
+    }
+    var text = lastDriving.copyText;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          showToast("コピーしました", "LINE/メールに貼り付けてください");
+        });
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        showToast("コピーしました", "LINE/メールに貼り付けてください");
+      }
+    } catch (e) {
+      showToast("コピーできませんでした", "本文を手動でコピーしてください");
+    }
+  });
+
+  var lineBtn = document.getElementById("d_toLine");
+  if (lineBtn) {
+    var cfg = window.CONFIG || {};
+    lineBtn.href = (cfg.LINE_URL || "https://line.me/R/ti/p/%40277rcesk").trim();
+    lineBtn.addEventListener("click", function (e) {
+      if (!lastDriving) {
+        e.preventDefault();
+        showToast("先に計算してください", "「計算する」を押してから送れます");
+        return;
+      }
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function () {
-            btnCopy.textContent = "コピーしました";
-            setTimeout(function () { btnCopy.textContent = "見積テキストをコピー"; }, 2000);
-          });
-        } else {
-          var ta = document.createElement("textarea");
-          ta.value = text;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand("copy");
-          document.body.removeChild(ta);
-          btnCopy.textContent = "コピーしました";
-          setTimeout(function () { btnCopy.textContent = "見積テキストをコピー"; }, 2000);
+          navigator.clipboard.writeText(lastDriving.copyText);
         }
-      } catch (e) {}
+      } catch (err) {}
+      showToast("LINEを開きます", "見積はコピー済みです。貼り付けて送ってください");
     });
   }
 
-  addListeners();
-  updateUI();
-
-  window.FareCalculator = { calculateFare: calculateFare, formatEstimateText: formatEstimateText };
+  window.FareCalculator = {
+    PRICE: PRICE,
+    calcTravelFee: calcTravelFee,
+    calcStairsFee: calcStairsFee,
+    buildDrivingCopy: buildDrivingCopy,
+    yen: yen
+  };
 })();

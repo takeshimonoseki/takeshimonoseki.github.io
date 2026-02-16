@@ -11,6 +11,9 @@ window.CONFIG = {
 
   GAS_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwzSFlI7k_eUkHzCyMY8isEyhOCSMrdAovFM2g7XGFZAfA9_3LS2J7F-HNIb5RtCkrAqg/exec",
 
+  // 距離を取得（Google）で自動入力する場合のみ設定（未設定なら手入力でOK）
+  GMAPS_API_KEY: "",
+
   // 空文字でも可。未設定時は送信せずLINE相談へ誘導
   GAS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwG3AtO8oAIn72V0NVJ42dNtjT3XOiUkVp6en0hxtnwaUs_pWqeuNLCY0q54Wb4FQnmwA/exec",
 
