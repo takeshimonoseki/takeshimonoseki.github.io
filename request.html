@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>協力ドライバーからの連絡専用ページ｜drivers-site</title>
+  <meta name="description" content="協力ドライバー登録済み・検討中の方向けの連絡ページ。案件の希望登録ではなく、条件の相談や登録内容の変更依頼などにお使いください。" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { deep: '#050505', muted: '#94A3B8' }, fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] } } } }
+  </script>
+  <link rel="stylesheet" href="./drivers.css" />
+  <script src="./config.js"></script>
+  
+  <script src="./drivers.js" defer></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-deep text-white min-h-screen">
+
+  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3 group">
+        <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
+          <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
+          <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        </div>
+        <div>
+          <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
+          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVER CONTACT</div>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-4">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
+          <a href="#" id="headerLineLink" class="hover:text-white transition-colors">相談する</a>
+          <span class="text-white/20">|</span>
+          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
+</div>
+        <nav class="hidden md:flex gap-1" aria-label="メイン">
+          <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
+          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業相談</a>
+          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">登録（一次）</a>
+</nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+
+    <!-- Intro -->
+    <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden relative overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-orange-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-bold text-amber-400 mb-4">
+          <i data-lucide="alert-circle" class="w-3 h-3"></i> 案件の「応募フォーム」ではありません
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">協力ドライバーからの連絡専用</h1>
+        <p class="text-sm text-muted leading-relaxed mb-2">
+          このページは、<strong class="text-white">協力ドライバー登録済み・登録検討中の方向け</strong>の連絡専用ページです。<br>
+          お客さま向けの「受注フォーム」や「案件応募フォーム」ではありません。
+        </p>
+        <ul class="text-xs text-white/50 space-y-1 mt-3">
+          <li>・登録内容の変更・削除依頼</li>
+          <li>・条件や運用ルールに関する質問</li>
+          <li>・「こういう働き方はできるか？」といった相談</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Message Form -->
+    <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden delay-100">
+      <h2 class="text-base font-bold mb-2 flex items-center gap-2">
+        <i data-lucide="edit-3" class="w-4 h-4 text-sky-400"></i> 送信したい内容（メモ）
+      </h2>
+      <p class="text-xs text-muted mb-4">
+        下の欄にメモを書いてから<strong class="text-white/80">「LINEでこの内容を送る」</strong>ボタンを押すと、LINEに本文を流し込んだ状態で開きます。
+      </p>
+      <textarea id="messageBody" rows="6"
+        class="w-full bg-white/[0.03] border border-white/10 rounded-xl p-4 text-sm text-white placeholder-white/25 focus:border-sky-500/50 focus:outline-none focus:ring-1 focus:ring-sky-500/20 transition-all resize-y"
+        placeholder="例：登録内容の変更・削除依頼／条件の相談／現状の働き方　など自由にお書きください。"></textarea>
+      <p class="text-[11px] text-muted mt-1">※ここで書いた内容は、ブラウザ内の一時メモです。送信されるのは、LINEで送信ボタンを押した内容のみです。</p>
+
+      <div class="mt-5">
+        <button type="button" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all active:scale-95" id="btnLineSend">
+          <i data-lucide="send" class="w-4 h-4"></i> LINEでこの内容を送る
+        </button>
+      </div>
+    </div>
+
+    <!-- Guidelines -->
+    <div class="glass-card p-6 reveal-hidden delay-200">
+      <h2 class="text-base font-bold mb-3 flex items-center gap-2">
+        <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i> 運用上のお願い
+      </h2>
+      <ul class="space-y-2 text-sm text-white/70">
+        <li class="flex items-start gap-2"><i data-lucide="x-circle" class="w-3.5 h-3.5 mt-0.5 text-red-400 flex-shrink-0"></i> このページから<strong class="text-white">具体的な運賃の交渉や金額提示</strong>は行わないでください。</li>
+        <li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 mt-0.5 text-green-400 flex-shrink-0"></i> 案件のご相談は、あくまで<strong class="text-white">代表たけとのやり取りの中</strong>で行います。</li>
+        <li class="flex items-start gap-2"><i data-lucide="x-circle" class="w-3.5 h-3.5 mt-0.5 text-red-400 flex-shrink-0"></i> お客さまとの直接のやり取りや、個別の営業連絡にこのページを使うことはお控えください。</li>
+      </ul>
+    </div>
+
+    <footer class="border-t border-white/5 mt-12 pt-8 pb-4 text-center">
+      <div class="text-xs text-muted" id="footerCompany">drivers-site｜協力ドライバー登録プール（山口県）</div>
+      <div class="text-[11px] text-white/30 mt-1">このページは、ドライバーさん側から代表たけへの連絡専用ページです。</div>
+    </footer>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // CONFIG からヘッダー・フッター情報を反映
+    (function applyConfig() {
+      if (!window.CONFIG) return;
+      var regionJa = document.getElementById("regionJa");
+      var regionEn = document.getElementById("regionEn");
+      var companyName = document.getElementById("companyName");
+      var footerCompany = document.getElementById("footerCompany");
+
+      if (regionJa) regionJa.textContent = window.CONFIG.REGION_LABEL || "山口県";
+      if (regionEn) regionEn.textContent = (window.CONFIG.REGION_CODE || "YAMAGUCHI").toUpperCase();
+      if (companyName) companyName.textContent = window.CONFIG.COMPANY_NAME || "軽貨物TAKE";
+      if (footerCompany) {
+        footerCompany.textContent = (window.CONFIG.COMPANY_NAME || "drivers-site") + "｜協力ドライバー登録プール（" + (window.CONFIG.REGION_LABEL || "山口県") + "）";
+      }
+
+      var lineLink = document.getElementById("headerLineLink");
+      var mailLink = document.getElementById("headerMailLink");
+
+      var lineUrl = window.CONFIG.LINE_ADD_FRIEND_URL || window.CONFIG.LINE_URL || "";
+      var email = window.CONFIG.EMAIL_TO || "";
+
+      if (lineLink && lineUrl) lineLink.href = lineUrl;
+      if (mailLink && email) {
+        mailLink.href = "mailto:" + email;
+        mailLink.textContent = email;
+      }
+      }
+    })();
+
+    function openLineWithText(text) {
+      var base = "https://line.me/R/msg/text/";
+      var url = base + "?" + encodeURIComponent(text.slice(0, 5000));
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    document.getElementById("btnLineSend").addEventListener("click", function () {
+      var body = document.getElementById("messageBody").value.trim();
+      var lines = [];
+      lines.push("【協力ドライバーからの連絡】");
+      if (body) {
+        lines.push(body);
+      } else {
+        lines.push("（本文は空欄のまま送信しました。内容はトークでお伝えします。）");
+      }
+      var text = lines.join("\n");
+      openLineWithText(text);
+    });
+
+    // Spotlight
+    document.addEventListener('mousemove', (e) => {
+      document.querySelectorAll('.glass-card').forEach(card => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
+      });
+    });
+    // Reveal
+    const obs = new IntersectionObserver(e => e.forEach(en => { if(en.isIntersecting){ en.target.classList.add('reveal-visible'); obs.unobserve(en.target); } }), {threshold:0.05});
+    document.querySelectorAll('.reveal-hidden').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

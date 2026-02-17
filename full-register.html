@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>本登録（本人確認）｜協力ドライバー登録プール</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="本人確認用の本登録ページ（noindex）。" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="sub-header">
+    <div class="container">
+      <a class="back" href="index.html">← トップへ</a>
+      <h1 class="title">本登録（本人確認）</h1>
+      <p class="subtitle">このページは検索に出ません（noindex）。個人情報は本人確認と運営連絡にのみ使用します。</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <div class="notice">
+        <p class="notice-title">必須</p>
+        <ul class="bullets">
+          <li>氏名 / 住所 / 年齢</li>
+          <li>顔写真 / 免許証（表・裏）/ 任意保険（自動車保険）証券写真</li>
+          <li>性別入力なし / 電話番号なし</li>
+        </ul>
+      </div>
+      <p class="muted tiny">
+        PickGo貨物保険の公式説明リンク：<a href="https://pickgo.town/faq" target="_blank" rel="noopener">FAQ（貨物の保障）</a> /
+        <a href="https://lp.partner.pickgo.town/partner/support/insurance" target="_blank" rel="noopener">貨物保険（支援制度）</a>
+        <br />※「アフィリエイト制度」は公式公開情報で未確認のため、本サイトでは記載しません。
+      </p>
+    </section>
+
+    <section class="section">
+      <form id="fullRegisterForm" data-form-type="driver_full_register" novalidate>
+        <h2 class="h2">本人確認（必須）</h2>
+
+        <div class="grid">
+          <label class="field">
+            <span class="label">氏名<span class="req">必須</span></span>
+            <input name="fullName" type="text" autocomplete="name" required maxlength="40" placeholder="例：山田 太郎" />
+          </label>
+
+          <label class="field">
+            <span class="label">年齢<span class="req">必須</span></span>
+            <input name="age" type="number" inputmode="numeric" required min="18" max="99" placeholder="例：35" />
+          </label>
+
+          <label class="field full">
+            <span class="label">住所<span class="req">必須</span></span>
+            <input name="address" type="text" autocomplete="street-address" required maxlength="120" placeholder="例：山口県下関市〜" />
+          </label>
+
+          <label class="field">
+            <span class="label">顔写真<span class="req">必須</span></span>
+            <input name="facePhoto" type="file" accept="image/*" required />
+            <p class="hint">※ 8MBまで推奨</p>
+          </label>
+
+          <label class="field">
+            <span class="label">免許証（表）<span class="req">必須</span></span>
+            <input name="licenseFront" type="file" accept="image/*" required />
+          </label>
+
+          <label class="field">
+            <span class="label">免許証（裏）<span class="req">必須</span></span>
+            <input name="licenseBack" type="file" accept="image/*" required />
+          </label>
+
+          <label class="field">
+            <span class="label">任意保険（自動車保険）証券写真<span class="req">必須</span></span>
+            <input name="autoInsurance" type="file" accept="image/*,application/pdf" required />
+          </label>
+
+          <label class="field">
+            <span class="label">貨物保険証券（あれば）</span>
+            <input name="cargoInsurance" type="file" accept="image/*,application/pdf" />
+            <p class="hint">※ 任意</p>
+          </label>
+        </div>
+
+        <hr class="hr" />
+
+        <h2 class="h2">公開プロフィール（お客さまページ向け）</h2>
+        <p class="muted">公開されるのはこのブロックのみ（個人情報は公開しません）。</p>
+
+        <div class="grid">
+          <label class="field">
+            <span class="label">市町村（公開）<span class="req">必須</span></span>
+            <input name="publicCity" type="text" required maxlength="30" placeholder="例：下関市" />
+          </label>
+
+          <label class="field">
+            <span class="label">車種（公開）<span class="req">必須</span></span>
+            <input name="vehicle" type="text" required maxlength="40" placeholder="例：ハイゼット / エブリイ など" />
+          </label>
+
+          <label class="field">
+            <span class="label">経験（公開）</span>
+            <input name="experience" type="text" maxlength="60" placeholder="例：軽貨物2年 / 宅配経験あり など" />
+          </label>
+
+          <label class="field full">
+            <span class="label">ひとこと（公開）</span>
+            <input name="oneWord" type="text" maxlength="80" placeholder="例：丁寧・時間厳守で対応します" />
+          </label>
+
+          <label class="field full">
+            <span class="label">ツール/所属など（公開）</span>
+            <input name="toolsAffiliation" type="text" maxlength="120" placeholder="例：黒ナンバー / 台車あり / 宅配アプリ経験 など" />
+          </label>
+        </div>
+
+        <hr class="hr" />
+
+        <label class="field check">
+          <input name="agree" type="checkbox" required />
+          <span>
+            上記内容に同意します（案件成立時は報酬の20%を運営・調整費として頂戴します／指名は希望として承りますが確約ではありません）
+          </span>
+        </label>
+
+        <div class="actions">
+          <button class="btn primary" type="submit">送信</button>
+          <a class="btn ghost" href="index.html">戻る</a>
+        </div>
+
+        <div id="status" class="status" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="tiny muted">このページURLは共有しないでください（本人確認用）。</p>
+    </div>
+  </footer>
+
+  <script src="assets/app.js" defer></script>
+</body>
+</html>
