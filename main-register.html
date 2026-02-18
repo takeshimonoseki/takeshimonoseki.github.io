@@ -953,10 +953,7 @@
           headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(bodyObj)
         }).then(function(){
-          receiptIdEl.textContent = lastReceiptId;
-          renderSummary(result.payload, result.files);
-          successBox.style.display = "";
-          successBox.scrollIntoView({ behavior: "smooth", block: "start" });
+          window.location.href = "thankyou.html?receiptId=" + encodeURIComponent(lastReceiptId);
         });
       }).catch(function(){
         networkReceiptIdEl.textContent = lastReceiptId;

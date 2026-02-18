@@ -392,7 +392,7 @@
       if (!v.ok) { if (v.msg) setError(v.msg); return; }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = "送信中…";
+      submitBtn.innerHTML = "<span class=\"inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2\"></span>送信中…";
       errorBox.style.display = "none";
       successBox.style.display = "none";
 
@@ -440,11 +440,8 @@
           body: JSON.stringify(bodyObj)
         });
 
-        receiptIdEl.textContent = rid;
-        successBox.style.display = "";
-        successBox.scrollIntoView({behavior:"smooth", block:"start"});
-        form.reset();
-        updateHint();
+        window.location.href = "thankyou.html?receiptId=" + encodeURIComponent(rid);
+        return;
       } catch (err) {
         setError("通信エラーで送信できませんでした。時間をおいて再度お試しください。");
       } finally {
