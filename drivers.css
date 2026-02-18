@@ -432,3 +432,12 @@ select {
 .line-qr-hint{font-size:12px;color:rgba(255,255,255,.55);line-height:1.4;}
 .line-qr-row{display:flex;gap:12px;align-items:center;}
 .line-qr-img{width:160px;height:160px;border-radius:12px;background:#fff;padding:8px;box-sizing:border-box;}
+
+/* ===== PCではLINEリンクを表示しない（QR画像はリンクにしないこと） ===== */
+@media (min-width: 1024px) {
+  #headerLineLink,
+  a[href*="line.me"],
+  a[href^="line:"] {
+    display: none !important;
+  }
+}
