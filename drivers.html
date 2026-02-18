@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>公開ドライバー一覧｜drivers-site（山口県）</title>
+  <meta name="description" content="審査通過した協力ドライバーの公開一覧です。" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/drivers.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { deep: '#050505', muted: '#94A3B8' },
+          fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="./drivers.css" />
+  <script src="./config.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-deep text-white min-h-screen">
+  <header class="sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3 group">
+        <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
+          <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
+          <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
+          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        </div>
+        <div>
+          <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
+          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS POOL</div>
+        </div>
+      </a>
+      <div class="flex items-center gap-4 flex-wrap">
+        <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
+          <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
+          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">相談スタート</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
+          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto" role="main">
+    <div class="mb-8">
+      <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-2">公開ドライバー一覧</h1>
+      <p class="text-sm text-white/60">審査通過した協力ドライバーを掲載しています。</p>
+    </div>
+
+    <div id="drivers-list" class="space-y-4">
+      <div id="drivers-loading" class="glass-card p-8 text-center text-white/60">
+        <span class="inline-block w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" aria-hidden="true"></span>
+        <p class="mt-3 text-sm">読み込み中…</p>
+      </div>
+      <div id="drivers-empty" class="glass-card p-8 text-center text-white/70" style="display:none;">
+        <p class="text-sm">掲載は審査通過後です。</p>
+        <p class="mt-2 text-xs text-white/50">現在、公開中のドライバーはいません。</p>
+      </div>
+      <div id="drivers-error" class="glass-card p-6 border border-red-500/20 bg-red-500/5" style="display:none;">
+        <p class="text-sm text-red-200" id="drivers-error-text">一覧の取得に失敗しました。</p>
+        <button type="button" id="drivers-retry" class="mt-3 px-4 py-2 rounded-xl bg-white/10 text-white text-sm font-bold hover:bg-white/20 transition-colors">再読み込み</button>
+      </div>
+      <div id="drivers-cards" class="grid gap-4" style="display:none;"></div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    (function() {
+      var endpoint = (window.CONFIG && window.CONFIG.GAS_ENDPOINT) ? String(window.CONFIG.GAS_ENDPOINT) : "";
+      var loadingEl = document.getElementById("drivers-loading");
+      var emptyEl = document.getElementById("drivers-empty");
+      var errorEl = document.getElementById("drivers-error");
+      var errorText = document.getElementById("drivers-error-text");
+      var cardsEl = document.getElementById("drivers-cards");
+      var retryBtn = document.getElementById("drivers-retry");
+
+      function hideAll() {
+        loadingEl.style.display = "none";
+        emptyEl.style.display = "none";
+        errorEl.style.display = "none";
+        cardsEl.style.display = "none";
+      }
+
+      function renderList(data) {
+        loadingEl.style.display = "none";
+        var list = (data && data.drivers) ? data.drivers : [];
+        if (list.length === 0) {
+          emptyEl.style.display = "block";
+          return;
+        }
+        cardsEl.innerHTML = "";
+        cardsEl.style.display = "grid";
+        list.forEach(function(d) {
+          var card = document.createElement("div");
+          card.className = "glass-card p-5 rounded-2xl border border-white/10";
+          var name = (d.nickname_public || "ドライバー").toString();
+          var city = (d.city_public || "").toString();
+          var vehicle = (d.vehicleType || "").toString();
+          var exp = (d.experience || "").toString();
+          var profile = (d.profile || "").toString();
+          card.innerHTML =
+            "<div class=\"font-bold text-white mb-1\">" + escapeHtml(name) + "</div>" +
+            (city ? "<div class=\"text-xs text-white/60 mb-2\">" + escapeHtml(city) + (vehicle ? " · " + escapeHtml(vehicle) : "") + "</div>" : "") +
+            (exp ? "<p class=\"text-sm text-white/80 mb-2\">" + escapeHtml(exp) + "</p>" : "") +
+            (profile ? "<p class=\"text-sm text-white/70\">" + escapeHtml(profile) + "</p>" : "");
+          cardsEl.appendChild(card);
+        });
+      }
+
+      function load() {
+        hideAll();
+        loadingEl.style.display = "block";
+
+        if (!endpoint) {
+          loadingEl.style.display = "none";
+          errorText.textContent = "設定（GAS_ENDPOINT）が未設定です。";
+          errorEl.style.display = "block";
+          return;
+        }
+
+        window.__publicDriversCallback = function(data) {
+          renderList(data);
+        };
+        var script = document.createElement("script");
+        script.src = endpoint + "?type=public_drivers&t=" + Date.now() + "&callback=__publicDriversCallback";
+        script.onerror = function() {
+          loadingEl.style.display = "none";
+          errorText.textContent = "一覧の取得に失敗しました。しばらくしてから再読み込みしてください。";
+          errorEl.style.display = "block";
+        };
+        document.head.appendChild(script);
+      }
+
+      function escapeHtml(s) {
+        var div = document.createElement("div");
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      if (retryBtn) retryBtn.addEventListener("click", load);
+      load();
+    })();
+  </script>
+</body>
+</html>

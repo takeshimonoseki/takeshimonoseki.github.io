@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>送信完了｜drivers-site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { deep: '#050505', muted: '#94A3B8' },
+          fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="./drivers.css" />
+  <script src="./config.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .thankyou-card { animation: thankyou-fade 0.25s ease both; }
+    @keyframes thankyou-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { .thankyou-card { animation: none; } }
+    .petal { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,182,193,0.25); pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) { .petal { display: none; } }
+  </style>
+</head>
+<body class="bg-deep text-white min-h-screen">
+  <header class="sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5">
+    <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30">
+          <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
+        </div>
+        <div class="text-sm font-black tracking-wide">軽貨物TAKE</div>
+      </a>
+    </div>
+  </header>
+
+  <main class="pt-16 pb-16 px-4 sm:px-6 lg:px-8 max-w-xl mx-auto relative overflow-hidden">
+    <div class="thankyou-card glass-card p-8 md:p-10 relative">
+      <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <span class="petal" style="top:10%;left:15%;animation:float 2s ease-in-out 0s 1;"></span>
+        <span class="petal" style="top:20%;right:20%;animation:float 2.2s ease-in-out 0.3s 1;"></span>
+      </div>
+      <style>@keyframes float{0%,100%{opacity:0.2;transform:translateY(0)}50%{opacity:0.4;transform:translateY(-6px)}}</style>
+
+      <div class="relative z-10 flex flex-col items-center text-center">
+        <div class="w-14 h-14 rounded-full bg-emerald-500/20 flex items-center justify-center mb-6">
+          <i data-lucide="check" class="w-8 h-8 text-emerald-400"></i>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-2">送信完了</h1>
+        <p class="text-white/70 text-sm mb-6">ご登録ありがとうございます。運営確認後にご連絡します。</p>
+
+        <div class="w-full rounded-2xl border border-white/10 bg-white/5 p-5 text-left mb-6">
+          <div class="text-xs font-bold text-white/50 mb-1">受付ID</div>
+          <div id="receiptIdDisp" class="font-mono text-lg font-bold text-white break-all">—</div>
+          <div class="mt-4 pt-4 border-t border-white/10">
+            <div class="text-xs font-bold text-white/50 mb-1">LINE通知</div>
+            <div id="lineStatusDisp" class="text-sm text-white/80">確認中…</div>
+          </div>
+        </div>
+
+        <a href="./index.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:shadow-white/20 transition-all">
+          <i data-lucide="home" class="w-4 h-4"></i> トップへ戻る
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var rid = params.get("receiptId") || params.get("rid") || sessionStorage.getItem("thankyou_receiptId") || "";
+      var linePushed = params.get("linePushed");
+      var lineError = params.get("lineError");
+      sessionStorage.removeItem("thankyou_receiptId");
+
+      var receiptIdDisp = document.getElementById("receiptIdDisp");
+      var lineStatusDisp = document.getElementById("lineStatusDisp");
+      receiptIdDisp.textContent = rid ? rid : "不明";
+
+      function setLineStatus(pushed, err) {
+        if (pushed === true) {
+          lineStatusDisp.innerHTML = '<span class="text-emerald-400">LINE通知：送信済み</span>';
+        } else if (err && err.indexOf("未設定") >= 0) {
+          lineStatusDisp.textContent = "LINE通知：未設定（運営側設定が必要です）";
+        } else if (err) {
+          lineStatusDisp.innerHTML = 'LINE通知：失敗（運営側で確認します）<br><span class="text-xs text-white/50">' + (err.slice(0, 60)) + '</span>';
+        } else {
+          lineStatusDisp.textContent = "LINE通知：送信後、運営が確認します。";
+        }
+      }
+
+      if (linePushed !== null && linePushed !== undefined && lineError !== null && lineError !== undefined) {
+        setLineStatus(linePushed === "true" || linePushed === true, lineError || "");
+        return;
+      }
+
+      var endpoint = (window.CONFIG && window.CONFIG.GAS_ENDPOINT) ? String(window.CONFIG.GAS_ENDPOINT) : "";
+      if (!endpoint || !rid) {
+        lineStatusDisp.textContent = "LINE通知：送信後、運営が確認します。";
+        return;
+      }
+
+      window.__lineStatus = function(data) {
+        if (data && typeof data.linePushed !== "undefined") {
+          setLineStatus(data.linePushed, data.lineError || "");
+        } else {
+          lineStatusDisp.textContent = "LINE通知：送信後、運営が確認します。";
+        }
+      };
+      var script = document.createElement("script");
+      script.src = endpoint + "?type=line_status&receiptId=" + encodeURIComponent(rid) + "&callback=__lineStatus";
+      script.onerror = function() { lineStatusDisp.textContent = "LINE通知：送信後、運営が確認します。"; };
+      document.head.appendChild(script);
+    })();
+  </script>
+</body>
+</html>
