@@ -822,7 +822,7 @@
       return lines.join("\n").slice(0, 4500);
     }
 
-    function renderSummary(payload, fileName) {
+    function renderSummary(payload) {
       publicSummaryEl.innerHTML = "";
       var lines = [];
       lines.push("ニックネーム：" + payload.nickname);
