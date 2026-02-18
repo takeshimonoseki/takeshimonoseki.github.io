@@ -20,29 +20,54 @@
 </head>
 <body class="bg-deep text-white min-h-screen">
 
-  <header class="fixed top-0 w-full z-50 bg-deep/80 backdrop-blur-xl border-b border-white/5">
+  <header class="sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
     <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
-          <div class="text-[9px] tracking-widest font-extrabold text-white/80">YAMAGUCHI</div>
-          <div class="text-[9px] font-bold text-white/50">山口県</div>
+          <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
+          <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div>
           <div class="text-sm font-black tracking-wide leading-none" id="companyName">軽貨物TAKE</div>
-          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">TERMS</div>
+          <div class="text-[10px] text-muted font-bold font-mono mt-0.5">DRIVERS POOL</div>
         </div>
       </a>
-      <nav class="hidden md:flex gap-1" aria-label="メイン">
-        <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
-        <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
-        <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-        <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
-      </nav>
+
+      <div class="flex items-center gap-4 flex-wrap">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <span class="text-white/20">|</span>
+          <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
+        </div>
+
+        <nav class="hidden md:flex gap-1 flex-wrap" aria-label="メイン">
+          <a href="./index.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">トップ</a>
+          <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">相談スタート</a>
+          <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
+          <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">仮登録</a>
+        </nav>
+
+        <button type="button" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-overlay" id="menu-toggle">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
     </div>
   </header>
+
+  <div id="nav-overlay" aria-hidden="true" role="dialog" aria-label="メニュー">
+    <button type="button" class="nav-overlay-close" aria-label="メニューを閉じる" id="menu-close">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    <a href="./index.html">トップ</a>
+    <a href="./consult.html">相談スタート</a>
+    <a href="./startup.html">開業トータル相談</a>
+    <a href="./vehicle.html">車両の相談</a>
+    <a href="./register.html">仮登録</a>
+  </div>
 
   <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
     <div class="glass-card p-6 md:p-10 reveal-hidden">
@@ -104,6 +129,19 @@
     });
     const obs = new IntersectionObserver(e => e.forEach(en => { if(en.isIntersecting){ en.target.classList.add('reveal-visible'); obs.unobserve(en.target); } }), {threshold:0.05});
     document.querySelectorAll('.reveal-hidden').forEach(el => obs.observe(el));
+
+    (function initNavOverlay() {
+      var overlay = document.getElementById("nav-overlay");
+      var toggle = document.getElementById("menu-toggle");
+      var closeBtn = document.getElementById("menu-close");
+      if (!overlay || !toggle) return;
+      function openMenu() { overlay.setAttribute("aria-hidden", "false"); toggle.setAttribute("aria-expanded", "true"); }
+      function closeMenu() { overlay.setAttribute("aria-hidden", "true"); toggle.setAttribute("aria-expanded", "false"); }
+      toggle.addEventListener("click", function() { overlay.getAttribute("aria-hidden") === "true" ? openMenu() : closeMenu(); });
+      if (closeBtn) closeBtn.addEventListener("click", closeMenu);
+      overlay.querySelectorAll("a").forEach(function(a) { a.addEventListener("click", closeMenu); });
+      document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeMenu(); });
+    })();
   </script>
 </body>
 </html>
