@@ -1,34 +1,33 @@
-/* 
-  Neo-Brutalism "Deep Space" Theme (Hybrid)
-  Target: drivers-site-from-github 2Refactor
-  ※ ヘッダーナビ: hover/active/focusで幅・高さ・位置が変わらないよう固定
+/* drivers-site / TAKE
+   抹茶ラテ（暗め）共通テーマ
+   - base(bg): #0b1411 〜 #0f1915
+   - surface(card): rgba(255,255,255,0.06)
+   - text: rgba(255,255,255,0.88)
+   - muted: rgba(255,255,255,0.60)
+   - accent: #7aa07a
+   - cream: #f3eadf
 */
 
 :root {
-  /* --- NEW VARIABLES (Neo-Brutalism) --- */
-  --bg-deep: #050505;
-  --bg-card: rgba(10, 10, 10, 0.6);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(255, 255, 255, 0.15);
-  
-  --text-main: #FFFFFF;
-  --text-muted: #94A3B8; /* Slate-400 */
-  --text-accent: #38BDF8; 
+  --bg: #0f1915;
+  --surface: rgba(255, 255, 255, 0.06);
+  --text: rgba(255, 255, 255, 0.88);
+  --muted: rgba(255, 255, 255, 0.60);
+  --accent: #7aa07a;
+  --cream: #f3eadf;
+  --border: rgba(255, 255, 255, 0.10);
 
-  /* Spotlight */
-  --spotlight-color: rgba(255, 255, 255, 0.08);
-
-  /* Spacing */
+  --bg-deep: var(--bg);
+  --bg-card: var(--surface);
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-glow: rgba(255, 255, 255, 0.18);
+  --text-main: var(--text);
+  --text-muted: var(--muted);
+  --text-accent: var(--accent);
+  --line: var(--border);
+  --accent-2: #5a8a5a;
+  --spotlight-color: rgba(255, 255, 255, 0.06);
   --space-1: 4px;
-  
-  /* --- MAPPED LEGACY VARIABLES (Dark Mode Transformation) --- */
-  --bg: #050505;
-  --surface: rgba(20, 20, 20, 0.4); /* Glassy dark */
-  --text: #F8F8F8;
-  --muted: #94A3B8;
-  --line: rgba(255, 255, 255, 0.12);
-  --accent: #DC2626; /* Red-600 */
-  --accent-2: #38BDF8; /* Sky-400 */
 }
 
 *{box-sizing:border-box}
@@ -40,15 +39,12 @@ body{ height:100%; margin:0; overflow-y: scroll;
   line-height:1.55;
 }
 
-/* ===== Layout ===== */
 .container{max-width:1080px;margin:0 auto;padding:0 16px}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
-
 hr{border:0;border-top:1px solid var(--line);margin:24px 0}
 
-/* ===== Header / Nav ===== */
-/* Stickyヘッダー：スクロール時も上部に固定（モバイル・PC対応） */
+/* ===== Header: 常に64px・全ページ一致・ずれ0 ===== */
 body > header {
   position: sticky !important;
   top: 0 !important;
@@ -58,14 +54,43 @@ body > header {
   z-index: 1000 !important;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  background: rgba(11, 20, 17, 0.92) !important;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
 }
 
-/* モバイル用オーバーレイメニュー */
+body > header .header-inner {
+  min-height: 64px !important;
+  height: 64px !important;
+  max-height: 64px !important;
+  line-height: 1.2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  box-sizing: border-box !important;
+}
+
+body > header .header-inner > a,
+body > header .header-inner > div {
+  align-items: center !important;
+  line-height: 1.2 !important;
+}
+
+body > header [data-lucide],
+body > header .w-5.h-5,
+body > header .w-6.h-6 {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+body > header .w-6.h-6 { width: 1.5rem !important; height: 1.5rem !important; }
+
 #nav-overlay {
   position: fixed;
   inset: 0;
   z-index: 999;
-  background: rgba(5, 5, 5, 0.95);
+  background: rgba(11, 20, 17, 0.97);
   backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
@@ -86,20 +111,20 @@ body > header {
   font-size: 1rem;
   font-weight: 800;
   border-radius: 9999px;
-  color: rgba(255,255,255,0.85);
+  color: var(--text);
   transition: background 0.15s ease, color 0.15s ease;
 }
 #nav-overlay a:hover,
 #nav-overlay a:focus {
-  background: rgba(255,255,255,0.08);
-  color: #fff;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
 }
 #nav-overlay .nav-overlay-close {
   position: absolute;
   top: 1rem;
   right: 1rem;
   padding: 10px;
-  color: rgba(255,255,255,0.7);
+  color: var(--muted);
   background: transparent;
   border: none;
   border-radius: 12px;
@@ -107,8 +132,8 @@ body > header {
   font: inherit;
 }
 #nav-overlay .nav-overlay-close:hover {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  background: rgba(255,255,255,0.07);
+  color: var(--text);
 }
 @media (min-width: 768px) {
   #nav-overlay { display: none !important; }
@@ -116,11 +141,10 @@ body > header {
 
 .topbar{
   position:sticky;top:0;z-index:50;
-  background:rgba(5,5,5,.72);
+  background:rgba(11, 20, 17, 0.92);
   backdrop-filter: blur(12px);
-  border-bottom:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid var(--border);
 }
-
 .topbar__inner{
   height:64px;
   display:flex;
@@ -128,14 +152,11 @@ body > header {
   justify-content:space-between;
   gap:12px;
 }
-
-.brand{
-  display:flex;align-items:center;gap:10px;
-}
+.brand{ display:flex;align-items:center;gap:10px; }
 .brand__logo{
   width:36px;height:36px;border-radius:16px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
+  background:rgba(18, 26, 22, 0.9);
+  border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;
 }
 .brand__meta{line-height:1.15}
@@ -146,14 +167,9 @@ body > header {
   color:var(--muted);
   font-weight:800;
 }
-.brand__name{
-  font-size:14px;
-  font-weight:900;
-}
+.brand__name{ font-size:14px; font-weight:900; }
 
-.nav{
-  display:flex;align-items:center;gap:8px;
-}
+.nav{ display:flex;align-items:center;gap:8px; }
 .nav a{
   display:inline-flex;
   align-items:center;
@@ -168,59 +184,98 @@ body > header {
 }
 .nav a:hover{
   color:var(--text);
-  background:rgba(255,255,255,.04);
-  border-color:rgba(255,255,255,.08);
+  background:rgba(17, 24, 19, 0.9);
+  border-color:var(--border);
 }
 .nav a[aria-current="page"]{
-  color:#000;
-  background:#fff;
-  border-color:#fff;
-  box-shadow: 0 12px 30px rgba(255,255,255,.10);
+  color:#0f1915;
+  background: var(--cream);
+  border-color: var(--cream);
+  box-shadow: 0 12px 30px rgba(0,0,0,.4);
 }
 .nav a:focus{outline:none}
 .nav a:focus-visible{
   outline:2px solid rgba(255,255,255,.30);
   outline-offset:2px;
 }
-
-.topbar__right{
-  display:flex;align-items:center;gap:10px;
-}
+.topbar__right{ display:flex;align-items:center;gap:10px; }
 .chip{
   display:inline-flex;
   align-items:center;
   gap:8px;
   padding:8px 12px;
   border-radius:999px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
+  background:rgba(18, 26, 22, 0.85);
+  border:1px solid var(--border);
   color:var(--muted);
   font-size:12px;
   font-weight:800;
   transition: background .18s ease, color .18s ease, border-color .18s ease;
 }
-.chip:hover{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.12)}
+.chip:hover{background:rgba(21, 30, 25, 0.95);color:var(--text);border-color:rgba(255,255,255,.20)}
 .chip i{width:16px;height:16px}
 
-/* ===== Hero / Cards ===== */
-.hero{
-  padding:40px 0 18px;
+/* ===== PC 1024px以上：LINE導線のみ非表示（QRブロックは表示OK） ===== */
+@media (min-width: 1024px) {
+  #headerLineLink,
+  a[href*="line.me"]:not([data-qr="line"]),
+  a[href^="line:"]:not([data-qr="line"]),
+  [data-line-ui="1"],
+  .js-line-send {
+    display: none !important;
+  }
 }
+img[data-qr="line"],
+[data-qr="line"] {
+  display: block !important;
+}
+.line-qr-box,
+.line-qr-img { display: block !important; }
+
+/* ===== QRかわいく（角丸・影・枠・バッジ） ===== */
+div:has(img[data-qr="line"]) {
+  position: relative;
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.06);
+}
+div:has(img[data-qr="line"])::after {
+  content: "LINE";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #06C755;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+img[data-qr="line"] {
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: #fff !important;
+  display: block !important;
+}
+
+.hero{ padding:40px 0 18px; }
 .hero__grid{
   display:grid;
   grid-template-columns: 1.2fr .8fr;
   gap:18px;
 }
-@media(max-width:900px){
-  .hero__grid{grid-template-columns:1fr}
-}
-/* ===== glass-card（全ページ共通カード） ===== */
+@media(max-width:900px){ .hero__grid{grid-template-columns:1fr} }
+
 .glass-card{
   border-radius:24px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
+  background:var(--surface);
+  border:1px solid var(--border);
   overflow:hidden;
   position:relative;
+  backdrop-filter: blur(22px);
 }
 .glass-card::before{
   content:"";
@@ -232,8 +287,8 @@ body > header {
 
 .card{
   border-radius:26px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
+  background:var(--surface);
+  border:1px solid var(--border);
   overflow:hidden;
   position:relative;
 }
@@ -245,20 +300,9 @@ body > header {
   pointer-events:none;
 }
 .card__inner{position:relative;padding:18px}
-.card__title{
-  margin:0;
-  font-size:22px;
-  font-weight:900;
-}
-.card__sub{
-  margin:8px 0 0;
-  color:var(--muted);
-  font-size:13px;
-}
-.badges{
-  margin-top:14px;
-  display:flex;flex-wrap:wrap;gap:8px;
-}
+.card__title{ margin:0; font-size:22px; font-weight:900; }
+.card__sub{ margin:8px 0 0; color:var(--muted); font-size:13px; }
+.badges{ margin-top:14px; display:flex;flex-wrap:wrap;gap:8px; }
 .badge{
   display:inline-flex;align-items:center;gap:8px;
   padding:8px 12px;
@@ -290,10 +334,7 @@ body > header {
 .btn:active{transform: translateY(0px)}
 .btn:focus{outline:none}
 .btn:focus-visible{outline:2px solid rgba(255,255,255,.30); outline-offset:2px}
-
-.btn-outline{
-  background:transparent;
-}
+.btn-outline{ background:transparent; }
 .btn-line{
   background:#06C755;
   border-color:rgba(6,199,85,.55);
@@ -301,13 +342,8 @@ body > header {
 }
 .btn-line:hover{background:#10d06a;border-color:rgba(6,199,85,.70)}
 
-/* ===== Sections ===== */
 .section{padding:18px 0 56px}
-.section__title{
-  font-size:18px;
-  font-weight:900;
-  margin:0 0 12px;
-}
+.section__title{ font-size:18px; font-weight:900; margin:0 0 12px; }
 .grid3{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -316,8 +352,8 @@ body > header {
 @media(max-width:900px){.grid3{grid-template-columns:1fr}}
 .tile{
   border-radius:24px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
+  background:var(--surface);
+  border:1px solid var(--border);
   padding:16px;
   position:relative;
   overflow:hidden;
@@ -337,45 +373,29 @@ body > header {
   font-weight:800;
   text-transform:uppercase;
 }
-.tile__h{
-  margin:8px 0 0;
-  font-size:16px;
-  font-weight:900;
-}
-.tile__p{
-  margin:8px 0 0;
-  font-size:12px;
-  color:rgba(255,255,255,.74);
-}
+.tile__h{ margin:8px 0 0; font-size:16px; font-weight:900; }
+.tile__p{ margin:8px 0 0; font-size:12px; color:rgba(255,255,255,.74); }
 
-/* ===== Form bits ===== */
 .field-label{font-weight:900;font-size:12px;color:rgba(255,255,255,.78)}
-.help{font-size:11px;color:rgba(255,255,255,.55)}
-
+.help{font-size:11px;color:var(--muted)}
 input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="number"],
 select,
-textarea{
-  font: inherit;
-}
-
+textarea{ font: inherit; }
 input::placeholder, textarea::placeholder{color:rgba(255,255,255,.30)}
 
-/* ===== Footer ===== */
 .footer{
   padding:26px 0 36px;
-  color:rgba(255,255,255,.55);
+  color:var(--muted);
   font-size:12px;
-  border-top:1px solid rgba(255,255,255,.06);
+  border-top:1px solid var(--border);
 }
 
-/* ===== Reveal (scroll) ===== */
 .reveal-hidden{opacity:0; transform: translateY(8px); transition: opacity .55s ease, transform .55s ease}
 .reveal-visible{opacity:1; transform:none}
 
-/* ===== Validation helpers ===== */
 .is-invalid{
   border-color: rgba(185,28,28,.65) !important;
   box-shadow: 0 0 0 2px rgba(185,28,28,.18) !important;
@@ -393,11 +413,7 @@ input::placeholder, textarea::placeholder{color:rgba(255,255,255,.30)}
   padding: 12px 14px;
   background: rgba(254,242,242,.06);
 }
-.is-invalid-hint{
-  margin-top: 6px;
-  font-size: 11px;
-  color: rgba(254,202,202,.90);
-}
+.is-invalid-hint{ margin-top: 6px; font-size: 11px; color: rgba(254,202,202,.90); }
 .is-invalid-file{
   border: 1px solid rgba(185,28,28,.55) !important;
   box-shadow: 0 0 0 2px rgba(185,28,28,.18) !important;
@@ -410,39 +426,28 @@ input::placeholder, textarea::placeholder{color:rgba(255,255,255,.30)}
   border-radius: 12px;
 }
 
-/* ===== 追加：select/optionダークモード強制 ===== */
-/* 強制的にダークモードを適用 */
 select, option {
-    background-color: #1a1a1a !important;
-    color: #ffffff !important;
+  background-color: #141C14 !important;
+  color: var(--text) !important;
 }
-
-/* ブラウザのデフォルトスタイルを打ち消す */
 select {
-    -webkit-appearance: none;
-    appearance: none;
-    border: 1px solid #444;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid var(--border);
 }
 
-/* ===== PC用：LINE QR表示（相談ページ） ===== */
 .pc-only{display:none;}
 @media (min-width: 768px){.pc-only{display:block;}}
 .line-qr-box{margin-top:12px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.03);}
 .line-qr-hint{font-size:12px;color:rgba(255,255,255,.55);line-height:1.4;}
 .line-qr-row{display:flex;gap:12px;align-items:center;}
-.line-qr-img{width:160px;height:160px;border-radius:12px;background:#fff;padding:8px;box-sizing:border-box;}
+.line-qr-img{width:160px;height:160px;border-radius:16px;background:#fff;padding:8px;box-sizing:border-box;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
 
-/* ===== PCではLINE UIを表示しない（QR画像はリンクにしないこと） ===== */
-@media (min-width: 1024px) {
-  #headerLineLink,
-  a[href*="line.me"],
-  a[href^="line:"],
-  [data-line-ui="1"] {
-    display: none !important;
-  }
+/* startup.html：フラッシュ0・ヘッダーずれ0のためアニメ無効化 */
+body[data-page="startup"] * {
+  animation: none !important;
+  transition: none !important;
 }
-
-/* ===== startup.html：フラッシュ・ヘッダーずれ防止（アニメ無効化） ===== */
 body[data-page="startup"] .reveal-hidden,
 body[data-page="startup"] [data-reveal],
 body[data-page="startup"] .fade,
@@ -450,6 +455,5 @@ body[data-page="startup"] .opacity-0 {
   opacity: 1 !important;
   transform: none !important;
   filter: none !important;
-  transition: none !important;
-  animation: none !important;
+  visibility: visible !important;
 }

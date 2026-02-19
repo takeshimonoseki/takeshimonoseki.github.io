@@ -1,0 +1,256 @@
+<!-- 保存先：TAKE/theme-preview.html -->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>抹茶ラテ配色 4案プレビュー（drivers-site）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
+    body{margin:0;background:#0b0d0c;color:#fff}
+    .wrap{max-width:1100px;margin:0 auto;padding:28px 18px 40px}
+    h1{font-size:22px;margin:0 0 6px}
+    p{margin:0 0 18px;color:rgba(255,255,255,.65);font-size:13px;line-height:1.55}
+    .grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:14px}
+    @media(min-width:860px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    .card{
+      border-radius:18px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+    }
+    .head{padding:14px 14px 0}
+    .tag{display:inline-flex;gap:8px;align-items:center;font-weight:800;font-size:12px;color:rgba(255,255,255,.85)}
+    .num{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10)}
+    .name{margin-top:8px;font-size:18px;font-weight:900;letter-spacing:.02em}
+    .desc{margin-top:6px;font-size:12px;color:rgba(255,255,255,.60)}
+    .preview{
+      padding:16px;
+      background: radial-gradient(900px 350px at 80% -10%, rgba(255,255,255,.12), transparent 60%),
+                  radial-gradient(700px 400px at -10% 110%, rgba(255,255,255,.08), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      border-top:1px solid rgba(255,255,255,.08);
+      min-height:220px;
+      position:relative;
+    }
+    .store{
+      border-radius:16px;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), var(--surface);
+      padding:14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+    }
+    .row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .logo{
+      display:flex;gap:10px;align-items:center
+    }
+    .dot{
+      width:34px;height:34px;border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), rgba(255,255,255,.15));
+      border:1px solid rgba(255,255,255,.15);
+    }
+    .title{font-weight:900;font-size:14px;line-height:1.1}
+    .sub{font-size:11px;color:var(--muted);margin-top:2px}
+    .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .btn{
+      font-weight:800;font-size:12px;
+      border-radius:999px;padding:10px 12px;cursor:default;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+    }
+    .btn.primary{
+      background: var(--cream);
+      color: #151a16;
+      border-color: rgba(0,0,0,.15);
+    }
+    .bullets{margin-top:12px;display:grid;gap:8px}
+    .li{
+      display:flex;gap:10px;align-items:flex-start;
+      color: rgba(255,255,255,.78);font-size:12px;line-height:1.45;
+    }
+    .check{
+      width:18px;height:18px;border-radius:9px;flex:0 0 auto;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:center;
+      color: var(--accent);
+      font-weight:900;
+    }
+    .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .sw{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--muted)}
+    .box{width:16px;height:16px;border-radius:6px;border:1px solid var(--border);background:var(--c)}
+    .foot{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;color:rgba(255,255,255,.45)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🍵 抹茶ラテ “落ち着き” 4案（暗め・シック）</h1>
+    <p>
+      どれも「深い緑＋白(オフホワイト)＋クリーム」の方向。<br>
+      好きな番号（1〜4）を選んで返信してくれたら、その配色を <b>drivers.css</b> に反映して全ページ統一する。
+    </p>
+
+    <div class="grid">
+
+      <section class="card">
+        <div class="head">
+          <div class="tag"><span class="num">1</span> 一番おすすめ</div>
+          <div class="name">Matcha Latte Classic</div>
+          <div class="desc">濃い抹茶＋クリーム。落ち着き最優先で“店舗っぽい”高級感。</div>
+        </div>
+        <div class="preview" style="--bg:#0f1411;--surface:#171e18;--text:#f4f0e5;--muted:#aeb8ad;--border:#2a332b;--accent:#98b789;--cream:#e7dcc3;">
+          <div class="store">
+            <div class="row">
+              <div class="logo">
+                <div class="dot"></div>
+                <div>
+                  <div class="title">軽貨物TAKE</div>
+                  <div class="sub">DRIVERS POOL / 山口県</div>
+                </div>
+              </div>
+              <div class="sub">抹茶ラテ / しっとり</div>
+            </div>
+            <div class="btns">
+              <div class="btn primary">仮登録</div>
+              <div class="btn">相談スタート</div>
+              <div class="btn">車両相談</div>
+            </div>
+            <div class="bullets">
+              <div class="li"><div class="check">✓</div>暗いけど“緑味”が出る。白文字が刺さらない。</div>
+              <div class="li"><div class="check">✓</div>ガラスカードが上品に見える。</div>
+            </div>
+            <div class="swatches">
+              <div class="sw"><span class="box" style="--c:var(--bg)"></span>BG #0f1411</div>
+              <div class="sw"><span class="box" style="--c:var(--surface)"></span>Surface #171e18</div>
+              <div class="sw"><span class="box" style="--c:var(--accent)"></span>Accent #98b789</div>
+              <div class="sw"><span class="box" style="--c:var(--cream)"></span>Cream #e7dcc3</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">迷ったらこれ。抹茶ラテ感・シック感のバランスが一番いい。</div>
+      </section>
+
+      <section class="card">
+        <div class="head">
+          <div class="tag"><span class="num">2</span> すっきり寄り</div>
+          <div class="name">Deep Sage Modern</div>
+          <div class="desc">少しだけクール。緑は控えめ、見やすさ優先。</div>
+        </div>
+        <div class="preview" style="--bg:#101612;--surface:#18211a;--text:#f3efe6;--muted:#a6b2a8;--border:#263129;--accent:#86b39a;--cream:#e9e2cf;">
+          <div class="store">
+            <div class="row">
+              <div class="logo">
+                <div class="dot"></div>
+                <div>
+                  <div class="title">軽貨物TAKE</div>
+                  <div class="sub">DRIVERS POOL / 山口県</div>
+                </div>
+              </div>
+              <div class="sub">モダン / 端正</div>
+            </div>
+            <div class="btns">
+              <div class="btn primary">仮登録</div>
+              <div class="btn">相談スタート</div>
+              <div class="btn">車両相談</div>
+            </div>
+            <div class="bullets">
+              <div class="li"><div class="check">✓</div>文字が読みやすい。緑は上品。</div>
+              <div class="li"><div class="check">✓</div>“暗いけど軽い”印象。</div>
+            </div>
+            <div class="swatches">
+              <div class="sw"><span class="box" style="--c:var(--bg)"></span>BG #101612</div>
+              <div class="sw"><span class="box" style="--c:var(--surface)"></span>Surface #18211a</div>
+              <div class="sw"><span class="box" style="--c:var(--accent)"></span>Accent #86b39a</div>
+              <div class="sw"><span class="box" style="--c:var(--cream)"></span>Cream #e9e2cf</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">“ビジネス感”を少し足したいなら2。</div>
+      </section>
+
+      <section class="card">
+        <div class="head">
+          <div class="tag"><span class="num">3</span> 温かい寄り</div>
+          <div class="name">Moss & Warm Cream</div>
+          <div class="desc">緑より「クリームの温度感」重視。落ち着き＋優しさ。</div>
+        </div>
+        <div class="preview" style="--bg:#12140f;--surface:#1c2017;--text:#f7f2e3;--muted:#bdb4a5;--border:#2d3225;--accent:#7ea06b;--cream:#eadfc8;">
+          <div class="store">
+            <div class="row">
+              <div class="logo">
+                <div class="dot"></div>
+                <div>
+                  <div class="title">軽貨物TAKE</div>
+                  <div class="sub">DRIVERS POOL / 山口県</div>
+                </div>
+              </div>
+              <div class="sub">あたたか / しっとり</div>
+            </div>
+            <div class="btns">
+              <div class="btn primary">仮登録</div>
+              <div class="btn">相談スタート</div>
+              <div class="btn">車両相談</div>
+            </div>
+            <div class="bullets">
+              <div class="li"><div class="check">✓</div>“怖さ”が減る。相談導線に向く。</div>
+              <div class="li"><div class="check">✓</div>クリームが効いて抹茶ラテっぽい。</div>
+            </div>
+            <div class="swatches">
+              <div class="sw"><span class="box" style="--c:var(--bg)"></span>BG #12140f</div>
+              <div class="sw"><span class="box" style="--c:var(--surface)"></span>Surface #1c2017</div>
+              <div class="sw"><span class="box" style="--c:var(--accent)"></span>Accent #7ea06b</div>
+              <div class="sw"><span class="box" style="--c:var(--cream)"></span>Cream #eadfc8</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">“相談サイト感”を出したいなら3。</div>
+      </section>
+
+      <section class="card">
+        <div class="head">
+          <div class="tag"><span class="num">4</span> 緑しっかり</div>
+          <div class="name">Rich Matcha (Not Too Dark)</div>
+          <div class="desc">緑味を一段強め。ただし黒すぎないラインで止める。</div>
+        </div>
+        <div class="preview" style="--bg:#0d1410;--surface:#142019;--text:#f2efe6;--muted:#a7b7ad;--border:#25352b;--accent:#6fb18a;--cream:#e6d6b8;">
+          <div class="store">
+            <div class="row">
+              <div class="logo">
+                <div class="dot"></div>
+                <div>
+                  <div class="title">軽貨物TAKE</div>
+                  <div class="sub">DRIVERS POOL / 山口県</div>
+                </div>
+              </div>
+              <div class="sub">緑濃い / 店舗感</div>
+            </div>
+            <div class="btns">
+              <div class="btn primary">仮登録</div>
+              <div class="btn">相談スタート</div>
+              <div class="btn">車両相談</div>
+            </div>
+            <div class="bullets">
+              <div class="li"><div class="check">✓</div>緑の主張が強い。ブランド色が出る。</div>
+              <div class="li"><div class="check">✓</div>差別化したいなら4。</div>
+            </div>
+            <div class="swatches">
+              <div class="sw"><span class="box" style="--c:var(--bg)"></span>BG #0d1410</div>
+              <div class="sw"><span class="box" style="--c:var(--surface)"></span>Surface #142019</div>
+              <div class="sw"><span class="box" style="--c:var(--accent)"></span>Accent #6fb18a</div>
+              <div class="sw"><span class="box" style="--c:var(--cream)"></span>Cream #e6d6b8</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">緑を“看板色”にしたいなら4。</div>
+      </section>
+
+    </div>
+  </div>
+</body>
+</html>

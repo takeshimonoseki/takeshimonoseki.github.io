@@ -1,13 +1,14 @@
 <!doctype html>
 <html lang="ja" class="scroll-smooth">
 <head>
+  <style id="critical">html,body{background:#0f1915!important;color:rgba(255,255,255,0.88)!important;min-height:100%!important;}</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）</title>
   <meta name="description" content="山口県エリアの協力ドライバー仮登録フォーム。ニックネーム・拠点市町村・車種・連絡先などを入力して登録できます。" />
-  <link rel="canonical" href="https://takeshimonoseki.github.io/register.html" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/TAKE/register.html" />
   <meta property="og:title" content="仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）" />
-  <meta property="og:url" content="https://takeshimonoseki.github.io/register.html" />
+  <meta property="og:url" content="https://takeshimonoseki.github.io/TAKE/register.html" />
   <meta property="og:type" content="website" />
 
   <!-- Fonts -->
@@ -21,7 +22,14 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: { deep: '#050505', muted: '#94A3B8' },
+          colors: {
+            deep: '#0f1915',
+            muted: 'rgba(255,255,255,0.60)',
+            cream: '#f3eadf',
+            accent: '#7aa07a',
+            surface: 'rgba(255,255,255,0.06)',
+            borderc: 'rgba(255,255,255,0.10)'
+          },
           fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
         }
       }
@@ -29,6 +37,7 @@
   </script>
 
   <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./assets/effects.css">
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
 
@@ -48,8 +57,8 @@
     }
     .field-input:focus {
       outline: none;
-      border-color: rgba(56,189,248,0.5);
-      box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+      border-color: rgba(152,183,137,0.6);
+      box-shadow: 0 0 0 3px rgba(152,183,137,0.12);
     }
     .field-input::placeholder { color: rgba(255,255,255,0.25); }
     select.field-input { appearance: none; cursor: pointer; }
@@ -70,9 +79,9 @@
       transition: all 0.2s ease;
     }
     .choice-radio label:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
-    .choice-radio label:has(:checked) { border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.05); }
+    .choice-radio label:has(:checked) { border-color: rgba(152,183,137,0.6); background: rgba(152,183,137,0.07); }
     .choice-radio input[type="radio"],
-    .choice-radio input[type="checkbox"] { accent-color: #38bdf8; }
+    .choice-radio input[type="checkbox"] { accent-color: #98b789; }
 
     .error-banner {
       padding: 16px; border-radius: 16px;
@@ -104,28 +113,27 @@
     .terms-box .terms-list { padding-left: 18px; font-size: 13px; color: rgba(255,255,255,0.6); }
     .terms-box .terms-list li { margin-bottom: 6px; }
     .terms-box .terms-note { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 8px; }
-    .terms-box .terms-note a { color: #38bdf8; text-decoration: underline; }
+    .terms-box .terms-note a { color: #98b789; text-decoration: underline; }
 
     #agreeLabel { font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
     #agreeLabel.is-invalid { color: #f87171; }
-    #agreeLabel input { accent-color: #38bdf8; }
+    #agreeLabel input { accent-color: #98b789; }
 
     .submit-hint { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
     .is-disabled { opacity: 0.4; pointer-events: none; }
   </style>
-  <link rel="stylesheet" href="./assets/sakura.css">
 </head>
-<body class="bg-deep text-white min-h-screen">
+<body class="bg-deep text-[#F3EBDD] min-h-screen">
 
   <!-- HEADER（全ページ統一・sticky） -->
-  <header class="sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
+  <header class="site-header sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
     <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
           <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2b3a2f] to-accent flex items-center justify-center shadow-lg shadow-emerald-900/30" aria-hidden="true">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div>
@@ -146,7 +154,7 @@
           <a href="./consult.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">相談スタート</a>
           <a href="./startup.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">開業トータル相談</a>
           <a href="./vehicle.html" class="px-4 py-2 rounded-full text-xs font-bold text-muted hover:text-white hover:bg-white/5 transition-colors">車両の相談</a>
-          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-white text-black shadow-lg shadow-white/10" aria-current="page">仮登録</a>
+          <a href="./register.html" class="px-4 py-2 rounded-full text-xs font-bold bg-cream text-[#151a16] shadow-lg shadow-white/10" aria-current="page">仮登録</a>
         </nav>
 
         <button type="button" class="md:hidden p-2 text-white bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav-overlay" id="menu-toggle">
@@ -172,7 +180,7 @@
 
     <!-- Intro -->
     <div class="glass-card p-6 md:p-10 mb-6 reveal-hidden relative overflow-hidden">
-      <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-20 -right-20 w-[300px] h-[300px] bg-gradient-to-br from-accent/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
       <div class="relative z-10">
         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-bold text-muted mb-4">
           <i data-lucide="info" class="w-3 h-3"></i> 求人ではなく「登録プール」です
@@ -306,12 +314,13 @@
               <div class="text-xs text-muted mt-1">「軽貨物として稼働できる状態かどうか」を把握するだけです。</div>
             </div>
 
-            <!-- 入院保険（証拠不要） -->
+            <!-- 自動車保険（口頭確認・証拠不要・任意） -->
             <div>
-              <label class="flex items-center gap-2 text-sm font-bold cursor-pointer" id="hospitalInsuranceLabel">
-                <input type="checkbox" id="hospitalInsurance" name="hospitalInsurance" class="accent-sky-400" />
-                入院保険に加入しています（証拠不要）
+              <label class="flex items-center gap-2 text-sm font-bold cursor-pointer" id="autoInsuranceLabel">
+                <input type="checkbox" id="autoInsurance" name="autoInsurance" style="accent-color:#98b789" />
+                自動車保険（対人・対物）に加入している（口頭確認）
               </label>
+              <div class="text-xs text-muted mt-1">任意項目です。未チェックでも送信できます。</div>
             </div>
 
             <!-- Contact Info（どれか1つでOK → メール or LINE表示名） -->
@@ -354,7 +363,7 @@
               </div>
 
               <label class="flex items-center gap-2 mt-3 text-sm font-semibold cursor-pointer" id="agreeLabel">
-                <input type="checkbox" id="agreeTerms" class="accent-sky-400" />
+                <input type="checkbox" id="agreeTerms" style="accent-color:#98b789" />
                 上記の同意内容に同意して仮登録します（必須）
               </label>
               <p class="text-xs text-muted mt-1">※登録すると、入力内容が代表たけのLINEに届きます。</p>
@@ -363,7 +372,7 @@
             <!-- Submit -->
             <div class="flex flex-col items-end gap-2">
               <div class="submit-hint" id="submitHint" aria-live="polite"></div>
-              <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-white text-black font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all active:scale-95" id="submitBtn">
+              <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-cream text-[#151a16] font-bold text-sm shadow-lg shadow-white/10 hover:-translate-y-0.5 transition-all active:scale-95" id="submitBtn">
                 <i data-lucide="send" class="w-4 h-4"></i> 仮登録する
               </button>
             </div>
@@ -550,7 +559,7 @@
     const vehicleModelEl = document.getElementById("vehicleModel");
     const workVehicleStatusEls = document.querySelectorAll('input[name="workVehicleStatus"]');
 
-    const hospitalInsuranceEl = document.getElementById("hospitalInsurance");
+    const autoInsuranceEl = document.getElementById("autoInsurance");
     const contactEmailEl = document.getElementById("contactEmail");
     const contactLineNameEl = document.getElementById("contactLineName");
 
@@ -696,11 +705,7 @@
         if (paintUI) { addFieldError_(document.getElementById("workVehicleStatusRow"), "必須です"); setFirst(document.getElementById("workVehicleStatusRow")); }
       }
 
-      var hospitalChecked = hospitalInsuranceEl && hospitalInsuranceEl.checked;
-      if (!hospitalChecked) {
-        errors.push("入院保険に加入しています（証拠不要）にチェックを入れてください。");
-        if (paintUI && hospitalInsuranceEl) { addFieldError_(hospitalInsuranceEl, "必須です"); setFirst(hospitalInsuranceEl); }
-      }
+      var autoInsuranceChecked = autoInsuranceEl && autoInsuranceEl.checked;
 
       var contactEmail = (contactEmailEl.value || "").trim();
       var contactLineName = (contactLineNameEl.value || "").trim();
@@ -724,8 +729,7 @@
         vehicleMaker: vehicleMaker,
         vehicleModel: vehicleModel,
         workVehicleStatus: workVehicleStatus,
-        hospitalInsurance: hospitalChecked,
-        autoInsurance: hospitalChecked ? "加入" : "",
+        autoInsurance: autoInsuranceChecked ? "加入" : "",
         contactEmail: contactEmail,
         contactLineName: contactLineName,
         messageToTake: (document.getElementById("messageToTake").value || "").trim(),
@@ -761,8 +765,6 @@
 
       if (!getWorkVehicleStatus()) missing.push("黒ナンバー状況");
 
-      if (!(hospitalInsuranceEl && hospitalInsuranceEl.checked)) missing.push("入院保険チェック");
-
       var mail = (contactEmailEl.value || "").trim();
       var line = (contactLineNameEl.value || "").trim();
       if (!(mail || line)) missing.push("連絡先(メールorLINE)");
@@ -787,7 +789,7 @@
       if (vehicleModelEl) vehicleModelEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       workVehicleStatusEls.forEach(function(el){ el.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); }); });
 
-      if (hospitalInsuranceEl) hospitalInsuranceEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
+      if (autoInsuranceEl) autoInsuranceEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
 
       contactEmailEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       contactLineNameEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
@@ -804,7 +806,7 @@
       lines.push("市町村：" + (payload.city || ""));
       lines.push("車種：" + (payload.vehicleMaker || "") + " " + (payload.vehicleModel || ""));
       lines.push("黒ナンバー：" + (payload.workVehicleStatus || ""));
-      lines.push("入院保険：" + (payload.hospitalInsurance ? "加入" : "—"));
+      lines.push("自動車保険（口頭確認）：" + (payload.autoInsurance ? "加入" : "—"));
       lines.push("連絡先：");
       if (payload.contactEmail) lines.push("・メール：" + payload.contactEmail);
       if (payload.contactLineName) lines.push("・LINE表示名：" + payload.contactLineName);
@@ -825,7 +827,7 @@
       lines.push("黒ナンバー：" + (payload.workVehicleStatus || ""));
       lines.push("メール：" + (payload.contactEmail || "—"));
       lines.push("LINE表示名：" + (payload.contactLineName || "—"));
-      lines.push("入院保険：" + (payload.autoInsurance ? "加入" : "—"));
+      lines.push("自動車保険（口頭確認）：" + (payload.autoInsurance ? "加入" : "—"));
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);
       if (payload.profile) lines.push("ひとこと：" + payload.profile);
       if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);
@@ -959,6 +961,6 @@
       document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeMenu(); });
     })();
   </script>
-  <script defer src="./assets/sakura.js"></script>
+  <script src="./assets/transition.js" defer></script>
 </body>
 </html>

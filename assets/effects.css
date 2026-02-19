@@ -1,0 +1,103 @@
+:root{
+  --page-dur-enter: 260ms;
+  --page-dur-leave: 240ms;
+  --page-blur: 2px;
+  --grain-opacity: 0.06;
+}
+
+/* ごく薄いノイズ（粒状） */
+html::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2147483647;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+/* 抹茶ラテ・ゆっくり光のにじみ */
+body::before{
+  content:"";
+  position: fixed;
+  top:-20%;
+  right:-10%;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(122,160,122,0.22), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(11,20,17,0.9), transparent 65%);
+  opacity:0.4;
+  filter: blur(32px);
+  pointer-events:none;
+  z-index:-1;
+  animation: matchaBlob1 26s ease-in-out infinite alternate;
+}
+body::after{
+  content:"";
+  position: fixed;
+  bottom:-25%;
+  left:-10%;
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(243,234,223,0.18), transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(21,28,22,0.95), transparent 70%);
+  opacity:0.32;
+  filter: blur(30px);
+  pointer-events:none;
+  z-index:-1;
+  animation: matchaBlob2 32s ease-in-out infinite alternate;
+}
+
+@keyframes matchaBlob1{
+  0%{ transform: translate3d(0,0,0) scale(1); }
+  50%{ transform: translate3d(-4%,6%,0) scale(1.05); }
+  100%{ transform: translate3d(-8%,2%,0) scale(1.02); }
+}
+@keyframes matchaBlob2{
+  0%{ transform: translate3d(0,0,0) scale(1); }
+  50%{ transform: translate3d(6%,-4%,0) scale(1.06); }
+  100%{ transform: translate3d(2%,-2%,0) scale(1.03); }
+}
+
+@keyframes pageEnter{
+  from{ opacity: 0; filter: blur(var(--page-blur)); }
+  to  { opacity: 1; filter: blur(0px); }
+}
+html.is-enter{
+  animation: pageEnter var(--page-dur-enter) ease both;
+}
+
+@keyframes pageLeave{
+  from{ opacity: 1; filter: blur(0px); }
+  to  { opacity: 0; filter: blur(var(--page-blur)); }
+}
+html.is-leave{
+  animation: pageLeave var(--page-dur-leave) ease both;
+}
+
+/* PC 1024px以上：LINE導線非表示（QRブロックはdrivers.cssで表示のまま） */
+@media (min-width: 1024px){
+  [data-line-ui="1"],
+  .js-line-send,
+  #headerLineLink {
+    display:none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  html.is-enter,
+  html.is-leave{
+    animation: none !important;
+    filter: none !important;
+  }
+  body::before,
+  body::after{
+    animation: none !important;
+    opacity: 0.2;
+  }
+}
