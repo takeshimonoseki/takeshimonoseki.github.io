@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）</title>
-  <meta name="description" content="山口県エリアの協力ドライバー仮登録フォーム。ニックネーム・拠点市町村・車種・連絡先・入院保険の確認などを入力して登録できます。" />
+  <meta name="description" content="山口県エリアの協力ドライバー仮登録フォーム。ニックネーム・拠点市町村・車種・連絡先などを入力して登録できます。" />
   <link rel="canonical" href="https://takeshimonoseki.github.io/register.html" />
   <meta property="og:title" content="仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）" />
   <meta property="og:url" content="https://takeshimonoseki.github.io/register.html" />
@@ -29,7 +29,6 @@
   </script>
 
   <link rel="stylesheet" href="./drivers.css" />
-  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
 
@@ -114,6 +113,7 @@
     .submit-hint { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
     .is-disabled { opacity: 0.4; pointer-events: none; }
   </style>
+  <link rel="stylesheet" href="./assets/sakura.css">
 </head>
 <body class="bg-deep text-white min-h-screen">
 
@@ -306,7 +306,7 @@
               <div class="text-xs text-muted mt-1">「軽貨物として稼働できる状態かどうか」を把握するだけです。</div>
             </div>
 
-            <!-- 入院保険（証拠不要・チェックのみ） -->
+            <!-- 入院保険（証拠不要） -->
             <div>
               <label class="flex items-center gap-2 text-sm font-bold cursor-pointer" id="hospitalInsuranceLabel">
                 <input type="checkbox" id="hospitalInsurance" name="hospitalInsurance" class="accent-sky-400" />
@@ -699,10 +699,7 @@
       var hospitalChecked = hospitalInsuranceEl && hospitalInsuranceEl.checked;
       if (!hospitalChecked) {
         errors.push("入院保険に加入しています（証拠不要）にチェックを入れてください。");
-        if (paintUI) {
-          var row = document.getElementById("hospitalInsuranceLabel");
-          if (row) { addFieldError_(row, "必須です"); setFirst(hospitalInsuranceEl); }
-        }
+        if (paintUI && hospitalInsuranceEl) { addFieldError_(hospitalInsuranceEl, "必須です"); setFirst(hospitalInsuranceEl); }
       }
 
       var contactEmail = (contactEmailEl.value || "").trim();
@@ -807,6 +804,7 @@
       lines.push("市町村：" + (payload.city || ""));
       lines.push("車種：" + (payload.vehicleMaker || "") + " " + (payload.vehicleModel || ""));
       lines.push("黒ナンバー：" + (payload.workVehicleStatus || ""));
+      lines.push("入院保険：" + (payload.hospitalInsurance ? "加入" : "—"));
       lines.push("連絡先：");
       if (payload.contactEmail) lines.push("・メール：" + payload.contactEmail);
       if (payload.contactLineName) lines.push("・LINE表示名：" + payload.contactLineName);
@@ -827,7 +825,7 @@
       lines.push("黒ナンバー：" + (payload.workVehicleStatus || ""));
       lines.push("メール：" + (payload.contactEmail || "—"));
       lines.push("LINE表示名：" + (payload.contactLineName || "—"));
-      lines.push("入院保険：" + (payload.hospitalInsurance ? "加入" : "—"));
+      lines.push("入院保険：" + (payload.autoInsurance ? "加入" : "—"));
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);
       if (payload.profile) lines.push("ひとこと：" + payload.profile);
       if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);

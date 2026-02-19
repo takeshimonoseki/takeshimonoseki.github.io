@@ -1,7 +1,13 @@
-/* 桜キャンバス：全面固定・クリック透過・ヘッダーより下のz-index */
+/* 桜キャンバス：全面固定・クリック透過・z-index低め（ヘッダーより下） */
 #sakura-canvas {
   position: fixed;
   inset: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 0;
 }

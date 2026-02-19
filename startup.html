@@ -26,10 +26,10 @@
     }
   </script>
   <link rel="stylesheet" href="./drivers.css" />
-  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="./line-consult.js" defer></script>
+  <link rel="stylesheet" href="./assets/sakura.css">
 </head>
 
 <body class="bg-deep text-white min-h-screen" data-page="startup">
@@ -198,6 +198,7 @@
         card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
       });
     });
+
     (function initNavOverlay() {
       var overlay = document.getElementById("nav-overlay");
       var toggle = document.getElementById("menu-toggle");
