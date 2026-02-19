@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ja" class="scroll-smooth">
 <head>
+  <style id="critical">html,body{background:#0f1915!important;color:rgba(255,255,255,0.88)!important;min-height:100%!important;}</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>公開ドライバー一覧｜drivers-site（山口県）</title>
@@ -14,7 +15,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: { deep: '#050505', muted: '#94A3B8' },
+          colors: { deep: '#0f1915', muted: 'rgba(255,255,255,0.60)', cream: '#f3eadf', accent: '#7aa07a' },
           fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] }
         }
       }
@@ -26,14 +27,14 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-deep text-white min-h-screen">
-  <header class="sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
+  <header class="site-header sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
     <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
         <div class="hidden sm:flex flex-col items-center justify-center px-3 py-1 bg-white/5 border border-white/10 rounded-full" aria-label="対応地域">
           <div class="text-[9px] tracking-widest font-extrabold text-white/80" id="regionEn">YAMAGUCHI</div>
           <div class="text-[9px] font-bold text-white/50" id="regionJa">山口県</div>
         </div>
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30" aria-hidden="true">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2b3a2f] to-accent flex items-center justify-center shadow-lg shadow-emerald-900/30" aria-hidden="true">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div>

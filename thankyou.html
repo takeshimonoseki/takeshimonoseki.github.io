@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ja" class="scroll-smooth">
 <head>
+  <style id="critical">html,body{background:#0f1915!important;color:rgba(255,255,255,0.88)!important;min-height:100%!important;}</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
@@ -13,7 +14,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: { deep: '#050505', muted: '#94A3B8' },
+          colors: { deep: '#0f1915', muted: 'rgba(255,255,255,0.60)', cream: '#f3eadf', accent: '#7aa07a' },
           fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] }
         }
       }
@@ -27,15 +28,13 @@
     .thankyou-card { animation: thankyou-fade 0.25s ease both; }
     @keyframes thankyou-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) { .thankyou-card { animation: none; } }
-    .petal { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,182,193,0.25); pointer-events: none; }
-    @media (prefers-reduced-motion: reduce) { .petal { display: none; } }
   </style>
 </head>
 <body class="bg-deep text-white min-h-screen">
-  <header class="sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5">
+  <header class="site-header sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5">
     <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-500 flex items-center justify-center shadow-lg shadow-red-900/30">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2b3a2f] to-accent flex items-center justify-center shadow-lg shadow-emerald-900/30">
           <span class="w-4 h-4 rounded-full border-2 border-white/90"></span>
         </div>
         <div class="text-sm font-black tracking-wide">軽貨物TAKE</div>
@@ -45,12 +44,6 @@
 
   <main class="pt-16 pb-16 px-4 sm:px-6 lg:px-8 max-w-xl mx-auto relative overflow-hidden">
     <div class="thankyou-card glass-card p-8 md:p-10 relative">
-      <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <span class="petal" style="top:10%;left:15%;animation:float 2s ease-in-out 0s 1;"></span>
-        <span class="petal" style="top:20%;right:20%;animation:float 2.2s ease-in-out 0.3s 1;"></span>
-      </div>
-      <style>@keyframes float{0%,100%{opacity:0.2;transform:translateY(0)}50%{opacity:0.4;transform:translateY(-6px)}}</style>
-
       <div class="relative z-10 flex flex-col items-center text-center">
         <div class="w-14 h-14 rounded-full bg-emerald-500/20 flex items-center justify-center mb-6">
           <i data-lucide="check" class="w-8 h-8 text-emerald-400"></i>

@@ -1,11 +1,11 @@
 :root{
-  --page-dur-enter: 220ms;
-  --page-dur-leave: 200ms;
+  --page-dur-enter: 260ms;
+  --page-dur-leave: 240ms;
   --page-blur: 2px;
   --grain-opacity: 0.06;
 }
 
-/* 微細グレイン（静的・操作を邪魔しない） */
+/* ごく薄いノイズ（粒状） */
 html::before{
   content:"";
   position: fixed;
@@ -17,7 +17,7 @@ html::before{
   mix-blend-mode: soft-light;
 }
 
-/* にじみblob（超控えめ・ゆっくり） */
+/* 抹茶ラテ・ゆっくり光のにじみ */
 body::before{
   content:"";
   position: fixed;
@@ -27,9 +27,9 @@ body::before{
   height:420px;
   border-radius:50%;
   background:
-    radial-gradient(circle at 30% 30%, rgba(143,163,122,0.28), transparent 60%),
-    radial-gradient(circle at 70% 70%, rgba(11,15,13,0.9), transparent 65%);
-  opacity:0.45;
+    radial-gradient(circle at 30% 30%, rgba(122,160,122,0.22), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(11,20,17,0.9), transparent 65%);
+  opacity:0.4;
   filter: blur(32px);
   pointer-events:none;
   z-index:-1;
@@ -44,9 +44,9 @@ body::after{
   height:360px;
   border-radius:50%;
   background:
-    radial-gradient(circle at 20% 80%, rgba(247,235,207,0.22), transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(243,234,223,0.18), transparent 60%),
     radial-gradient(circle at 80% 20%, rgba(21,28,22,0.95), transparent 70%);
-  opacity:0.38;
+  opacity:0.32;
   filter: blur(30px);
   pointer-events:none;
   z-index:-1;
@@ -64,7 +64,6 @@ body::after{
   100%{ transform: translate3d(2%,-2%,0) scale(1.03); }
 }
 
-/* 入場：フェードイン＋ブラー解除（JSが is-enter を付ける） */
 @keyframes pageEnter{
   from{ opacity: 0; filter: blur(var(--page-blur)); }
   to  { opacity: 1; filter: blur(0px); }
@@ -73,7 +72,6 @@ html.is-enter{
   animation: pageEnter var(--page-dur-enter) ease both;
 }
 
-/* 退場：フェードアウト＋ブラー（JSが is-leave を付ける） */
 @keyframes pageLeave{
   from{ opacity: 1; filter: blur(0px); }
   to  { opacity: 0; filter: blur(var(--page-blur)); }
@@ -82,16 +80,15 @@ html.is-leave{
   animation: pageLeave var(--page-dur-leave) ease both;
 }
 
-/* PCではLINE導線を出さない（QRはOK） */
-@media (min-width: 768px){
+/* PC 1024px以上：LINE導線非表示（QRブロックはdrivers.cssで表示のまま） */
+@media (min-width: 1024px){
   [data-line-ui="1"],
-  .btn-line,
-  #btnLineFallback{
+  .js-line-send,
+  #headerLineLink {
     display:none !important;
   }
 }
 
-/* 酔い対策：動きは無効（グレインは残してOK） */
 @media (prefers-reduced-motion: reduce){
   html.is-enter,
   html.is-leave{
@@ -101,6 +98,6 @@ html.is-leave{
   body::before,
   body::after{
     animation: none !important;
-    opacity: 0.25;
+    opacity: 0.2;
   }
 }

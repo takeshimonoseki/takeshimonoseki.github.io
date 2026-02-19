@@ -100,9 +100,15 @@
       root.classList.add("is-leave");
 
       var href = a.href;
+      var leaveDur = 240;
+      try {
+        var cs = getComputedStyle(document.documentElement);
+        var v = cs.getPropertyValue("--page-dur-leave");
+        if (v) leaveDur = Math.max(220, Math.min(300, parseFloat(v) || 240));
+      } catch (e) {}
       setTimeout(function () {
         window.location.href = href;
-      }, 200);
+      }, leaveDur);
     },
     { capture: true }
   );
