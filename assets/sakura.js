@@ -4,14 +4,16 @@
   var MAX_PETALS = 10;
   var SPAWN_MS_MIN = 900;
   var SPAWN_MS_MAX = 1400;
-  var OPACITY_MIN = 0.12;
-  var OPACITY_MAX = 0.28;
-  var SIZE_MIN = 6;
+  var OPACITY_MIN = 0.10;
+  var OPACITY_MAX = 0.24;
+  var SIZE_MIN = 8;
   var SIZE_MAX = 14;
-  var SPEED_Y_MIN = 10;
-  var SPEED_Y_MAX = 30;
+  var SPEED_Y_MIN = 8;
+  var SPEED_Y_MAX = 22;
   var DRIFT_X_MIN = -8;
   var DRIFT_X_MAX = 8;
+
+  var PINKS = ["#ffd1dc", "#ffb7c5", "#ffc4d6", "#ffdbe6"];
 
   var canvas, ctx, petals = [], nextSpawn = 0, animId, running = false;
 
@@ -42,6 +44,10 @@
     return min + Math.random() * (max - min);
   }
 
+  function pickPink() {
+    return PINKS[Math.floor(Math.random() * PINKS.length)];
+  }
+
   function spawnPetal() {
     petals.push({
       x: Math.random() * (window.innerWidth + 40) - 20,
@@ -49,8 +55,24 @@
       size: random(SIZE_MIN, SIZE_MAX),
       opacity: random(OPACITY_MIN, OPACITY_MAX),
       speedY: random(SPEED_Y_MIN, SPEED_Y_MAX),
-      driftX: random(DRIFT_X_MIN, DRIFT_X_MAX)
+      driftX: random(DRIFT_X_MIN, DRIFT_X_MAX),
+      color: pickPink()
     });
+  }
+
+  /* 花びら形（涙型・先端が少し尖る）をパスで描画。ellipse禁止 */
+  function drawPetalPath(ctx, x, y, size, rotation) {
+    var w = size * 0.6;
+    var h = size;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.beginPath();
+    ctx.moveTo(0, -h * 0.5);
+    ctx.bezierCurveTo(w * 0.8, -h * 0.3, w * 0.6, h * 0.4, 0, h * 0.5);
+    ctx.bezierCurveTo(-w * 0.6, h * 0.4, -w * 0.8, -h * 0.3, 0, -h * 0.5);
+    ctx.closePath();
+    ctx.restore();
   }
 
   function tick() {
@@ -73,9 +95,11 @@
         petals.splice(i, 1);
         continue;
       }
-      ctx.fillStyle = "rgba(255, 182, 193, " + p.opacity + ")";
-      ctx.beginPath();
-      ctx.ellipse(p.x, p.y, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
+      var r = parseInt(p.color.slice(1, 3), 16);
+      var g = parseInt(p.color.slice(3, 5), 16);
+      var b = parseInt(p.color.slice(5, 7), 16);
+      ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + p.opacity + ")";
+      drawPetalPath(ctx, p.x, p.y, p.size, (p.y * 0.02 + p.x * 0.01) % (Math.PI * 2));
       ctx.fill();
     }
 

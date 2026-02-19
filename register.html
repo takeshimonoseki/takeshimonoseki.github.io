@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）</title>
   <meta name="description" content="山口県エリアの協力ドライバー仮登録フォーム。ニックネーム・拠点市町村・車種・連絡先などを入力して登録できます。" />
-  <link rel="canonical" href="https://takeshimonoseki.github.io/register.html" />
+  <link rel="canonical" href="https://takeshimonoseki.github.io/TAKE/register.html" />
   <meta property="og:title" content="仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）" />
-  <meta property="og:url" content="https://takeshimonoseki.github.io/register.html" />
+  <meta property="og:url" content="https://takeshimonoseki.github.io/TAKE/register.html" />
   <meta property="og:type" content="website" />
 
   <!-- Fonts -->
@@ -306,12 +306,13 @@
               <div class="text-xs text-muted mt-1">「軽貨物として稼働できる状態かどうか」を把握するだけです。</div>
             </div>
 
-            <!-- 入院保険（証拠不要） -->
+            <!-- 自動車保険（口頭確認・証拠不要・任意） -->
             <div>
-              <label class="flex items-center gap-2 text-sm font-bold cursor-pointer" id="hospitalInsuranceLabel">
-                <input type="checkbox" id="hospitalInsurance" name="hospitalInsurance" class="accent-sky-400" />
-                入院保険に加入しています（証拠不要）
+              <label class="flex items-center gap-2 text-sm font-bold cursor-pointer" id="autoInsuranceLabel">
+                <input type="checkbox" id="autoInsurance" name="autoInsurance" class="accent-sky-400" />
+                自動車保険（対人・対物）に加入している（口頭確認）
               </label>
+              <div class="text-xs text-muted mt-1">任意項目です。未チェックでも送信できます。</div>
             </div>
 
             <!-- Contact Info（どれか1つでOK → メール or LINE表示名） -->
@@ -550,7 +551,7 @@
     const vehicleModelEl = document.getElementById("vehicleModel");
     const workVehicleStatusEls = document.querySelectorAll('input[name="workVehicleStatus"]');
 
-    const hospitalInsuranceEl = document.getElementById("hospitalInsurance");
+    const autoInsuranceEl = document.getElementById("autoInsurance");
     const contactEmailEl = document.getElementById("contactEmail");
     const contactLineNameEl = document.getElementById("contactLineName");
 
@@ -696,11 +697,7 @@
         if (paintUI) { addFieldError_(document.getElementById("workVehicleStatusRow"), "必須です"); setFirst(document.getElementById("workVehicleStatusRow")); }
       }
 
-      var hospitalChecked = hospitalInsuranceEl && hospitalInsuranceEl.checked;
-      if (!hospitalChecked) {
-        errors.push("入院保険に加入しています（証拠不要）にチェックを入れてください。");
-        if (paintUI && hospitalInsuranceEl) { addFieldError_(hospitalInsuranceEl, "必須です"); setFirst(hospitalInsuranceEl); }
-      }
+      var autoInsuranceChecked = autoInsuranceEl && autoInsuranceEl.checked;
 
       var contactEmail = (contactEmailEl.value || "").trim();
       var contactLineName = (contactLineNameEl.value || "").trim();
@@ -724,8 +721,7 @@
         vehicleMaker: vehicleMaker,
         vehicleModel: vehicleModel,
         workVehicleStatus: workVehicleStatus,
-        hospitalInsurance: hospitalChecked,
-        autoInsurance: hospitalChecked ? "加入" : "",
+        autoInsurance: autoInsuranceChecked ? "加入" : "",
         contactEmail: contactEmail,
         contactLineName: contactLineName,
         messageToTake: (document.getElementById("messageToTake").value || "").trim(),
@@ -761,8 +757,6 @@
 
       if (!getWorkVehicleStatus()) missing.push("黒ナンバー状況");
 
-      if (!(hospitalInsuranceEl && hospitalInsuranceEl.checked)) missing.push("入院保険チェック");
-
       var mail = (contactEmailEl.value || "").trim();
       var line = (contactLineNameEl.value || "").trim();
       if (!(mail || line)) missing.push("連絡先(メールorLINE)");
@@ -787,7 +781,7 @@
       if (vehicleModelEl) vehicleModelEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       workVehicleStatusEls.forEach(function(el){ el.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); }); });
 
-      if (hospitalInsuranceEl) hospitalInsuranceEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
+      if (autoInsuranceEl) autoInsuranceEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
 
       contactEmailEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       contactLineNameEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
@@ -804,7 +798,7 @@
       lines.push("市町村：" + (payload.city || ""));
       lines.push("車種：" + (payload.vehicleMaker || "") + " " + (payload.vehicleModel || ""));
       lines.push("黒ナンバー：" + (payload.workVehicleStatus || ""));
-      lines.push("入院保険：" + (payload.hospitalInsurance ? "加入" : "—"));
+      lines.push("自動車保険（口頭確認）：" + (payload.autoInsurance ? "加入" : "—"));
       lines.push("連絡先：");
       if (payload.contactEmail) lines.push("・メール：" + payload.contactEmail);
       if (payload.contactLineName) lines.push("・LINE表示名：" + payload.contactLineName);
@@ -825,7 +819,7 @@
       lines.push("黒ナンバー：" + (payload.workVehicleStatus || ""));
       lines.push("メール：" + (payload.contactEmail || "—"));
       lines.push("LINE表示名：" + (payload.contactLineName || "—"));
-      lines.push("入院保険：" + (payload.autoInsurance ? "加入" : "—"));
+      lines.push("自動車保険（口頭確認）：" + (payload.autoInsurance ? "加入" : "—"));
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);
       if (payload.profile) lines.push("ひとこと：" + payload.profile);
       if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);

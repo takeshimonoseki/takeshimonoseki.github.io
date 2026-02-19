@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /main-register.html
+Disallow: /TAKE/main-register.html
+Disallow: /TAKE/full-register.html
 
-Sitemap: https://takeshimonoseki.github.io/sitemap.xml
+Sitemap: https://takeshimonoseki.github.io/TAKE/sitemap.xml

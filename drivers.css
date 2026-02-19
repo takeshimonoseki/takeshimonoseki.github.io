@@ -65,7 +65,7 @@ body > header {
   position: fixed;
   inset: 0;
   z-index: 999;
-  background: rgba(5, 5, 5, 0.95);
+  background: rgba(242, 247, 242, 0.98);
   backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
@@ -86,20 +86,20 @@ body > header {
   font-size: 1rem;
   font-weight: 800;
   border-radius: 9999px;
-  color: rgba(255,255,255,0.85);
+  color: var(--ml-text);
   transition: background 0.15s ease, color 0.15s ease;
 }
 #nav-overlay a:hover,
 #nav-overlay a:focus {
-  background: rgba(255,255,255,0.08);
-  color: #fff;
+  background: rgba(0,0,0,0.06);
+  color: var(--ml-text);
 }
 #nav-overlay .nav-overlay-close {
   position: absolute;
   top: 1rem;
   right: 1rem;
   padding: 10px;
-  color: rgba(255,255,255,0.7);
+  color: var(--ml-muted, rgba(0,0,0,0.6));
   background: transparent;
   border: none;
   border-radius: 12px;
@@ -107,8 +107,8 @@ body > header {
   font: inherit;
 }
 #nav-overlay .nav-overlay-close:hover {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  background: rgba(0,0,0,0.08);
+  color: var(--ml-text);
 }
 @media (min-width: 768px) {
   #nav-overlay { display: none !important; }
@@ -410,18 +410,16 @@ input::placeholder, textarea::placeholder{color:rgba(255,255,255,.30)}
   border-radius: 12px;
 }
 
-/* ===== 追加：select/optionダークモード強制 ===== */
-/* 強制的にダークモードを適用 */
+/* ===== select/option（抹茶ラテテーマに合わせる） ===== */
 select, option {
-    background-color: #1a1a1a !important;
-    color: #ffffff !important;
+    background-color: #fff !important;
+    color: var(--ml-text) !important;
 }
 
-/* ブラウザのデフォルトスタイルを打ち消す */
 select {
     -webkit-appearance: none;
     appearance: none;
-    border: 1px solid #444;
+    border: 1px solid var(--ml-border);
 }
 
 /* ===== PC用：LINE QR表示（相談ページ） ===== */
@@ -432,17 +430,11 @@ select {
 .line-qr-row{display:flex;gap:12px;align-items:center;}
 .line-qr-img{width:160px;height:160px;border-radius:12px;background:#fff;padding:8px;box-sizing:border-box;}
 
-/* ===== PCではLINE UIを表示しない（QR画像はリンクにしないこと） ===== */
-@media (min-width: 1024px) {
-  #headerLineLink,
-  a[href*="line.me"],
-  a[href^="line:"],
-  [data-line-ui="1"] {
-    display: none !important;
-  }
-}
-
 /* ===== startup.html：フラッシュ・ヘッダーずれ防止（アニメ無効化） ===== */
+body[data-page="startup"] * {
+  animation: none !important;
+  transition: none !important;
+}
 body[data-page="startup"] .reveal-hidden,
 body[data-page="startup"] [data-reveal],
 body[data-page="startup"] .fade,
@@ -450,6 +442,62 @@ body[data-page="startup"] .opacity-0 {
   opacity: 1 !important;
   transform: none !important;
   filter: none !important;
-  transition: none !important;
-  animation: none !important;
+  visibility: visible !important;
+}
+
+/* ===== ヘッダー高さ固定（全ページ一致・ずれ防止） ===== */
+body > header .header-inner {
+  min-height: 64px;
+  height: 64px;
+  line-height: 1.2;
+}
+
+/* ===== 抹茶ラテテーマ（明るい・白〜淡い抹茶・暗黒NG） ===== */
+:root {
+  --ml-bg1: #f2f7f2;
+  --ml-bg2: #e8f0ea;
+  --ml-card: #ffffff;
+  --ml-text: #1a2e1f;
+  --ml-muted: #4a6b52;
+  --ml-border: rgba(0, 0, 0, 0.08);
+  --ml-accent: #5c8f62;
+}
+html, body {
+  color: var(--ml-text);
+  background: linear-gradient(180deg, var(--ml-bg1), var(--ml-bg2));
+}
+.card, .panel, .form-card, .container, .main, .glass-card {
+  background: var(--ml-card);
+  border: 1px solid var(--ml-border);
+}
+input, select, textarea, .field-input {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--ml-border);
+  color: var(--ml-text);
+}
+button, .btn, button[type="submit"] {
+  background: var(--ml-accent);
+  color: #fff;
+}
+.btn-line {
+  background: #06C755 !important;
+  color: #fff !important;
+}
+.muted, .help, .small {
+  color: var(--ml-muted);
+}
+
+/* ===== PC幅：LINEボタン/アイコン/誘導UI非表示（QR画像は表示OK） ===== */
+@media (min-width: 1024px) {
+  #headerLineLink,
+  a[href*="line.me"],
+  a[href^="line:"],
+  [data-line-ui="1"] {
+    display: none !important;
+  }
+  img[data-qr="line"],
+  .line-qr-box,
+  .line-qr-img {
+    display: block !important;
+  }
 }
