@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）</title>
-  <meta name="description" content="山口県エリアの協力ドライバー仮登録フォーム。ニックネーム・拠点市町村・車種・連絡先・任意保険証券写真などを入力して登録できます。" />
+  <meta name="description" content="山口県エリアの協力ドライバー仮登録フォーム。ニックネーム・拠点市町村・車種・連絡先・入院保険の確認などを入力して登録できます。" />
   <link rel="canonical" href="https://takeshimonoseki.github.io/register.html" />
   <meta property="og:title" content="仮登録｜協力ドライバー登録フォーム｜drivers-site（山口県）" />
   <meta property="og:url" content="https://takeshimonoseki.github.io/register.html" />
@@ -29,6 +29,7 @@
   </script>
 
   <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
 
@@ -135,7 +136,7 @@
 
       <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" data-line-ui="1" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
@@ -305,15 +306,12 @@
               <div class="text-xs text-muted mt-1">「軽貨物として稼働できる状態かどうか」を把握するだけです。</div>
             </div>
 
-            <!-- 任意保険（自動車保険）証券写真 -->
+            <!-- 入院保険（証拠不要・チェックのみ） -->
             <div>
-              <div class="flex items-center gap-2 mb-2">
-                <label class="text-sm font-bold" for="autoInsurance">任意保険（自動車保険）証券写真</label>
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400">非公開</span>
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
-              </div>
-              <input type="file" id="autoInsurance" name="autoInsurance" accept="image/*,application/pdf" capture="environment" class="field-input" />
-              <div class="text-xs text-muted mt-1">任意保険加入が前提です。証券の写真（またはPDF）を添付してください。</div>
+              <label class="flex items-center gap-2 text-sm font-bold cursor-pointer" id="hospitalInsuranceLabel">
+                <input type="checkbox" id="hospitalInsurance" name="hospitalInsurance" class="accent-sky-400" />
+                入院保険に加入しています（証拠不要）
+              </label>
             </div>
 
             <!-- Contact Info（どれか1つでOK → メール or LINE表示名） -->
@@ -419,7 +417,7 @@
           取りこぼし防止のため、下のボタンから<strong>内容をLINEメッセージとして送ってください</strong>（画像は送れません）。
         </div>
         <div class="mt-3">
-          <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all" id="btnLineFallback">
+          <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:-translate-y-0.5 transition-all" id="btnLineFallback" data-line-ui="1">
             <i data-lucide="message-circle" class="w-4 h-4"></i> LINEで内容を送る
           </button>
         </div>
@@ -552,7 +550,7 @@
     const vehicleModelEl = document.getElementById("vehicleModel");
     const workVehicleStatusEls = document.querySelectorAll('input[name="workVehicleStatus"]');
 
-    const autoInsuranceEl = document.getElementById("autoInsurance");
+    const hospitalInsuranceEl = document.getElementById("hospitalInsurance");
     const contactEmailEl = document.getElementById("contactEmail");
     const contactLineNameEl = document.getElementById("contactLineName");
 
@@ -698,16 +696,13 @@
         if (paintUI) { addFieldError_(document.getElementById("workVehicleStatusRow"), "必須です"); setFirst(document.getElementById("workVehicleStatusRow")); }
       }
 
-      var maxMb = (window.CONFIG && window.CONFIG.MAX_FILE_MB) ? Number(window.CONFIG.MAX_FILE_MB) : 5;
-      var maxBytes = Math.max(1, maxMb) * 1024 * 1024;
-
-      var autoInsuranceFile = autoInsuranceEl && autoInsuranceEl.files && autoInsuranceEl.files[0] ? autoInsuranceEl.files[0] : null;
-      if (!autoInsuranceFile) {
-        errors.push("任意保険（自動車保険）証券写真を添付してください。");
-        if (paintUI && autoInsuranceEl) { addFieldError_(autoInsuranceEl, "必須です"); setFirst(autoInsuranceEl); }
-      } else if (autoInsuranceFile.size && autoInsuranceFile.size > maxBytes) {
-        errors.push("任意保険のファイルサイズが大きすぎます（" + maxMb + "MBまで）。撮り直し/圧縮して再添付してください。");
-        if (paintUI && autoInsuranceEl) { addFieldError_(autoInsuranceEl, "サイズ超過"); setFirst(autoInsuranceEl); }
+      var hospitalChecked = hospitalInsuranceEl && hospitalInsuranceEl.checked;
+      if (!hospitalChecked) {
+        errors.push("入院保険に加入しています（証拠不要）にチェックを入れてください。");
+        if (paintUI) {
+          var row = document.getElementById("hospitalInsuranceLabel");
+          if (row) { addFieldError_(row, "必須です"); setFirst(hospitalInsuranceEl); }
+        }
       }
 
       var contactEmail = (contactEmailEl.value || "").trim();
@@ -732,6 +727,8 @@
         vehicleMaker: vehicleMaker,
         vehicleModel: vehicleModel,
         workVehicleStatus: workVehicleStatus,
+        hospitalInsurance: hospitalChecked,
+        autoInsurance: hospitalChecked ? "加入" : "",
         contactEmail: contactEmail,
         contactLineName: contactLineName,
         messageToTake: (document.getElementById("messageToTake").value || "").trim(),
@@ -744,7 +741,7 @@
         createdAt: new Date().toISOString()
       };
 
-      return { payload: payload, errors: errors, firstInvalidEl: firstInvalid, autoInsuranceFile: autoInsuranceFile };
+      return { payload: payload, errors: errors, firstInvalidEl: firstInvalid };
     }
 
     function validateAndPaint_(){
@@ -767,7 +764,7 @@
 
       if (!getWorkVehicleStatus()) missing.push("黒ナンバー状況");
 
-      if (!(autoInsuranceEl.files && autoInsuranceEl.files.length)) missing.push("任意保険写真");
+      if (!(hospitalInsuranceEl && hospitalInsuranceEl.checked)) missing.push("入院保険チェック");
 
       var mail = (contactEmailEl.value || "").trim();
       var line = (contactLineNameEl.value || "").trim();
@@ -793,7 +790,7 @@
       if (vehicleModelEl) vehicleModelEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       workVehicleStatusEls.forEach(function(el){ el.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); }); });
 
-      if (autoInsuranceEl) autoInsuranceEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
+      if (hospitalInsuranceEl) hospitalInsuranceEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
 
       contactEmailEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
       contactLineNameEl.addEventListener(ev, function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
@@ -818,11 +815,10 @@
       if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);
       if (payload.ngText) lines.push("NG条件：" + payload.ngText);
       lines.push("同意：" + (payload.consent || "未同意"));
-      lines.push("※画像はフォームからのみ送信");
       return lines.join("\n").slice(0, 4500);
     }
 
-    function renderSummary(payload, fileName) {
+    function renderSummary(payload) {
       publicSummaryEl.innerHTML = "";
       var lines = [];
       lines.push("ニックネーム：" + payload.nickname);
@@ -831,7 +827,7 @@
       lines.push("黒ナンバー：" + (payload.workVehicleStatus || ""));
       lines.push("メール：" + (payload.contactEmail || "—"));
       lines.push("LINE表示名：" + (payload.contactLineName || "—"));
-      lines.push("任意保険：" + (fileName || "添付あり"));
+      lines.push("入院保険：" + (payload.hospitalInsurance ? "加入" : "—"));
       if (payload.messageToTake) lines.push("伝えたいこと：" + payload.messageToTake);
       if (payload.profile) lines.push("ひとこと：" + payload.profile);
       if (payload.dispatchHope) lines.push("配車希望：" + payload.dispatchHope);
@@ -885,25 +881,21 @@
       var originalText = submitBtn.textContent;
       submitBtn.textContent = "送信中…";
 
-      var file = result.autoInsuranceFile;
+      var bodyObj = {
+        type: "driver_register",
+        receiptId: lastReceiptId,
+        data: result.payload,
+        files: {}
+      };
 
-      fileToDataUrlSmart(file, { maxW: 1280, maxH: 1280, quality: 0.82 }).then(function(fileObj){
-        var bodyObj = {
-          type: "driver_register",
-          receiptId: lastReceiptId,
-          data: result.payload,
-          files: { autoInsurance: fileObj }
-        };
-
-        return fetch(endpoint, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify(bodyObj)
-        });
+      fetch(endpoint, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(bodyObj)
       }).then(function(){
         receiptIdEl.textContent = lastReceiptId;
-        renderSummary(result.payload, (file && file.name) ? file.name : "");
+        renderSummary(result.payload);
         successBox.style.display = "";
         successBox.scrollIntoView({ behavior: "smooth", block: "start" });
       }).catch(function(){
@@ -969,5 +961,6 @@
       document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeMenu(); });
     })();
   </script>
+  <script defer src="./assets/sakura.js"></script>
 </body>
 </html>

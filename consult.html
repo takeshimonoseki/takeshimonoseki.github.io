@@ -21,6 +21,7 @@
     }
   </script>
   <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -45,7 +46,7 @@
 
       <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" data-line-ui="1" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
@@ -184,7 +185,7 @@
           </details>
 
           <div class="flex flex-wrap gap-3 mt-6">
-            <a class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 transition-all" id="btnAddFriend" href="https://line.me/R/ti/p/%40277rcesk" target="_blank" rel="noopener noreferrer">
+            <a class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-white/10 bg-white/5 text-white/80 font-bold text-sm hover:bg-white/10 transition-all" id="btnAddFriend" data-line-ui="1" href="https://line.me/R/ti/p/%40277rcesk" target="_blank" rel="noopener noreferrer">
               <i data-lucide="user-plus" class="w-4 h-4"></i> まず友だち追加
             </a>
             <button class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#06C755] text-white font-bold text-sm shadow-lg shadow-green-500/20 transition-all active:scale-95" type="button" id="btnBuild">
@@ -334,5 +335,6 @@
       document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeMenu(); });
     })();
   </script>
+  <script defer src="./assets/sakura.js"></script>
 </body>
 </html>

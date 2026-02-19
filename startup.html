@@ -26,14 +26,13 @@
     }
   </script>
   <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="./line-consult.js" defer></script>
 </head>
 
-<body class="bg-deep text-white min-h-screen">
-  <div id="top"></div>
-
+<body class="bg-deep text-white min-h-screen" data-page="startup">
   <header class="sticky top-0 w-full z-[1000] bg-deep/80 backdrop-blur-xl border-b border-white/5" id="top">
     <div class="header-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="./index.html" class="flex items-center gap-3 group">
@@ -52,7 +51,7 @@
 
       <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" data-line-ui="1" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
@@ -84,7 +83,7 @@
   </div>
 
   <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-    <div class="glass-card p-6 reveal-hidden">
+    <div class="glass-card p-6">
       <div class="flex items-start gap-4">
         <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center">
           <i data-lucide="briefcase" class="w-5 h-5 text-white/80"></i>
@@ -106,7 +105,7 @@
     </div>
 
     <div class="mt-8 grid gap-6">
-      <div class="glass-card p-6 reveal-hidden">
+      <div class="glass-card p-6">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center">
             <i data-lucide="list-checks" class="w-4 h-4 text-white/80"></i>
@@ -160,7 +159,7 @@
                 placeholder="状況／困っていること"></textarea>
             </div>
 
-            <button type="button" class="btn btn-line js-line-send w-full" id="btnLineStartup" data-line-title="開業トータル相談">
+            <button type="button" class="btn btn-line js-line-send w-full" id="btnLineStartup" data-line-title="開業トータル相談" data-line-ui="1">
               <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i> LINEで相談する
             </button>
           </div>
@@ -199,13 +198,6 @@
         card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
       });
     });
-    var obs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(en) {
-        if (en.isIntersecting) { en.target.classList.add('reveal-visible'); obs.unobserve(en.target); }
-      });
-    }, { threshold: 0.05 });
-    document.querySelectorAll('.reveal-hidden').forEach(function(el) { obs.observe(el); });
-
     (function initNavOverlay() {
       var overlay = document.getElementById("nav-overlay");
       var toggle = document.getElementById("menu-toggle");
@@ -219,5 +211,6 @@
       document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeMenu(); });
     })();
   </script>
+  <script defer src="./assets/sakura.js"></script>
 </body>
 </html>

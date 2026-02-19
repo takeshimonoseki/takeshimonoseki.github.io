@@ -25,6 +25,7 @@
     }
   </script>
   <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
   <script src="./line-consult.js" defer></script>
@@ -50,7 +51,7 @@
 
       <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" data-line-ui="1" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
@@ -180,7 +181,7 @@
         </div>
 
         <div class="mt-8 flex justify-end">
-          <button type="button" class="btn btn-line js-line-send w-full sm:w-auto" id="btnLinePurchase" data-line-title="車両購入の相談">
+          <button type="button" class="btn btn-line js-line-send w-full sm:w-auto" id="btnLinePurchase" data-line-title="車両購入の相談" data-line-ui="1">
             <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i> LINEで相談する
           </button>
         </div>
@@ -222,7 +223,7 @@
           </div>
 
           <div class="pt-2">
-            <button type="button" class="btn btn-line js-line-send w-full" id="btnLineRepair" data-line-title="修理・整備の相談">
+            <button type="button" class="btn btn-line js-line-send w-full" id="btnLineRepair" data-line-title="修理・整備の相談" data-line-ui="1">
               LINEで相談
             </button>
           </div>
@@ -263,7 +264,7 @@
             <textarea id="shakenNote" class="js-line-note w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-white/30" data-line-note rows="2" placeholder="車種／要望など"></textarea>
           </div>
           <div class="pt-2">
-            <button type="button" class="btn btn-line js-line-send w-full" id="btnLineShaken" data-line-title="車検の相談">
+            <button type="button" class="btn btn-line js-line-send w-full" id="btnLineShaken" data-line-title="車検の相談" data-line-ui="1">
               LINEで相談
             </button>
           </div>
@@ -336,5 +337,6 @@
       document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeMenu(); });
     })();
   </script>
+  <script defer src="./assets/sakura.js"></script>
 </body>
 </html>

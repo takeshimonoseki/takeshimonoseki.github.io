@@ -229,6 +229,18 @@ function handleDriverFiles(body) {
   return { ok: true, receiptId: receiptId };
 }
 
+var FULL_SHEET_URL_HEADERS = ["driveFolderUrl", "facePhotoUrl", "licenseFrontUrl", "licenseBackUrl", "autoInsuranceUrl", "cargoInsuranceUrl"];
+
+function ensureFullSheetUrlColumns(sheet) {
+  if (!sheet) return;
+  try {
+    var header14 = sheet.getRange(1, 14).getValue();
+    if (header14 === "" || header14 == null) {
+      sheet.getRange(1, 14, 1, 19).setValues([FULL_SHEET_URL_HEADERS]);
+    }
+  } catch (e) {}
+}
+
 function handleDriverFullRegister(body) {
   var receiptId = (body.receiptId || "").toString().trim() || ("DRF-" + new Date().getTime() + "-" + Math.random().toString(36).slice(2, 8));
   var data = body.data || {};
@@ -242,6 +254,7 @@ function handleDriverFullRegister(body) {
     sheet = ss.insertSheet(SHEET_TAB_FULL);
     sheet.getRange(1, 1, 1, 13).setValues([["receiptId", "date", "fullName", "address", "age", "city_public", "vehicle_public", "experience", "tools", "message", "status", "linePushed", "lineError"]]);
   }
+  ensureFullSheetUrlColumns(sheet);
 
   var row = [
     receiptId,
@@ -260,18 +273,43 @@ function handleDriverFullRegister(body) {
   ];
   sheet.appendRow(row);
 
+  var driveFolderUrl = "";
+  var facePhotoUrl = "";
+  var licenseFrontUrl = "";
+  var licenseBackUrl = "";
+  var autoInsuranceUrl = "";
+  var cargoInsuranceUrl = "";
+
   var folder = null;
   try {
     folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
   } catch (e) {}
   if (folder && body.files) {
     var subFolder = folder.createFolder(receiptId);
+    driveFolderUrl = subFolder.getUrl() || "";
+
     var files = body.files;
-    if (files.facePhoto && files.facePhoto.dataUrl) saveDataUrl(subFolder, "顔写真", files.facePhoto);
-    if (files.licenseFront && files.licenseFront.dataUrl) saveDataUrl(subFolder, "免許証_表", files.licenseFront);
-    if (files.licenseBack && files.licenseBack.dataUrl) saveDataUrl(subFolder, "免許証_裏", files.licenseBack);
-    if (files.autoInsurance && files.autoInsurance.dataUrl) saveDataUrl(subFolder, "自賠責証券", files.autoInsurance);
-    if (files.cargoInsurance && files.cargoInsurance.dataUrl) saveDataUrl(subFolder, "貨物保険", files.cargoInsurance);
+    var f;
+    if (files.facePhoto && files.facePhoto.dataUrl) {
+      f = saveDataUrl(subFolder, "顔写真", files.facePhoto);
+      if (f) facePhotoUrl = f.getUrl() || "";
+    }
+    if (files.licenseFront && files.licenseFront.dataUrl) {
+      f = saveDataUrl(subFolder, "免許証_表", files.licenseFront);
+      if (f) licenseFrontUrl = f.getUrl() || "";
+    }
+    if (files.licenseBack && files.licenseBack.dataUrl) {
+      f = saveDataUrl(subFolder, "免許証_裏", files.licenseBack);
+      if (f) licenseBackUrl = f.getUrl() || "";
+    }
+    if (files.autoInsurance && files.autoInsurance.dataUrl) {
+      f = saveDataUrl(subFolder, "自賠責証券", files.autoInsurance);
+      if (f) autoInsuranceUrl = f.getUrl() || "";
+    }
+    if (files.cargoInsurance && files.cargoInsurance.dataUrl) {
+      f = saveDataUrl(subFolder, "貨物保険", files.cargoInsurance);
+      if (f) cargoInsuranceUrl = f.getUrl() || "";
+    }
   }
 
   var lineResult = sendLineNotify(receiptId, (data.fullName || "").toString().trim());
@@ -282,6 +320,7 @@ function handleDriverFullRegister(body) {
   if (lastRow >= 1) {
     sheet.getRange(lastRow, 12).setValue(linePushed);
     sheet.getRange(lastRow, 13).setValue(lineError);
+    sheet.getRange(lastRow, 14, lastRow, 19).setValues([[driveFolderUrl, facePhotoUrl, licenseFrontUrl, licenseBackUrl, autoInsuranceUrl, cargoInsuranceUrl]]);
   }
 
   try {
@@ -300,18 +339,17 @@ function handleDriverFullRegister(body) {
 function saveDataUrl(folder, baseName, fileObj) {
   var dataUrl = (fileObj.dataUrl || "").toString();
   var idx = dataUrl.indexOf(",");
-  if (idx < 0) return;
+  if (idx < 0) return null;
   var base64 = dataUrl.slice(idx + 1);
-  if (!base64 || base64.length > MAX_FILE_BYTES * 1.4) return;
+  if (!base64 || base64.length > MAX_FILE_BYTES * 1.4) return null;
   var ext = getExt(fileObj.name || "");
   if (ext === ".pdf") {
     try {
       var blob = Utilities.newBlob(Utilities.base64Decode(base64), "application/pdf", baseName + ext);
-      folder.createFile(blob);
-    } catch (e) {}
-    return;
+      return folder.createFile(blob);
+    } catch (e) { return null; }
   }
-  saveBase64(folder, baseName + (ext || ".jpg"), base64);
+  return saveBase64(folder, baseName + (ext || ".jpg"), base64);
 }
 
 function sendLineNotify(receiptId, fullName) {
@@ -347,9 +385,9 @@ function sendLineNotify(receiptId, fullName) {
 }
 
 function saveBase64(folder, fileName, base64Data) {
-  if (!base64Data || base64Data.length > MAX_FILE_BYTES * 1.4) return;
+  if (!base64Data || base64Data.length > MAX_FILE_BYTES * 1.4) return null;
   var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "application/octet-stream", fileName);
-  folder.createFile(blob);
+  return folder.createFile(blob);
 }
 
 function getExt(name) {

@@ -1,0 +1,7 @@
+/* 桜キャンバス：全面固定・クリック透過・ヘッダーより下のz-index */
+#sakura-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}

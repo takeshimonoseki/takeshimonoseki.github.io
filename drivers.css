@@ -432,3 +432,29 @@ select {
 .line-qr-hint{font-size:12px;color:rgba(255,255,255,.55);line-height:1.4;}
 .line-qr-row{display:flex;gap:12px;align-items:center;}
 .line-qr-img{width:160px;height:160px;border-radius:12px;background:#fff;padding:8px;box-sizing:border-box;}
+
+/* ===== PCではLINEリンクを表示しない（QR画像はリンクにしないこと） ===== */
+@media (min-width: 1024px) {
+  #headerLineLink,
+  a[href*="line.me"],
+  a[href^="line:"],
+  [data-line-ui="1"] {
+    display: none !important;
+  }
+}
+
+/* ===== startup.html：フラッシュ防止（初期非表示→表示を無効化） ===== */
+body[data-page="startup"] .reveal-hidden,
+body[data-page="startup"] [data-reveal],
+body[data-page="startup"] .fade,
+body[data-page="startup"] .opacity-0 {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ===== ヘッダーずれ対策（全ページ共通） ===== */
+html { scrollbar-gutter: stable; }
+body { overflow-y: scroll; }

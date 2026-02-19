@@ -27,6 +27,7 @@
   </script>
 
   <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
 
@@ -120,7 +121,7 @@
 
       <div class="flex items-center gap-4">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" data-line-ui="1" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
@@ -984,5 +985,6 @@
     }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
     document.querySelectorAll('.reveal-hidden').forEach(el => observer.observe(el));
   </script>
+  <script defer src="./assets/sakura.js"></script>
 </body>
 </html>

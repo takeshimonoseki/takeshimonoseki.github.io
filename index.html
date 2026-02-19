@@ -28,6 +28,7 @@
   </script>
 
   <link rel="stylesheet" href="./drivers.css" />
+  <link rel="stylesheet" href="./assets/sakura.css" />
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -52,7 +53,7 @@
 
       <div class="flex items-center gap-4 flex-wrap">
         <div class="hidden lg:flex items-center gap-3 text-xs text-muted" aria-label="連絡先">
-          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
+          <a href="https://line.me/R/ti/p/%40277rcesk" id="headerLineLink" data-line-ui="1" class="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">LINE</a>
           <span class="text-white/20">|</span>
           <a href="#" id="headerMailLink" class="hover:text-white transition-colors">takeshimonoseki@gmail.com</a>
         </div>
@@ -134,6 +135,13 @@
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 bg-white/5 text-white/60">アニメ風アイコン掲載</span>
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 bg-white/5 text-white/60">手数料：案件成立時20%</span>
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 bg-white/5 text-white/60">指名希望OK（確約なし）</span>
+          </div>
+
+          <div class="mb-8 flex items-start gap-4">
+            <div class="flex-shrink-0 rounded-xl border border-white/15 bg-white/5 p-3">
+              <p class="text-xs font-bold text-white/80 mb-2">LINEで相談・登録</p>
+              <img data-qr="line" id="top-line-qr" alt="LINE友だち追加QRコード" width="180" height="180" class="rounded-lg bg-white" />
+            </div>
           </div>
 
           <!-- 説明付き導線（優先順：仮登録 → 開業トータル相談 → 車両の相談） -->
@@ -267,6 +275,8 @@
       var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
       var headerLineLink = document.getElementById("headerLineLink");
       if (headerLineLink) headerLineLink.href = lineUrl;
+      var topQr = document.getElementById("top-line-qr");
+      if (topQr && lineUrl) topQr.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(lineUrl);
     })();
 
     document.querySelectorAll('a[data-scroll-top]').forEach(function(a){
@@ -300,5 +310,6 @@
       document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeMenu(); });
     })();
   </script>
+  <script defer src="./assets/sakura.js"></script>
 </body>
 </html>
