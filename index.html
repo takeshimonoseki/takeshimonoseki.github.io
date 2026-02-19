@@ -28,7 +28,7 @@
   </script>
 
   <link rel="stylesheet" href="./drivers.css" />
-  <link rel="stylesheet" href="./assets/sakura.css" />
+  <link rel="stylesheet" href="./assets/sakura.css">
   <script src="./config.js"></script>
   <script src="./drivers.js" defer></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -91,7 +91,8 @@
         <div class="absolute -top-40 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-red-600/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-gradient-to-tr from-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative z-10">
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-start lg:gap-8">
+          <div class="flex-1 min-w-0">
           <div class="inline-flex flex-wrap items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full mb-6">
             <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
             <span class="text-xs font-bold text-muted font-mono" id="regionKicker">山口県エリア</span>
@@ -137,13 +138,6 @@
             <span class="px-3 py-1 rounded-full text-[11px] font-bold border border-white/10 bg-white/5 text-white/60">指名希望OK（確約なし）</span>
           </div>
 
-          <div class="mb-8 flex items-start gap-4">
-            <div class="flex-shrink-0 rounded-xl border border-white/15 bg-white/5 p-3">
-              <p class="text-xs font-bold text-white/80 mb-2">LINEで相談・登録</p>
-              <img data-qr="line" id="top-line-qr" alt="LINE友だち追加QRコード" width="180" height="180" class="rounded-lg bg-white" />
-            </div>
-          </div>
-
           <!-- 説明付き導線（優先順：仮登録 → 開業トータル相談 → 車両の相談） -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-4xl mt-8">
             <a href="./register.html" class="group block p-5 sm:p-6 rounded-2xl border-2 border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all text-left">
@@ -181,6 +175,14 @@
 
           <div class="mt-6 max-w-4xl text-xs text-white/60">
             仮登録後、必要に応じて本人確認（本登録・書類）をご案内します。
+          </div>
+          </div>
+          <div class="flex-shrink-0 mt-6 lg:mt-0">
+            <div class="p-4 rounded-2xl border border-white/15 bg-white/5 inline-block">
+              <p class="text-xs font-bold text-white/80 mb-2">LINEで相談・登録</p>
+              <img id="topLineQrImg" data-qr="line" alt="LINE友だち追加QRコード" width="180" height="180" class="rounded-xl bg-white" />
+              <p class="text-[10px] text-white/50 mt-2">QRを読み取って追加</p>
+            </div>
           </div>
         </div>
       </div>
@@ -275,8 +277,8 @@
       var lineUrl = window.CONFIG.LINE_URL || "https://line.me/R/ti/p/%40277rcesk";
       var headerLineLink = document.getElementById("headerLineLink");
       if (headerLineLink) headerLineLink.href = lineUrl;
-      var topQr = document.getElementById("top-line-qr");
-      if (topQr && lineUrl) topQr.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(lineUrl);
+      var qrImg = document.getElementById("topLineQrImg");
+      if (qrImg && lineUrl) qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(lineUrl);
     })();
 
     document.querySelectorAll('a[data-scroll-top]').forEach(function(a){

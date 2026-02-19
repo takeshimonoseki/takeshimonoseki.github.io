@@ -13,116 +13,109 @@
   var DRIFT_X_MIN = -8;
   var DRIFT_X_MAX = 8;
 
-  var canvas, ctx, petals = [], nextSpawn = 0, rafId, running = false;
+  var canvas, ctx, petals = [], nextSpawn = 0, animId, running = false;
 
-  function reduceMotion() {
+  function prefersReducedMotion() {
     try {
-      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     } catch (e) { return false; }
   }
 
-  function spawnOne() {
-    if (petals.length >= MAX_PETALS) return;
-    var w = canvas.width;
-    petals.push({
-      x: Math.random() * w,
-      y: -SIZE_MAX - 5,
-      size: SIZE_MIN + Math.random() * (SIZE_MAX - SIZE_MIN),
-      opacity: OPACITY_MIN + Math.random() * (OPACITY_MAX - OPACITY_MIN),
-      speedY: SPEED_Y_MIN + Math.random() * (SPEED_Y_MAX - SPEED_Y_MIN),
-      driftX: DRIFT_X_MIN + Math.random() * (DRIFT_X_MAX - DRIFT_X_MIN)
-    });
-  }
-
-  function tick(t) {
-    if (!running || !ctx || !canvas) return;
-    var dt = 0.016;
-    if (t && typeof t === "number" && lastT) dt = Math.min(0.1, (t - lastT) / 1000);
-    lastT = t;
-
-    if (t >= nextSpawn) {
-      spawnOne();
-      nextSpawn = t + (SPAWN_MS_MIN + Math.random() * (SPAWN_MS_MAX - SPAWN_MS_MIN)) / 1000;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    var i = petals.length;
-    while (i--) {
-      var p = petals[i];
-      p.y += p.speedY * dt;
-      p.x += p.driftX * dt;
-      if (p.y > canvas.height + p.size) {
-        petals.splice(i, 1);
-        continue;
-      }
-      ctx.save();
-      ctx.globalAlpha = p.opacity;
-      ctx.fillStyle = "#ffb7c5";
-      ctx.beginPath();
-      ctx.ellipse(p.x, p.y, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-    rafId = requestAnimationFrame(tick);
-  }
-  var lastT = 0;
-
-  function start() {
-    if (reduceMotion() || !canvas || !ctx) return;
-    running = true;
-    nextSpawn = 0;
-    lastT = performance.now();
-    rafId = requestAnimationFrame(tick);
-  }
-
-  function stop() {
-    running = false;
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = null;
+  function createCanvas() {
+    var c = document.createElement("canvas");
+    c.id = "sakura-canvas";
+    document.body.appendChild(c);
+    return c;
   }
 
   function resize() {
     if (!canvas) return;
     var dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    if (ctx) ctx.scale(dpr, dpr);
+  }
+
+  function random(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  function spawnPetal() {
+    petals.push({
+      x: Math.random() * (window.innerWidth + 40) - 20,
+      y: -20,
+      size: random(SIZE_MIN, SIZE_MAX),
+      opacity: random(OPACITY_MIN, OPACITY_MAX),
+      speedY: random(SPEED_Y_MIN, SPEED_Y_MAX),
+      driftX: random(DRIFT_X_MIN, DRIFT_X_MAX)
+    });
+  }
+
+  function tick() {
+    if (!canvas || !ctx) return;
     var w = window.innerWidth;
     var h = window.innerHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-    if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    var now = Date.now();
+    if (running && now >= nextSpawn && petals.length < MAX_PETALS) {
+      spawnPetal();
+      nextSpawn = now + random(SPAWN_MS_MIN, SPAWN_MS_MAX);
+    }
+
+    for (var i = petals.length - 1; i >= 0; i--) {
+      var p = petals[i];
+      p.y += p.speedY * 0.016;
+      p.x += p.driftX * 0.016;
+      if (p.y > h + 30) {
+        petals.splice(i, 1);
+        continue;
+      }
+      ctx.fillStyle = "rgba(255, 182, 193, " + p.opacity + ")";
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    animId = requestAnimationFrame(tick);
   }
 
-  function init() {
-    if (document.getElementById("sakura-canvas")) return;
-    canvas = document.createElement("canvas");
-    canvas.id = "sakura-canvas";
-    canvas.setAttribute("aria-hidden", "true");
-    document.body.insertBefore(canvas, document.body.firstChild);
+  function start() {
+    if (prefersReducedMotion()) return;
+    canvas = document.getElementById("sakura-canvas") || createCanvas();
     ctx = canvas.getContext("2d");
     resize();
-    if (!reduceMotion()) start();
+    running = true;
+    nextSpawn = Date.now();
+    if (!animId) tick();
+  }
 
-    window.addEventListener("resize", resize);
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) stop();
-      else if (!reduceMotion()) start();
+  function stop() {
+    running = false;
+  }
+
+  function removeLineUiOnPc() {
+    if (window.innerWidth < 1024) return;
+    var sel = '#headerLineLink, a[href*="line.me"], a[href^="line:"], [data-line-ui="1"]';
+    document.querySelectorAll(sel).forEach(function (el) {
+      if (el.tagName && el.tagName.toLowerCase() === "img" && el.getAttribute("data-qr") === "line") return;
+      el.remove();
     });
-
-    if (window.innerWidth >= 1024) {
-      var lineUis = document.querySelectorAll("#headerLineLink, a[href*=\"line.me\"], a[href^=\"line:\"], [data-line-ui=\"1\"]");
-      for (var i = 0; i < lineUis.length; i++) {
-        var el = lineUis[i];
-        if (el.getAttribute && el.getAttribute("data-qr") === "line") continue;
-        if (el.querySelector && el.querySelector("img[data-qr=\"line\"]")) continue;
-        try { el.remove(); } catch (e) {}
-      }
-    }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  document.addEventListener("DOMContentLoaded", function () {
+    start();
+    removeLineUiOnPc();
+    window.addEventListener("resize", function () {
+      resize();
+      if (window.innerWidth >= 1024) removeLineUiOnPc();
+    });
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) stop();
+    else if (!prefersReducedMotion()) start();
+  });
 })();
