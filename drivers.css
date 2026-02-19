@@ -1,34 +1,40 @@
-/* 
-  Neo-Brutalism "Deep Space" Theme (Hybrid)
-  Target: drivers-site-from-github 2Refactor
-  ※ ヘッダーナビ: hover/active/focusで幅・高さ・位置が変わらないよう固定
+/* drivers-site / TAKE
+   抹茶ラテ（暗め）共通テーマ
+   - base(bg): #0B0F0D
+   - surface(card): rgba(16,24,16,0.60)
+   - text: #F3EBDD
+   - muted: #A7B0A0
+   - accent: #8FA37A
+   - border: rgba(255,255,255,0.10)
 */
 
 :root {
-  /* --- NEW VARIABLES (Neo-Brutalism) --- */
-  --bg-deep: #050505;
-  --bg-card: rgba(10, 10, 10, 0.6);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(255, 255, 255, 0.15);
-  
-  --text-main: #FFFFFF;
-  --text-muted: #94A3B8; /* Slate-400 */
-  --text-accent: #38BDF8; 
+  /* ベースカラー（全ページ共通） */
+  --bg: #0B0F0D;
+  --surface: rgba(16, 24, 16, 0.60);
+  --text: #F3EBDD;
+  --muted: #A7B0A0;
+  --accent: #8FA37A;
+  --border: rgba(255, 255, 255, 0.10);
+
+  /* 既存トークン互換 */
+  --bg-deep: var(--bg);
+  --bg-card: var(--surface);
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-glow: rgba(255, 255, 255, 0.18);
+  --text-main: var(--text);
+  --text-muted: var(--muted);
+  --text-accent: var(--accent);
+  --line: var(--border);
+
+  /* アクセント以外の既存用途用 */
+  --accent-2: #4FA089;
 
   /* Spotlight */
-  --spotlight-color: rgba(255, 255, 255, 0.08);
+  --spotlight-color: rgba(255, 255, 255, 0.06);
 
   /* Spacing */
   --space-1: 4px;
-  
-  /* --- MAPPED LEGACY VARIABLES (Dark Mode Transformation) --- */
-  --bg: #050505;
-  --surface: rgba(20, 20, 20, 0.4); /* Glassy dark */
-  --text: #F8F8F8;
-  --muted: #94A3B8;
-  --line: rgba(255, 255, 255, 0.12);
-  --accent: #DC2626; /* Red-600 */
-  --accent-2: #38BDF8; /* Sky-400 */
 }
 
 *{box-sizing:border-box}
@@ -65,7 +71,7 @@ body > header {
   position: fixed;
   inset: 0;
   z-index: 999;
-  background: rgba(242, 247, 242, 0.98);
+  background: rgba(11, 15, 13, 0.97);
   backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
@@ -86,20 +92,20 @@ body > header {
   font-size: 1rem;
   font-weight: 800;
   border-radius: 9999px;
-  color: var(--ml-text);
+  color: var(--text);
   transition: background 0.15s ease, color 0.15s ease;
 }
 #nav-overlay a:hover,
 #nav-overlay a:focus {
-  background: rgba(0,0,0,0.06);
-  color: var(--ml-text);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
 }
 #nav-overlay .nav-overlay-close {
   position: absolute;
   top: 1rem;
   right: 1rem;
   padding: 10px;
-  color: var(--ml-muted, rgba(0,0,0,0.6));
+  color: var(--muted);
   background: transparent;
   border: none;
   border-radius: 12px;
@@ -107,8 +113,8 @@ body > header {
   font: inherit;
 }
 #nav-overlay .nav-overlay-close:hover {
-  background: rgba(0,0,0,0.08);
-  color: var(--ml-text);
+  background: rgba(255,255,255,0.07);
+  color: var(--text);
 }
 @media (min-width: 768px) {
   #nav-overlay { display: none !important; }
@@ -116,9 +122,9 @@ body > header {
 
 .topbar{
   position:sticky;top:0;z-index:50;
-  background:rgba(5,5,5,.72);
+  background:rgba(6, 10, 8, .86);
   backdrop-filter: blur(12px);
-  border-bottom:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid var(--border);
 }
 
 .topbar__inner{
@@ -134,8 +140,8 @@ body > header {
 }
 .brand__logo{
   width:36px;height:36px;border-radius:16px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
+  background:rgba(18, 26, 20, 0.9);
+  border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;
 }
 .brand__meta{line-height:1.15}
@@ -168,14 +174,14 @@ body > header {
 }
 .nav a:hover{
   color:var(--text);
-  background:rgba(255,255,255,.04);
-  border-color:rgba(255,255,255,.08);
+  background:rgba(17, 24, 19, 0.9);
+  border-color:var(--border);
 }
 .nav a[aria-current="page"]{
-  color:#000;
-  background:#fff;
-  border-color:#fff;
-  box-shadow: 0 12px 30px rgba(255,255,255,.10);
+  color:#10150F;
+  background:#F3EBDD;
+  border-color:#F3EBDD;
+  box-shadow: 0 12px 30px rgba(10,10,10,.55);
 }
 .nav a:focus{outline:none}
 .nav a:focus-visible{
@@ -192,14 +198,14 @@ body > header {
   gap:8px;
   padding:8px 12px;
   border-radius:999px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
+  background:rgba(18, 26, 20, 0.85);
+  border:1px solid var(--border);
   color:var(--muted);
   font-size:12px;
   font-weight:800;
   transition: background .18s ease, color .18s ease, border-color .18s ease;
 }
-.chip:hover{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.12)}
+.chip:hover{background:rgba(21, 30, 25, 0.95);color:var(--text);border-color:rgba(255,255,255,.20)}
 .chip i{width:16px;height:16px}
 
 /* ===== Hero / Cards ===== */
@@ -217,10 +223,11 @@ body > header {
 /* ===== glass-card（全ページ共通カード） ===== */
 .glass-card{
   border-radius:24px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
+  background:var(--surface);
+  border:1px solid var(--border);
   overflow:hidden;
   position:relative;
+  backdrop-filter: blur(22px);
 }
 .glass-card::before{
   content:"";
@@ -232,8 +239,8 @@ body > header {
 
 .card{
   border-radius:26px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
+  background:var(--surface);
+  border:1px solid var(--border);
   overflow:hidden;
   position:relative;
 }
@@ -316,8 +323,8 @@ body > header {
 @media(max-width:900px){.grid3{grid-template-columns:1fr}}
 .tile{
   border-radius:24px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
+  background:var(--surface);
+  border:1px solid var(--border);
   padding:16px;
   position:relative;
   overflow:hidden;
@@ -350,7 +357,7 @@ body > header {
 
 /* ===== Form bits ===== */
 .field-label{font-weight:900;font-size:12px;color:rgba(255,255,255,.78)}
-.help{font-size:11px;color:rgba(255,255,255,.55)}
+.help{font-size:11px;color:var(--muted)}
 
 input[type="text"],
 input[type="email"],
@@ -366,9 +373,9 @@ input::placeholder, textarea::placeholder{color:rgba(255,255,255,.30)}
 /* ===== Footer ===== */
 .footer{
   padding:26px 0 36px;
-  color:rgba(255,255,255,.55);
+  color:var(--muted);
   font-size:12px;
-  border-top:1px solid rgba(255,255,255,.06);
+  border-top:1px solid var(--border);
 }
 
 /* ===== Reveal (scroll) ===== */
@@ -412,14 +419,14 @@ input::placeholder, textarea::placeholder{color:rgba(255,255,255,.30)}
 
 /* ===== select/option（抹茶ラテテーマに合わせる） ===== */
 select, option {
-    background-color: #fff !important;
-    color: var(--ml-text) !important;
+    background-color: #141C14 !important;
+    color: var(--text) !important;
 }
 
 select {
     -webkit-appearance: none;
     appearance: none;
-    border: 1px solid var(--ml-border);
+    border: 1px solid var(--border);
 }
 
 /* ===== PC用：LINE QR表示（相談ページ） ===== */
@@ -451,44 +458,8 @@ body > header .header-inner {
   height: 64px;
   line-height: 1.2;
 }
-
-/* ===== 抹茶ラテテーマ（明るい・白〜淡い抹茶・暗黒NG） ===== */
-:root {
-  --ml-bg1: #f2f7f2;
-  --ml-bg2: #e8f0ea;
-  --ml-card: #ffffff;
-  --ml-text: #1a2e1f;
-  --ml-muted: #4a6b52;
-  --ml-border: rgba(0, 0, 0, 0.08);
-  --ml-accent: #5c8f62;
-}
-html, body {
-  color: var(--ml-text);
-  background: linear-gradient(180deg, var(--ml-bg1), var(--ml-bg2));
-}
-.card, .panel, .form-card, .container, .main, .glass-card {
-  background: var(--ml-card);
-  border: 1px solid var(--ml-border);
-}
-input, select, textarea, .field-input {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--ml-border);
-  color: var(--ml-text);
-}
-button, .btn, button[type="submit"] {
-  background: var(--ml-accent);
-  color: #fff;
-}
-.btn-line {
-  background: #06C755 !important;
-  color: #fff !important;
-}
-.muted, .help, .small {
-  color: var(--ml-muted);
-}
-
 /* ===== PC幅：LINEボタン/アイコン/誘導UI非表示（QR画像は表示OK） ===== */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   #headerLineLink,
   a[href*="line.me"],
   a[href^="line:"],
