@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="robots" content="noindex, nofollow" />
   <title>本人確認（本登録）｜drivers-site</title>
-  <meta name="description" content="本人確認（本登録）フォーム。必須：氏名、住所（郵便番号から自動入力可）、軽車両・経験年数、顔写真、免許証（表/裏）、自動車保険証券写真。任意：貨物保険証券。" />
+  <meta name="description" content="本人確認（本登録）フォーム。必須：氏名、住所、軽車両・経験年数、免許証表裏、車両前面、車検証、自賠責、任意保険、経営届出書、振込口座（入力）。任意：貨物保険。" />
   <link rel="canonical" href="https://takeshimonoseki.github.io/TAKE/full-register.html" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,7 +128,7 @@
 
         <h1 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">本人確認（本登録）フォーム</h1>
         <p class="text-sm text-muted leading-relaxed mb-2">
-          必須：氏名／住所（郵便番号から自動入力可）／軽車両・経験年数／顔写真／免許証（表・裏）／自動車保険証券写真。任意：貨物保険証券（あれば）。
+          必須：氏名／住所／軽車両・経験年数／免許証（表・裏）／車両前面／車検証／自賠責／任意保険／経営届出書／振込口座（入力）。任意：貨物保険（あれば）。
         </p>
         <p class="text-xs text-white/40">
           公開プロフィール（必須）は、お客さま向け掲載用です。住所・車両は上で入力した値が初期表示され、編集できます。
@@ -142,11 +142,13 @@
         <div id="errorBox" class="error-banner mb-6" style="display:none;">
           <strong>送信できませんでした。</strong>
           <div class="mt-2" id="errorText">赤枠の項目をご確認ください。</div>
+          <div class="mt-2 text-xs font-mono text-white/80" id="errorDebugId"></div>
         </div>
 
         <div id="successBox" class="success-banner mb-6" style="display:none;">
           <strong>送信しました。</strong>
           <div class="mt-2 text-white/70 text-sm">受付ID：<span id="receiptId" class="font-mono"></span></div>
+          <div class="mt-2 text-white/70 text-sm">追跡ID：<span id="successDebugId" class="font-mono"></span></div>
           <div class="mt-2 text-white/60 text-xs">確認後、必要に応じて運営から連絡します。</div>
         </div>
 
@@ -178,7 +180,9 @@
               </div>
               <div>
                 <label class="text-sm font-bold mb-2 block" for="city">市区町村</label>
-                <input type="text" id="city" class="field-input" placeholder="例：下関市" />
+                <input type="text" id="city" class="field-input" list="cityList" placeholder="例：下関市" autocomplete="off" />
+                <datalist id="cityList"></datalist>
+                <div class="text-xs text-white/40 mt-1">山口県・福岡県は候補から選択できます。それ以外は手入力。</div>
               </div>
               <div>
                 <label class="text-sm font-bold mb-2 block" for="addressLine">町名・番地以降</label>
@@ -222,30 +226,110 @@
               </select>
             </div>
 
-            <!-- 写真：必須4つ・任意1つ -->
+            <!-- 写真：必須8点・任意1点 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="text-sm font-bold mb-2 block" for="facePhoto">顔写真（必須）</label>
-                <input type="file" id="facePhoto" class="field-input" accept="image/*" />
-                <div class="text-xs text-white/40 mt-1">本人確認用（公開しません）。</div>
-              </div>
-              <div>
-                <label class="text-sm font-bold mb-2 block" for="autoInsurance">自動車保険証券写真（必須）</label>
-                <input type="file" id="autoInsurance" class="field-input" accept="image/*,application/pdf" />
-              </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="text-sm font-bold mb-2 block" for="licenseFront">免許証（表）（必須）</label>
+                <label class="text-sm font-bold mb-2 block" for="licenseFront">運転免許証 表（必須）</label>
                 <input type="file" id="licenseFront" class="field-input" accept="image/*" />
               </div>
               <div>
-                <label class="text-sm font-bold mb-2 block" for="licenseBack">免許証（裏）（必須）</label>
+                <label class="text-sm font-bold mb-2 block" for="licenseBack">運転免許証 裏（必須）</label>
                 <input type="file" id="licenseBack" class="field-input" accept="image/*" />
               </div>
             </div>
             <div>
-              <label class="text-sm font-bold mb-2 block" for="cargoInsurance">貨物保険証券（任意）</label>
+              <label class="text-sm font-bold mb-2 block" for="vehicleFront">車両前面（黒ナンバーが読める）（必須）</label>
+              <input type="file" id="vehicleFront" class="field-input" accept="image/*" />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-sm font-bold mb-2 block" for="vehicleInspection">車検証（必須）</label>
+                <input type="file" id="vehicleInspection" class="field-input" accept="image/*,application/pdf" />
+              </div>
+              <div>
+                <label class="text-sm font-bold mb-2 block" for="compulsoryInsurance">自賠責（必須）</label>
+                <input type="file" id="compulsoryInsurance" class="field-input" accept="image/*,application/pdf" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-sm font-bold mb-2 block" for="voluntaryInsurance">任意保険（必須）</label>
+                <input type="file" id="voluntaryInsurance" class="field-input" accept="image/*,application/pdf" />
+              </div>
+              <div>
+                <label class="text-sm font-bold mb-2 block" for="keiCargoNotification">経営届出書（受領印あり）（必須）</label>
+                <input type="file" id="keiCargoNotification" class="field-input" accept="image/*,application/pdf" />
+              </div>
+            </div>
+            <!-- 振込口座（入力・必須） -->
+            <div class="p-4 rounded-xl border border-white/10 bg-white/5 space-y-4">
+              <div class="font-bold text-sm">振込口座（入力・必須）</div>
+              <div class="flex flex-wrap gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="bankKind" value="bank" id="bankKindBank" class="accent-[#38bdf8]" checked />
+                  <span class="text-sm">通常の銀行</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="bankKind" value="yucho" id="bankKindYucho" class="accent-[#38bdf8]" />
+                  <span class="text-sm">ゆうちょ銀行（振込用）</span>
+                </label>
+              </div>
+              <div id="bankFields" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="text-sm font-bold mb-2 block" for="bankName">銀行名（必須）</label>
+                    <input type="text" id="bankName" class="field-input" placeholder="例：〇〇銀行" />
+                  </div>
+                  <div>
+                    <label class="text-sm font-bold mb-2 block" for="branchName">支店名（必須）</label>
+                    <input type="text" id="branchName" class="field-input" placeholder="例：〇〇支店" />
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="text-sm font-bold mb-2 block" for="accountType">口座種別（必須）</label>
+                    <select id="accountType" class="field-input">
+                      <option value="">選択</option>
+                      <option value="普通">普通</option>
+                      <option value="当座">当座</option>
+                      <option value="貯蓄">貯蓄</option>
+                      <option value="その他">その他</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-sm font-bold mb-2 block" for="accountNumber">口座番号（必須・6〜7桁）</label>
+                    <input type="text" id="accountNumber" class="field-input" placeholder="例：1234567" maxlength="7" pattern="[0-9]*" inputmode="numeric" />
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm font-bold mb-2 block" for="accountHolderKana">口座名義（カナ・必須）</label>
+                  <input type="text" id="accountHolderKana" class="field-input" placeholder="例：ヤマダ タロウ" />
+                </div>
+              </div>
+              <div id="yuchoFields" class="space-y-4" style="display:none;">
+                <p class="text-xs text-amber-200/90">ゆうちょは「振込用の店名／店番／口座番号(7桁)」で入力してください（記号・番号ではありません）。</p>
+                <div>
+                  <label class="text-sm font-bold mb-2 block" for="yuchoStoreName">店名（必須）</label>
+                  <input type="text" id="yuchoStoreName" class="field-input" placeholder="例：一三八" />
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="text-sm font-bold mb-2 block" for="yuchoStoreCode">店番（3桁・必須）</label>
+                    <input type="text" id="yuchoStoreCode" class="field-input" placeholder="例：138" maxlength="3" pattern="[0-9]*" inputmode="numeric" />
+                  </div>
+                  <div>
+                    <label class="text-sm font-bold mb-2 block" for="yuchoAccountNumber">口座番号（7桁・必須）</label>
+                    <input type="text" id="yuchoAccountNumber" class="field-input" placeholder="例：1234567" maxlength="7" pattern="[0-9]*" inputmode="numeric" />
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm font-bold mb-2 block" for="yuchoAccountHolderKana">口座名義（カナ・必須）</label>
+                  <input type="text" id="yuchoAccountHolderKana" class="field-input" placeholder="例：ヤマダ タロウ" />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="text-sm font-bold mb-2 block" for="cargoInsurance">貨物保険（任意）</label>
               <input type="file" id="cargoInsurance" class="field-input" accept="image/*,application/pdf" />
               <div class="text-xs text-white/40 mt-1">
                 PickGoの「貨物の保障」公式説明：
@@ -276,7 +360,8 @@
               </div>
               <div>
                 <label class="text-sm font-bold mb-2 block" for="publicCity">市区町村（公開）</label>
-                <input type="text" id="publicCity" class="field-input" placeholder="例：下関市" />
+                <input type="text" id="publicCity" class="field-input" list="publicCityList" placeholder="例：下関市" autocomplete="off" />
+                <datalist id="publicCityList"></datalist>
               </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -366,11 +451,31 @@
     const maker = el("maker");
     const model = el("model");
     const experienceYears = el("experienceYears");
-    const facePhoto = el("facePhoto");
     const licenseFront = el("licenseFront");
     const licenseBack = el("licenseBack");
-    const autoInsurance = el("autoInsurance");
+    const vehicleFront = el("vehicleFront");
+    const vehicleInspection = el("vehicleInspection");
+    const compulsoryInsurance = el("compulsoryInsurance");
+    const voluntaryInsurance = el("voluntaryInsurance");
+    const keiCargoNotification = el("keiCargoNotification");
     const cargoInsurance = el("cargoInsurance");
+    const bankKindBank = el("bankKindBank");
+    const bankKindYucho = el("bankKindYucho");
+    const bankFields = el("bankFields");
+    const yuchoFields = el("yuchoFields");
+    const bankName = el("bankName");
+    const branchName = el("branchName");
+    const accountType = el("accountType");
+    const accountNumber = el("accountNumber");
+    const accountHolderKana = el("accountHolderKana");
+    const yuchoStoreName = el("yuchoStoreName");
+    const yuchoStoreCode = el("yuchoStoreCode");
+    const yuchoAccountNumber = el("yuchoAccountNumber");
+    const yuchoAccountHolderKana = el("yuchoAccountHolderKana");
+    const cityList = el("cityList");
+    const publicCityList = el("publicCityList");
+    const errorDebugIdEl = el("errorDebugId");
+    const successDebugIdEl = el("successDebugId");
     const nickname = el("nickname");
     const publicPrefecture = el("publicPrefecture");
     const publicCity = el("publicCity");
@@ -385,6 +490,33 @@
     }
     fillPrefectureSelect(prefecture);
     fillPrefectureSelect(publicPrefecture);
+
+    var CITIES_BY_PREF = {
+      "山口県": ["下関市","山口市","宇部市","周南市","防府市","下松市","岩国市","田布施町","光市","長門市","萩市","柳井市","美祢市","山陽小野田市"],
+      "福岡県": ["北九州市","福岡市","久留米市","飯塚市","直方市","行橋市","宗像市","春日市","大野城市","太宰府市","筑紫野市"]
+    };
+    function updateCityDatalist(datalistEl, prefectureValue) {
+      if (!datalistEl) return;
+      var cities = CITIES_BY_PREF[prefectureValue] || [];
+      datalistEl.innerHTML = cities.map(function(c){ return "<option value=\"" + c + "\">"; }).join("");
+    }
+    prefecture.addEventListener("change", function() {
+      updateCityDatalist(cityList, prefecture.value || "");
+      if (publicPrefecture) publicPrefecture.value = prefecture.value;
+      updateCityDatalist(publicCityList, publicPrefecture ? publicPrefecture.value : "");
+    });
+    publicPrefecture.addEventListener("change", function() { updateCityDatalist(publicCityList, publicPrefecture.value || ""); });
+    updateCityDatalist(cityList, prefecture.value || "");
+    updateCityDatalist(publicCityList, publicPrefecture ? publicPrefecture.value : "");
+
+    function toggleBankYucho() {
+      var isYucho = bankKindYucho && bankKindYucho.checked;
+      if (bankFields) bankFields.style.display = isYucho ? "none" : "";
+      if (yuchoFields) yuchoFields.style.display = isYucho ? "" : "none";
+    }
+    if (bankKindBank) bankKindBank.addEventListener("change", toggleBankYucho);
+    if (bankKindYucho) bankKindYucho.addEventListener("change", toggleBankYucho);
+    toggleBankYucho();
 
     function updateModelSelect(makerSelect, modelSelect) {
       if (window.VehicleLinkage && window.VehicleLinkage.updateLightVehicleSelect) {
@@ -401,8 +533,7 @@
       updateModelSelect(publicMaker, publicModel);
       if (publicModel && model) publicModel.value = model.value;
     }
-    prefecture.addEventListener("change", () => { if (publicPrefecture) publicPrefecture.value = prefecture.value; });
-    city.addEventListener("input", () => { if (publicCity) publicCity.value = city.value; });
+    city.addEventListener("input", function() { if (publicCity) publicCity.value = city.value; });
     maker.addEventListener("change", syncPublicVehicle);
     model.addEventListener("change", () => { if (publicModel) publicModel.value = model.value; });
 
@@ -420,6 +551,8 @@
           prefecture.value = (r.address1 || "") || prefecture.value;
           city.value = (r.address2 || "") || city.value;
           addressLine.value = (r.address3 || "") || addressLine.value;
+          updateCityDatalist(cityList, prefecture.value || "");
+          updateCityDatalist(publicCityList, publicPrefecture ? publicPrefecture.value : "");
           syncPublicVehicle();
         })
         .catch(() => {});
@@ -434,8 +567,13 @@
       const r = Math.floor(Math.random()*1e6).toString(36).padStart(4,"0");
       return "DRF-" + ts + "-" + r;
     }
+    function makeDebugId() {
+      const ts = Date.now().toString(36);
+      const r = Math.floor(Math.random()*1e6).toString(36).padStart(5,"0");
+      return "DBG-" + ts + "-" + r;
+    }
 
-    const allInputs = [fullName, postalCode, prefecture, city, addressLine, maker, model, experienceYears, facePhoto, licenseFront, licenseBack, autoInsurance, cargoInsurance, nickname, publicPrefecture, publicCity, publicMaker, publicModel, publicAppeal, agree];
+    const allInputs = [fullName, postalCode, prefecture, city, addressLine, maker, model, experienceYears, licenseFront, licenseBack, vehicleFront, vehicleInspection, compulsoryInsurance, voluntaryInsurance, keiCargoNotification, bankName, branchName, accountType, accountNumber, accountHolderKana, yuchoStoreName, yuchoStoreCode, yuchoAccountNumber, yuchoAccountHolderKana, cargoInsurance, nickname, publicPrefecture, publicCity, publicMaker, publicModel, publicAppeal, agree];
     function clearInvalid() {
       allInputs.forEach(x => {
         if (!x) return;
@@ -443,8 +581,9 @@
       });
     }
 
-    function setError(msg) {
+    function setError(msg, debugId) {
       errorText.textContent = msg;
+      if (errorDebugIdEl) errorDebugIdEl.textContent = debugId ? "追跡ID: " + debugId : "";
       errorBox.style.display = "";
       successBox.style.display = "none";
       errorBox.scrollIntoView({behavior:"smooth", block:"center"});
@@ -490,11 +629,24 @@
       const pubModel = (publicModel.value || "").trim();
       const pubAppeal = (publicAppeal.value || "").trim();
 
-      const fFace = getFile(facePhoto);
       const fLf = getFile(licenseFront);
       const fLb = getFile(licenseBack);
-      const fAi = getFile(autoInsurance);
+      const fVf = getFile(vehicleFront);
+      const fVi = getFile(vehicleInspection);
+      const fCo = getFile(compulsoryInsurance);
+      const fVo = getFile(voluntaryInsurance);
+      const fKei = getFile(keiCargoNotification);
       const fCi = getFile(cargoInsurance);
+      const bankKind = (document.querySelector("input[name=bankKind]:checked") && document.querySelector("input[name=bankKind]:checked").value) || "bank";
+      const bName = (bankName && bankName.value || "").trim();
+      const bBranch = (branchName && branchName.value || "").trim();
+      const bType = (accountType && accountType.value || "").trim();
+      const bNum = (accountNumber && accountNumber.value || "").replace(/\D/g, "");
+      const bKana = (accountHolderKana && accountHolderKana.value || "").trim();
+      const yStore = (yuchoStoreName && yuchoStoreName.value || "").trim();
+      const yCode = (yuchoStoreCode && yuchoStoreCode.value || "").replace(/\D/g, "");
+      const yNum = (yuchoAccountNumber && yuchoAccountNumber.value || "").replace(/\D/g, "");
+      const yKana = (yuchoAccountHolderKana && yuchoAccountHolderKana.value || "").trim();
 
       if (!n) { fullName.classList.add("is-invalid"); return {ok:false, msg:"氏名を入力してください。"}; }
       if (pc.length !== 7) { postalCode.classList.add("is-invalid"); return {ok:false, msg:"郵便番号を7桁で入力してください。"}; }
@@ -505,15 +657,34 @@
       if (!mod) { model.classList.add("is-invalid"); return {ok:false, msg:"車種を選択してください。"}; }
       if (!exp) { experienceYears.classList.add("is-invalid"); return {ok:false, msg:"経験年数を選択してください。"}; }
 
-      if (!fFace) { facePhoto.classList.add("is-invalid"); return {ok:false, msg:"顔写真を添付してください。"}; }
-      if (!fLf) { licenseFront.classList.add("is-invalid"); return {ok:false, msg:"免許証（表）を添付してください。"}; }
-      if (!fLb) { licenseBack.classList.add("is-invalid"); return {ok:false, msg:"免許証（裏）を添付してください。"}; }
-      if (!fAi) { autoInsurance.classList.add("is-invalid"); return {ok:false, msg:"自動車保険証券写真を添付してください。"}; }
+      if (!fLf) { licenseFront.classList.add("is-invalid"); return {ok:false, msg:"運転免許証（表）を添付してください。"}; }
+      if (!fLb) { licenseBack.classList.add("is-invalid"); return {ok:false, msg:"運転免許証（裏）を添付してください。"}; }
+      if (!fVf) { vehicleFront.classList.add("is-invalid"); return {ok:false, msg:"車両前面写真を添付してください。"}; }
+      if (!fVi) { vehicleInspection.classList.add("is-invalid"); return {ok:false, msg:"車検証を添付してください。"}; }
+      if (!fCo) { compulsoryInsurance.classList.add("is-invalid"); return {ok:false, msg:"自賠責を添付してください。"}; }
+      if (!fVo) { voluntaryInsurance.classList.add("is-invalid"); return {ok:false, msg:"任意保険を添付してください。"}; }
+      if (!fKei) { keiCargoNotification.classList.add("is-invalid"); return {ok:false, msg:"経営届出書（受領印あり）を添付してください。"}; }
 
-      if (!checkSize(fFace, facePhoto)) return {ok:false};
+      if (bankKind === "bank") {
+        if (!bName) { if (bankName) bankName.classList.add("is-invalid"); return {ok:false, msg:"銀行名を入力してください。"}; }
+        if (!bBranch) { if (branchName) branchName.classList.add("is-invalid"); return {ok:false, msg:"支店名を入力してください。"}; }
+        if (!bType) { if (accountType) accountType.classList.add("is-invalid"); return {ok:false, msg:"口座種別を選択してください。"}; }
+        if (bNum.length < 6 || bNum.length > 7) { if (accountNumber) accountNumber.classList.add("is-invalid"); return {ok:false, msg:"口座番号は6〜7桁で入力してください。"}; }
+        if (!bKana) { if (accountHolderKana) accountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。"}; }
+      } else {
+        if (!yStore) { if (yuchoStoreName) yuchoStoreName.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの店名を入力してください。"}; }
+        if (yCode.length !== 3) { if (yuchoStoreCode) yuchoStoreCode.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの店番は3桁で入力してください。"}; }
+        if (yNum.length !== 7) { if (yuchoAccountNumber) yuchoAccountNumber.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの口座番号は7桁で入力してください。"}; }
+        if (!yKana) { if (yuchoAccountHolderKana) yuchoAccountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。"}; }
+      }
+
       if (!checkSize(fLf, licenseFront)) return {ok:false};
       if (!checkSize(fLb, licenseBack)) return {ok:false};
-      if (!checkSize(fAi, autoInsurance)) return {ok:false};
+      if (!checkSize(fVf, vehicleFront)) return {ok:false};
+      if (!checkSize(fVi, vehicleInspection)) return {ok:false};
+      if (!checkSize(fCo, compulsoryInsurance)) return {ok:false};
+      if (!checkSize(fVo, voluntaryInsurance)) return {ok:false};
+      if (!checkSize(fKei, keiCargoNotification)) return {ok:false};
       if (fCi && !checkSize(fCi, cargoInsurance)) return {ok:false};
 
       if (!nick) { nickname.classList.add("is-invalid"); return {ok:false, msg:"ニックネーム（公開）を入力してください。"}; }
@@ -530,13 +701,26 @@
       }
 
       const addressFull = pref + c + al;
+      var bankAccount = {
+        bankKind: bankKind,
+        bankName: bName,
+        branchName: bBranch,
+        accountType: bType,
+        accountNumber: bNum,
+        accountHolderKana: bKana,
+        yuchoStoreName: yStore,
+        yuchoStoreCode: yCode,
+        yuchoAccountNumber: yNum,
+        yuchoAccountHolderKana: yKana
+      };
       return {
         ok: true,
         data: {
           n, addressFull, postalCode: pc, prefecture: pref, city: c, addressLine: al,
           maker: m, model: mod, experienceYears: exp,
           nickname: nick, publicPrefecture: pubPref, publicCity: pubCity, publicMaker: pubMaker, publicModel: pubModel, publicAppeal: pubAppeal,
-          fFace, fLf, fLb, fAi, fCi
+          bankAccount: bankAccount,
+          fLf, fLb, fVf, fVi, fCo, fVo, fKei, fCi
         }
       };
     }
@@ -550,26 +734,42 @@
       e.preventDefault();
 
       const v = validate();
-      if (!v.ok) { if (v.msg) setError(v.msg); return; }
+      if (!v.ok) { if (v.msg) setError(v.msg, ""); return; }
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = "<span class=\"inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2\"></span>送信中…";
       errorBox.style.display = "none";
       successBox.style.display = "none";
 
-      try {
-        const rid = makeReceiptId();
-        const d = v.data;
+      const rid = makeReceiptId();
+      const debugId = makeDebugId();
+      const d = v.data;
 
-        const faceUrl = await fileToDataUrl(d.fFace);
+      try {
         const lfUrl = await fileToDataUrl(d.fLf);
         const lbUrl = await fileToDataUrl(d.fLb);
-        const aiUrl = await fileToDataUrl(d.fAi);
+        const vfUrl = await fileToDataUrl(d.fVf);
+        const viUrl = await fileToDataUrl(d.fVi);
+        const coUrl = await fileToDataUrl(d.fCo);
+        const voUrl = await fileToDataUrl(d.fVo);
+        const keiUrl = await fileToDataUrl(d.fKei);
         const ciUrl = d.fCi ? await fileToDataUrl(d.fCi) : "";
+
+        const files = {
+          licenseFront: { name: d.fLf.name || "licenseFront", type: d.fLf.type || "", dataUrl: lfUrl },
+          licenseBack: { name: d.fLb.name || "licenseBack", type: d.fLb.type || "", dataUrl: lbUrl },
+          vehicleFront: { name: d.fVf.name || "vehicleFront", type: d.fVf.type || "", dataUrl: vfUrl },
+          vehicleInspection: { name: d.fVi.name || "vehicleInspection", type: d.fVi.type || "", dataUrl: viUrl },
+          compulsoryInsurance: { name: d.fCo.name || "compulsoryInsurance", type: d.fCo.type || "", dataUrl: coUrl },
+          voluntaryInsurance: { name: d.fVo.name || "voluntaryInsurance", type: d.fVo.type || "", dataUrl: voUrl },
+          keiCargoNotification: { name: d.fKei.name || "keiCargoNotification", type: d.fKei.type || "", dataUrl: keiUrl }
+        };
+        if (d.fCi) files.cargoInsurance = { name: d.fCi.name || "cargoInsurance", type: d.fCi.type || "", dataUrl: ciUrl };
 
         const bodyObj = {
           type: "driver_full_register",
           receiptId: rid,
+          debugId: debugId,
           data: {
             fullName: d.n,
             address: d.addressFull,
@@ -580,6 +780,7 @@
             maker: d.maker,
             model: d.model,
             experienceYears: d.experienceYears,
+            bankAccount: d.bankAccount || {},
             publicProfile: {
               nickname: d.nickname,
               prefecture: d.publicPrefecture,
@@ -595,29 +796,38 @@
             },
             consent: true
           },
-          files: {
-            facePhoto: { name: d.fFace.name || "facePhoto", type: d.fFace.type || "", dataUrl: faceUrl },
-            licenseFront: { name: d.fLf.name || "licenseFront", type: d.fLf.type || "", dataUrl: lfUrl },
-            licenseBack: { name: d.fLb.name || "licenseBack", type: d.fLb.type || "", dataUrl: lbUrl },
-            autoInsurance: { name: d.fAi.name || "autoInsurance", type: d.fAi.type || "", dataUrl: aiUrl }
-          }
+          files: files
         };
 
-        if (d.fCi) {
-          bodyObj.files.cargoInsurance = { name: d.fCi.name || "cargoInsurance", type: d.fCi.type || "", dataUrl: ciUrl };
-        }
-
-        await fetch(ENDPOINT, {
+        const res = await fetch(ENDPOINT, {
           method: "POST",
-          mode: "no-cors",
           headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(bodyObj)
         });
 
-        window.location.href = "thankyou.html?receiptId=" + encodeURIComponent(rid);
-        return;
+        var json = null;
+        try {
+          const text = await res.text();
+          if (text && text.trim()) json = JSON.parse(text);
+        } catch (parseErr) {}
+
+        if (json && typeof json.ok === "boolean") {
+          if (json.ok === true) {
+            receiptIdEl.textContent = rid;
+            if (successDebugIdEl) successDebugIdEl.textContent = json.debugId || debugId;
+            successBox.style.display = "";
+            errorBox.style.display = "none";
+            window.location.href = "thankyou.html?receiptId=" + encodeURIComponent(rid) + "&debugId=" + encodeURIComponent(json.debugId || debugId);
+            return;
+          } else {
+            setError((json.message || "送信できませんでした。") + (json.debugId ? " 追跡ID: " + json.debugId : ""), json.debugId || debugId);
+            return;
+          }
+        }
+
+        setError("送信結果を確認できませんでした（未確認）。Jobsで追跡できます。", debugId);
       } catch (err) {
-        setError("通信エラーで送信できませんでした。時間をおいて再度お試しください。");
+        setError("通信エラーで送信できませんでした。時間をおいて再度お試しください。追跡ID: " + debugId, debugId);
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> 送信する';
