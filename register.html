@@ -892,14 +892,27 @@
 
       fetch(endpoint, {
         method: "POST",
-        mode: "no-cors",
         headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(bodyObj)
-      }).then(function(){
-        receiptIdEl.textContent = lastReceiptId;
-        renderSummary(result.payload);
-        successBox.style.display = "";
-        successBox.scrollIntoView({ behavior: "smooth", block: "start" });
+      }).then(function(res) {
+        return res.text().then(function(text) {
+          var json = null;
+          try { if (text && text.trim()) json = JSON.parse(text); } catch (e) {}
+          if (json && json.ok === true) {
+            receiptIdEl.textContent = lastReceiptId;
+            renderSummary(result.payload);
+            successBox.style.display = "";
+            successBox.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            errorBox.style.display = "";
+            errorListEl.innerHTML = "";
+            var msg = (json && json.message) ? String(json.message) : "送信できませんでした。しばらくして再度お試しか、下の「LINEで内容を送る」をご利用ください。";
+            var li = document.createElement("li");
+            li.textContent = msg;
+            errorListEl.appendChild(li);
+            errorBox.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
       }).catch(function(){
         networkErrorBox.style.display = "";
         networkErrorBox.scrollIntoView({ behavior: "smooth", block: "center" });

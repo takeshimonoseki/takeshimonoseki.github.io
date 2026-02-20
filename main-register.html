@@ -953,11 +953,24 @@
 
         return fetch(endpoint, {
           method: "POST",
-          mode: "no-cors",
           headers: { "Content-Type": "text/plain" },
           body: JSON.stringify(bodyObj)
-        }).then(function(){
-          window.location.href = "thankyou.html?receiptId=" + encodeURIComponent(lastReceiptId);
+        }).then(function(res) {
+          return res.text().then(function(text) {
+            var json = null;
+            try { if (text && text.trim()) json = JSON.parse(text); } catch (e) {}
+            if (json && json.ok === true) {
+              window.location.href = "thankyou.html?receiptId=" + encodeURIComponent(lastReceiptId);
+            } else {
+              errorBox.style.display = "";
+              errorListEl.innerHTML = "";
+              var msg = (json && json.message) ? String(json.message) : "送信できませんでした。しばらくして再度お試しください。";
+              var li = document.createElement("li");
+              li.textContent = msg;
+              errorListEl.appendChild(li);
+              errorBox.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+          });
         });
       }).catch(function(){
         networkReceiptIdEl.textContent = lastReceiptId;

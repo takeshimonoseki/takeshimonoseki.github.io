@@ -54,6 +54,8 @@
     #cityWrap select#city, #publicCityWrap select#publicCity { min-height: 42px; }
     .is-invalid { border-color: rgba(239,68,68,0.6) !important; }
     .is-invalid:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.15) !important; }
+    .field-error-text { color: #fca5a5; font-size: 12px; margin-top: 4px; }
+    #agreeLabel.is-invalid { color: #fca5a5; }
 
     .error-banner {
       padding: 16px; border-radius: 16px;
@@ -413,6 +415,7 @@
             <input type="checkbox" id="agree" />
             <span>内容に同意します（20%手数料／指名は希望のみ（確約なし）／電話導線なし）</span>
           </label>
+          <div id="agreeErrorText" class="field-error-text" role="alert" style="display:none;"></div>
           <div class="text-xs text-white/40 mt-2">※本人確認情報は公開しません。</div>
         </div>
 
@@ -810,11 +813,15 @@
     }
 
     const allInputs = [fullName, postalCode, prefecture, city, addressLine, maker, model, experienceYears, licenseFront, licenseBack, vehicleFront, vehicleInspection, compulsoryInsurance, voluntaryInsurance, keiCargoNotification, bankName, branchName, accountType, accountNumber, accountHolderKana, yuchoStoreName, yuchoStoreCode, yuchoAccountNumber, yuchoAccountHolderKana, cargoInsurance, nickname, publicPrefecture, publicCity, publicMaker, publicModel, publicAppeal, agree, cityManual, publicCityManual, branchCodeInput];
+    const agreeLabelEl = el("agreeLabel");
+    const agreeErrorTextEl = el("agreeErrorText");
     function clearInvalid() {
       allInputs.forEach(x => {
         if (!x) return;
         x.classList.remove("is-invalid");
       });
+      if (agreeLabelEl) agreeLabelEl.classList.remove("is-invalid");
+      if (agreeErrorTextEl) { agreeErrorTextEl.textContent = ""; agreeErrorTextEl.style.display = "none"; }
     }
 
     function setError(msg, debugId) {
@@ -849,6 +856,7 @@
     function validate() {
       clearInvalid();
       errorBox.style.display = "none";
+      var firstInvalidEl = null;
 
       var n = (fullName.value || "").trim();
       var pc = (postalCode.value || "").replace(/\D/g, "");
@@ -887,61 +895,67 @@
       var bCode = (bankCodeEl && bankCodeEl.value || "").trim();
       var brCode = (branchCodeEl && branchCodeEl.value || "").trim();
 
-      if (!n) { fullName.classList.add("is-invalid"); return {ok:false, msg:"氏名を入力してください。"}; }
-      if (pc.length !== 7) { postalCode.classList.add("is-invalid"); return {ok:false, msg:"郵便番号を7桁で入力してください。"}; }
-      if (!pref) { prefecture.classList.add("is-invalid"); return {ok:false, msg:"都道府県を選択してください。"}; }
-      if (!c) { (cityManualMode && cityManual ? cityManual : city).classList.add("is-invalid"); return {ok:false, msg:"市区町村を入力してください。"}; }
-      if (!al) { addressLine.classList.add("is-invalid"); return {ok:false, msg:"町名・番地以降を入力してください。"}; }
-      if (!m) { maker.classList.add("is-invalid"); return {ok:false, msg:"車両メーカーを選択してください。"}; }
-      if (!mod) { model.classList.add("is-invalid"); return {ok:false, msg:"車種を選択してください。"}; }
-      if (!exp) { experienceYears.classList.add("is-invalid"); return {ok:false, msg:"経験年数を選択してください。"}; }
+      if (!n) { fullName.classList.add("is-invalid"); return {ok:false, msg:"氏名を入力してください。", firstInvalidEl: fullName}; }
+      if (pc.length !== 7) { postalCode.classList.add("is-invalid"); return {ok:false, msg:"郵便番号を7桁で入力してください。", firstInvalidEl: postalCode}; }
+      if (!pref) { prefecture.classList.add("is-invalid"); return {ok:false, msg:"都道府県を選択してください。", firstInvalidEl: prefecture}; }
+      if (!c) { (cityManualMode && cityManual ? cityManual : city).classList.add("is-invalid"); return {ok:false, msg:"市区町村を入力してください。", firstInvalidEl: (cityManualMode && cityManual) ? cityManual : city}; }
+      if (!al) { addressLine.classList.add("is-invalid"); return {ok:false, msg:"町名・番地以降を入力してください。", firstInvalidEl: addressLine}; }
+      if (!m) { maker.classList.add("is-invalid"); return {ok:false, msg:"車両メーカーを選択してください。", firstInvalidEl: maker}; }
+      if (!mod) { model.classList.add("is-invalid"); return {ok:false, msg:"車種を選択してください。", firstInvalidEl: model}; }
+      if (!exp) { experienceYears.classList.add("is-invalid"); return {ok:false, msg:"経験年数を選択してください。", firstInvalidEl: experienceYears}; }
 
-      if (!fLf) { licenseFront.classList.add("is-invalid"); return {ok:false, msg:"運転免許証（表）を添付してください。"}; }
-      if (!fLb) { licenseBack.classList.add("is-invalid"); return {ok:false, msg:"運転免許証（裏）を添付してください。"}; }
-      if (!fVf) { vehicleFront.classList.add("is-invalid"); return {ok:false, msg:"車両前面写真を添付してください。"}; }
-      if (!fVi) { vehicleInspection.classList.add("is-invalid"); return {ok:false, msg:"車検証を添付してください。"}; }
-      if (!fCo) { compulsoryInsurance.classList.add("is-invalid"); return {ok:false, msg:"自賠責を添付してください。"}; }
-      if (!fVo) { voluntaryInsurance.classList.add("is-invalid"); return {ok:false, msg:"任意保険を添付してください。"}; }
-      if (!fKei) { keiCargoNotification.classList.add("is-invalid"); return {ok:false, msg:"経営届出書（受領印あり）を添付してください。"}; }
+      if (!fLf) { licenseFront.classList.add("is-invalid"); return {ok:false, msg:"運転免許証（表）を添付してください。", firstInvalidEl: licenseFront}; }
+      if (!fLb) { licenseBack.classList.add("is-invalid"); return {ok:false, msg:"運転免許証（裏）を添付してください。", firstInvalidEl: licenseBack}; }
+      if (!fVf) { vehicleFront.classList.add("is-invalid"); return {ok:false, msg:"車両前面写真を添付してください。", firstInvalidEl: vehicleFront}; }
+      if (!fVi) { vehicleInspection.classList.add("is-invalid"); return {ok:false, msg:"車検証を添付してください。", firstInvalidEl: vehicleInspection}; }
+      if (!fCo) { compulsoryInsurance.classList.add("is-invalid"); return {ok:false, msg:"自賠責を添付してください。", firstInvalidEl: compulsoryInsurance}; }
+      if (!fVo) { voluntaryInsurance.classList.add("is-invalid"); return {ok:false, msg:"任意保険を添付してください。", firstInvalidEl: voluntaryInsurance}; }
+      if (!fKei) { keiCargoNotification.classList.add("is-invalid"); return {ok:false, msg:"経営届出書（受領印あり）を添付してください。", firstInvalidEl: keiCargoNotification}; }
 
       if (bankKind === "bank") {
-        if (!bName) { if (bankName) bankName.classList.add("is-invalid"); return {ok:false, msg:"銀行名を入力してください。"}; }
-        if (!bBranch) { if (branchName) branchName.classList.add("is-invalid"); return {ok:false, msg:"支店名を入力してください。"}; }
-        if (bType !== "普通" && bType !== "当座" && bType !== "その他") { if (accountType) accountType.classList.add("is-invalid"); return {ok:false, msg:"口座種別は「普通」「当座」「その他」のいずれかを選択してください。"}; }
-        if (bNum.length < 6 || bNum.length > 7) { if (accountNumber) accountNumber.classList.add("is-invalid"); return {ok:false, msg:"口座番号は6〜7桁で入力してください。"}; }
-        if (!bKana) { if (accountHolderKana) accountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。"}; }
+        if (!bName) { if (bankName) bankName.classList.add("is-invalid"); return {ok:false, msg:"銀行名を入力してください。", firstInvalidEl: bankName}; }
+        if (!bBranch) { if (branchName) branchName.classList.add("is-invalid"); return {ok:false, msg:"支店名を入力してください。", firstInvalidEl: branchName}; }
+        if (bType !== "普通" && bType !== "当座" && bType !== "その他") { if (accountType) accountType.classList.add("is-invalid"); return {ok:false, msg:"口座種別は「普通」「当座」「その他」のいずれかを選択してください。", firstInvalidEl: accountType}; }
+        if (bNum.length < 6 || bNum.length > 7) { if (accountNumber) accountNumber.classList.add("is-invalid"); return {ok:false, msg:"口座番号は6〜7桁で入力してください。", firstInvalidEl: accountNumber}; }
+        if (!bKana) { if (accountHolderKana) accountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。", firstInvalidEl: accountHolderKana}; }
         if (!isBankManual && (!bCode || !brCode)) {
           if (!bCode && bankName) bankName.classList.add("is-invalid");
           if (!brCode && (branchName || branchCodeInput)) { if (branchName) branchName.classList.add("is-invalid"); if (branchCodeInput) branchCodeInput.classList.add("is-invalid"); }
-          return {ok:false, msg:"銀行・支店を一覧から選択するか、店番3桁で支店を確定してください。"};
+          firstInvalidEl = bankName || branchName || branchCodeInput;
+          return {ok:false, msg:"銀行・支店を一覧から選択するか、店番3桁で支店を確定してください。", firstInvalidEl: firstInvalidEl};
         }
       } else {
-        if (!yStore) { if (yuchoStoreName) yuchoStoreName.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの店名を入力してください。"}; }
-        if (yCode.length !== 3) { if (yuchoStoreCode) yuchoStoreCode.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの店番は3桁で入力してください。"}; }
-        if (yNum.length !== 7) { if (yuchoAccountNumber) yuchoAccountNumber.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの口座番号は7桁で入力してください。"}; }
-        if (!yKana) { if (yuchoAccountHolderKana) yuchoAccountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。"}; }
+        if (!yStore) { if (yuchoStoreName) yuchoStoreName.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの店名を入力してください。", firstInvalidEl: yuchoStoreName}; }
+        if (yCode.length !== 3) { if (yuchoStoreCode) yuchoStoreCode.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの店番は3桁で入力してください。", firstInvalidEl: yuchoStoreCode}; }
+        if (yNum.length !== 7) { if (yuchoAccountNumber) yuchoAccountNumber.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの口座番号は7桁で入力してください。", firstInvalidEl: yuchoAccountNumber}; }
+        if (!yKana) { if (yuchoAccountHolderKana) yuchoAccountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。", firstInvalidEl: yuchoAccountHolderKana}; }
       }
 
-      if (!checkSize(fLf, licenseFront)) return {ok:false};
-      if (!checkSize(fLb, licenseBack)) return {ok:false};
-      if (!checkSize(fVf, vehicleFront)) return {ok:false};
-      if (!checkSize(fVi, vehicleInspection)) return {ok:false};
-      if (!checkSize(fCo, compulsoryInsurance)) return {ok:false};
-      if (!checkSize(fVo, voluntaryInsurance)) return {ok:false};
-      if (!checkSize(fKei, keiCargoNotification)) return {ok:false};
-      if (fCi && !checkSize(fCi, cargoInsurance)) return {ok:false};
+      if (!checkSize(fLf, licenseFront)) return {ok:false, firstInvalidEl: licenseFront};
+      if (!checkSize(fLb, licenseBack)) return {ok:false, firstInvalidEl: licenseBack};
+      if (!checkSize(fVf, vehicleFront)) return {ok:false, firstInvalidEl: vehicleFront};
+      if (!checkSize(fVi, vehicleInspection)) return {ok:false, firstInvalidEl: vehicleInspection};
+      if (!checkSize(fCo, compulsoryInsurance)) return {ok:false, firstInvalidEl: compulsoryInsurance};
+      if (!checkSize(fVo, voluntaryInsurance)) return {ok:false, firstInvalidEl: voluntaryInsurance};
+      if (!checkSize(fKei, keiCargoNotification)) return {ok:false, firstInvalidEl: keiCargoNotification};
+      if (fCi && !checkSize(fCi, cargoInsurance)) return {ok:false, firstInvalidEl: cargoInsurance};
 
-      if (!nick) { nickname.classList.add("is-invalid"); return {ok:false, msg:"ニックネーム（公開）を入力してください。"}; }
-      if (!pubPref) { publicPrefecture.classList.add("is-invalid"); return {ok:false, msg:"公開用の都道府県を選択してください。"}; }
-      if (!pubCity) { (publicCityManualMode && publicCityManual ? publicCityManual : publicCity).classList.add("is-invalid"); return {ok:false, msg:"公開用の市区町村を入力してください。"}; }
-      if (!pubMaker) { publicMaker.classList.add("is-invalid"); return {ok:false, msg:"公開用のメーカーを選択してください。"}; }
-      if (!pubModel) { publicModel.classList.add("is-invalid"); return {ok:false, msg:"公開用の車種を選択してください。"}; }
-      if (!pubAppeal) { publicAppeal.classList.add("is-invalid"); return {ok:false, msg:"アピールポイント（公開）を入力してください。"}; }
+      if (!nick) { nickname.classList.add("is-invalid"); return {ok:false, msg:"ニックネーム（公開）を入力してください。", firstInvalidEl: nickname}; }
+      if (!pubPref) { publicPrefecture.classList.add("is-invalid"); return {ok:false, msg:"公開用の都道府県を選択してください。", firstInvalidEl: publicPrefecture}; }
+      if (!pubCity) { (publicCityManualMode && publicCityManual ? publicCityManual : publicCity).classList.add("is-invalid"); return {ok:false, msg:"公開用の市区町村を入力してください。", firstInvalidEl: (publicCityManualMode && publicCityManual) ? publicCityManual : publicCity}; }
+      if (!pubMaker) { publicMaker.classList.add("is-invalid"); return {ok:false, msg:"公開用のメーカーを選択してください。", firstInvalidEl: publicMaker}; }
+      if (!pubModel) { publicModel.classList.add("is-invalid"); return {ok:false, msg:"公開用の車種を選択してください。", firstInvalidEl: publicModel}; }
+      if (!pubAppeal) { publicAppeal.classList.add("is-invalid"); return {ok:false, msg:"アピールポイント（公開）を入力してください。", firstInvalidEl: publicAppeal}; }
 
-      if (!agree.checked) { agree.classList.add("is-invalid"); return {ok:false, msg:"同意にチェックしてください。"}; }
+      if (!agree.checked) {
+        agree.classList.add("is-invalid");
+        if (agreeLabelEl) agreeLabelEl.classList.add("is-invalid");
+        if (agreeErrorTextEl) { agreeErrorTextEl.textContent = "同意にチェックを入れてください。"; agreeErrorTextEl.style.display = ""; }
+        return {ok:false, msg:"同意にチェックを入れてください。", firstInvalidEl: agree};
+      }
 
       if (!ENDPOINT || ENDPOINT === "あとで貼る") {
-        return { ok:false, msg:"送信先（GAS_ENDPOINT）が未設定です（config.js を確認してください）。"};
+        return { ok:false, msg:"送信先（GAS_ENDPOINT）が未設定です（config.js を確認してください）。", firstInvalidEl: null};
       }
 
       var addressFull = pref + c + al;
@@ -986,7 +1000,14 @@
       e.preventDefault();
 
       const v = validate();
-      if (!v.ok) { if (v.msg) setError(v.msg, ""); return; }
+      if (!v.ok) {
+        if (v.msg) setError(v.msg, "");
+        if (v.firstInvalidEl) {
+          if (v.firstInvalidEl.scrollIntoView) v.firstInvalidEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          try { if (v.firstInvalidEl.focus) v.firstInvalidEl.focus({ preventScroll: false }); } catch (err) {}
+        }
+        return;
+      }
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = "<span class=\"inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2\"></span>送信中…";
