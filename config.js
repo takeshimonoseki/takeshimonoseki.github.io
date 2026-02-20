@@ -10,11 +10,11 @@ window.CONFIG = {
 
   EMAIL_TO: "takeshimonoseki@gmail.com",
 
-  // GAS WebアプリURL（現状値）
-  GAS_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwzSFlI7k_eUkHzCyMY8isEyhOCSMrdAovFM2g7XGFZAfA9_3LS2J7F-HNIb5RtCkrAqg/exec",
+  // ✅ GAS WebアプリURL（確定：O＝英大文字）
+  GAS_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwWQsnvGNke38i4luvYZM1SHmhScl7EEPLQli0-8ozVjQHfzeBJbyArcviVq02-ZOLWgQ/exec",
 
-  // ✅ 送信先エンドポイント（重複なし）
-  GAS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwG3AtO8oAIn72V0NVJ42dNtjT3XOiUkVp6en0hxtnwaUs_pWqeuNLCY0q54Wb4FQnmwA/exec",
+  // ✅ 送信先エンドポイント（ここだけ見て送信してるので同じにする）
+  GAS_ENDPOINT: "https://script.google.com/macros/s/AKfycbwWQsnvGNke38i4luvYZM1SHmhScl7EEPLQli0-8ozVjQHfzeBJbyArcviVq02-ZOLWgQ/exec",
 
   MAX_FILE_MB: 5
 };
