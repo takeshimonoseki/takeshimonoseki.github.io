@@ -217,7 +217,7 @@
                 <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-500/10 text-red-400">必須</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <input type="text" id="zip" class="field-input sm:col-span-1" inputmode="numeric" placeholder="郵便番号（例：750-0000）" />
+                <input type="text" id="zip" class="field-input sm:col-span-1" inputmode="numeric" placeholder="郵便番号（7桁・ハイフンなし）" maxlength="7" pattern="[0-9]*" />
                 <input type="text" id="pref" class="field-input sm:col-span-1" placeholder="都道府県（例：山口県）" />
                 <input type="text" id="addrCity" class="field-input sm:col-span-1" placeholder="市区町村（例：下関市）" />
               </div>
@@ -632,6 +632,12 @@
     });
     publicCityOtherEl.addEventListener("input", function(){ updateSubmitHint(); if (hasTriedSubmit) validateAndPaint_(); });
 
+    if (zipEl) zipEl.addEventListener("input", function() {
+      this.value = (this.value || "").replace(/\D/g, "").slice(0, 7);
+      updateSubmitHint();
+      if (hasTriedSubmit) validateAndPaint_();
+    });
+
     // メーカー→車種（軽のみ・本登録と同じ連動）
     if (vehicleMakerEl && vehicleModelEl && window.VehicleLinkage && window.VehicleLinkage.updateLightVehicleSelect) {
       window.VehicleLinkage.updateLightVehicleSelect(vehicleMakerEl, vehicleModelEl);
@@ -703,13 +709,14 @@
       var firstName = (firstNameEl.value || "").trim();
       if (!firstName) { errors.push("名前を入力してください。"); if (paintUI) { addFieldError_(firstNameEl, "必須です"); setFirst(firstNameEl); } }
 
-      var zip = (zipEl.value || "").trim();
+      var zip = (zipEl.value || "").replace(/\D/g, "").trim();
       var pref = (prefEl.value || "").trim();
       var addrCity = (addrCityEl.value || "").trim();
       var addrLine1 = (addrLine1El.value || "").trim();
       var addrLine2 = (addrLine2El.value || "").trim();
 
       if (!zip) { errors.push("郵便番号を入力してください。"); if (paintUI) { addFieldError_(zipEl, "必須です"); setFirst(zipEl); } }
+      else if (zip.length !== 7) { errors.push("郵便番号を7桁で入力してください。"); if (paintUI) { addFieldError_(zipEl, "7桁で入力"); setFirst(zipEl); } }
       if (!pref) { errors.push("都道府県を入力してください。"); if (paintUI) { addFieldError_(prefEl, "必須です"); setFirst(prefEl); } }
       if (!addrCity) { errors.push("市区町村を入力してください。"); if (paintUI) { addFieldError_(addrCityEl, "必須です"); setFirst(addrCityEl); } }
       if (!addrLine1) { errors.push("番地・町名を入力してください。"); if (paintUI) { addFieldError_(addrLine1El, "必須です"); setFirst(addrLine1El); } }

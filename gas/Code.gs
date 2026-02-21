@@ -320,6 +320,7 @@ function handleDriverFiles(body, debugId) {
 }
 
 var FULL_SHEET_URL_HEADERS = ["driveFolderUrl", "licenseFrontUrl", "licenseBackUrl", "vehicleFrontUrl", "vehicleInspectionUrl", "compulsoryInsuranceUrl", "voluntaryInsuranceUrl", "keiCargoNotificationUrl", "bankAccountProofUrl", "cargoInsuranceUrl"];
+var FULL_SHEET_COL_BANK = 24; // 振込口座（入力）は24列目に保存（既存シートと互換）
 
 function ensureFullSheetUrlColumns(sheet) {
   if (!sheet) return;
@@ -328,7 +329,26 @@ function ensureFullSheetUrlColumns(sheet) {
     if (header14 === "" || header14 == null) {
       sheet.getRange(1, 14, 1, 23).setValues([FULL_SHEET_URL_HEADERS]);
     }
+    var headerBank = sheet.getRange(1, FULL_SHEET_COL_BANK).getValue();
+    if (headerBank === "" || headerBank == null) {
+      sheet.getRange(1, FULL_SHEET_COL_BANK).setValue("bankAccount");
+    }
   } catch (e) {}
+}
+
+function formatBankAccountForSheet(bankAccount) {
+  if (!bankAccount || typeof bankAccount !== "object") return "";
+  try {
+    if (bankAccount.yucho && typeof bankAccount.yucho === "object") {
+      var y = bankAccount.yucho;
+      return "ゆうちょ " + (y.storeName || "") + " " + (y.storeCode || "") + " " + (y.accountNumber || "") + " " + (y.accountHolderKana || "");
+    }
+    if (bankAccount.bank && typeof bankAccount.bank === "object") {
+      var b = bankAccount.bank;
+      return (b.bankName || "") + " " + (b.branchName || "") + " " + (b.accountType || "") + " " + (b.accountNumber || "") + " " + (b.accountHolderKana || "");
+    }
+  } catch (e) {}
+  return JSON.stringify(bankAccount);
 }
 
 var FULL_REGISTER_FILE_KEYS = ["licenseFront", "licenseBack", "vehicleFront", "vehicleInspection", "compulsoryInsurance", "voluntaryInsurance", "keiCargoNotification", "bankAccountProof", "cargoInsurance"];
@@ -435,6 +455,11 @@ function handleDriverFullRegister(body, debugId, ss) {
       sheet.getRange(lastRow, 12).setValue(linePushed);
       sheet.getRange(lastRow, 13).setValue(lineError);
       sheet.getRange(lastRow, 14).setValue(driveFolderUrl);
+      var bankAccount = (data.bankAccount && typeof data.bankAccount === "object") ? data.bankAccount : null;
+      if (bankAccount) {
+        var bankStr = formatBankAccountForSheet(bankAccount);
+        if (bankStr.length > 0) sheet.getRange(lastRow, FULL_SHEET_COL_BANK).setValue(bankStr.slice(0, 500));
+      }
     } catch (updateErr) {
       Logger.log("[%s] SHEET update URLs error %s", debugId, updateErr.toString());
     }

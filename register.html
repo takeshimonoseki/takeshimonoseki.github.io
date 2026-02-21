@@ -718,6 +718,12 @@
           addFieldError_(contactLineNameEl, "どちらか必須です");
           setFirst(contactEmailEl);
         }
+      } else if (contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+        errors.push("メールアドレスを正しく入力してください。");
+        if (paintUI) {
+          addFieldError_(contactEmailEl, "@とドメインを含めて入力");
+          setFirst(contactEmailEl);
+        }
       }
 
       if (!agreeTermsEl.checked) {

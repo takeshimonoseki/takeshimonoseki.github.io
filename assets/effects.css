@@ -64,8 +64,9 @@ body::after{
   100%{ transform: translate3d(2%,-2%,0) scale(1.03); }
 }
 
+/* 初回表示時のフラッシュ防止：opacity は 1 のまま、blur のみで入場 */
 @keyframes pageEnter{
-  from{ opacity: 0; filter: blur(var(--page-blur)); }
+  from{ opacity: 1; filter: blur(var(--page-blur)); }
   to  { opacity: 1; filter: blur(0px); }
 }
 html.is-enter{

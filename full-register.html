@@ -800,6 +800,10 @@
         return "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン゛゜".charAt(k);
       });
     }
+    function isKanaOnly(str) {
+      if (typeof str !== "string" || !str.length) return false;
+      return /^[\u30A1-\u30F6\u30FC\u30FB\u0020\u00A0]+$/.test(str);
+    }
 
     function makeReceiptId() {
       const ts = Date.now().toString(36);
@@ -918,6 +922,10 @@
         if (bType !== "普通" && bType !== "当座" && bType !== "その他") { if (accountType) accountType.classList.add("is-invalid"); return {ok:false, msg:"口座種別は「普通」「当座」「その他」のいずれかを選択してください。", firstInvalidEl: accountType}; }
         if (bNum.length < 6 || bNum.length > 7) { if (accountNumber) accountNumber.classList.add("is-invalid"); return {ok:false, msg:"口座番号は6〜7桁で入力してください。", firstInvalidEl: accountNumber}; }
         if (!bKana) { if (accountHolderKana) accountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。", firstInvalidEl: accountHolderKana}; }
+<<<<<<< HEAD
+=======
+        if (!isKanaOnly(bKana)) { if (accountHolderKana) accountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義はカタカナで入力してください。", firstInvalidEl: accountHolderKana}; }
+>>>>>>> 035fb9c (Enhance registration forms with improved error handling and user feedback)
         if (!isBankManual && (!bCode || !brCode)) {
           if (!bCode && bankName) bankName.classList.add("is-invalid");
           if (!brCode && (branchName || branchCodeInput)) { if (branchName) branchName.classList.add("is-invalid"); if (branchCodeInput) branchCodeInput.classList.add("is-invalid"); }
@@ -929,6 +937,10 @@
         if (yCode.length !== 3) { if (yuchoStoreCode) yuchoStoreCode.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの店番は3桁で入力してください。", firstInvalidEl: yuchoStoreCode}; }
         if (yNum.length !== 7) { if (yuchoAccountNumber) yuchoAccountNumber.classList.add("is-invalid"); return {ok:false, msg:"ゆうちょの口座番号は7桁で入力してください。", firstInvalidEl: yuchoAccountNumber}; }
         if (!yKana) { if (yuchoAccountHolderKana) yuchoAccountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義（カナ）を入力してください。", firstInvalidEl: yuchoAccountHolderKana}; }
+<<<<<<< HEAD
+=======
+        if (!isKanaOnly(yKana)) { if (yuchoAccountHolderKana) yuchoAccountHolderKana.classList.add("is-invalid"); return {ok:false, msg:"口座名義はカタカナで入力してください。", firstInvalidEl: yuchoAccountHolderKana}; }
+>>>>>>> 035fb9c (Enhance registration forms with improved error handling and user feedback)
       }
 
       if (!checkSize(fLf, licenseFront)) return {ok:false, firstInvalidEl: licenseFront};
