@@ -29,7 +29,7 @@ type ViewState = 'top' | 'customer' | 'driver' | 'simulator' | 'consult-delivery
 const PROFILE_IMAGE_URL = `${import.meta.env.BASE_URL}images/profile.jpg`;
 const HERO_BG_URL = `${import.meta.env.BASE_URL}images/hero-bg.jpg`;
 const VAN_IMAGE_URL = `${import.meta.env.BASE_URL}images/van.jpg`;
-const LINE_QR_URL = `${import.meta.env.BASE_URL}images/line-qr.png`;
+const LINE_QR_URL = 'https://qr-official.line.me/gs/M_771sxuxl_GW.png';
 
 // --- Data Constants ---
 const KEI_MAKERS = {
