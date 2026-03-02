@@ -26,9 +26,10 @@ import {
 
 type ViewState = 'top' | 'customer' | 'driver' | 'simulator' | 'consult-delivery' | 'register' | 'consult-vehicle' | 'consult-business' | 'consult-vehicle-buy' | 'consult-vehicle-repair' | 'consult-vehicle-inspect' | 'takesan-log';
 
-const PROFILE_IMAGE_URL = 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=400&auto=format&fit=crop'; // ユーザー提供のロゴイメージ
-const HERO_BG_URL = 'https://images.unsplash.com/photo-1490806678282-484c3765e177?q=80&w=1200&auto=format&fit=crop'; // 富士山と軽バンのイメージ
-const VAN_IMAGE_URL = 'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=800&auto=format&fit=crop'; // 白いバンのイメージ
+const PROFILE_IMAGE_URL = `${import.meta.env.BASE_URL}images/profile.jpg`;
+const HERO_BG_URL = `${import.meta.env.BASE_URL}images/hero-bg.jpg`;
+const VAN_IMAGE_URL = `${import.meta.env.BASE_URL}images/van.jpg`;
+const LINE_QR_URL = `${import.meta.env.BASE_URL}images/line-qr.png`;
 
 // --- Data Constants ---
 const KEI_MAKERS = {
@@ -146,7 +147,7 @@ export default function App() {
               
               {/* Header QR Code */}
               <div className="flex items-center gap-2 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm ml-2">
-                <img src="https://qr-official.line.me/gs/M_771sxuxl_GW.png" alt="LINE QR" className="w-10 h-10" />
+                <img src={LINE_QR_URL} alt="LINE QR" className="w-10 h-10" />
                 <div className="flex flex-col">
                   <span className="text-[8px] font-bold text-slate-400 leading-none mb-0.5">LINE公式</span>
                   <a href="https://lin.ee/lTCUeadq" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-[#06C755] hover:underline flex items-center gap-1">
@@ -934,7 +935,7 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                   </ol>
                   
                   <div className="flex justify-center mb-4">
-                    <img src="https://qr-official.line.me/gs/M_771sxuxl_GW.png" alt="LINE QR" className="w-32 h-32 border border-slate-200 rounded-xl" />
+                    <img src={LINE_QR_URL} alt="LINE QR" className="w-32 h-32 border border-slate-200 rounded-xl" />
                   </div>
                   
                   <div className="flex items-center gap-2 mb-4 mt-4">
@@ -2633,7 +2634,7 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
                   </ol>
                   
                   <div className="flex justify-center mb-4">
-                    <img src="https://qr-official.line.me/gs/M_771sxuxl_GW.png" alt="LINE QR" className="w-32 h-32 border border-slate-200 rounded-xl" />
+                    <img src={LINE_QR_URL} alt="LINE QR" className="w-32 h-32 border border-slate-200 rounded-xl" />
                   </div>
                   
                   <div className="flex items-center gap-2 mb-4 mt-4">
