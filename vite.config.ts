@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [react()],
-  base: '/TAKE/', // ← リポジトリ名が TAKE の場合はこれ
+  plugins: [react(), tailwindcss()],
+  base: process.env.VITE_BASE_PATH || '/',
 })

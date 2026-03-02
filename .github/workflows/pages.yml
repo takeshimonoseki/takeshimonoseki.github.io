@@ -29,8 +29,18 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Download images
+        run: |
+          mkdir -p public/images
+          curl -fL -o public/images/profile.jpg "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=400&auto=format&fit=crop"
+          curl -fL -o public/images/hero-bg.jpg "https://images.unsplash.com/photo-1490806678282-484c3765e177?q=80&w=1200&auto=format&fit=crop"
+          curl -fL -o public/images/van.jpg "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=800&auto=format&fit=crop"
+          curl -fL -o public/images/line-qr.png "https://qr-official.line.me/gs/M_771sxuxl_GW.png"
+
       - name: Build
         run: npm run build
+        env:
+          VITE_BASE_PATH: /TAKE/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
