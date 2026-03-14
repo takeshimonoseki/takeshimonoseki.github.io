@@ -8,7 +8,7 @@
  * Code.gs のヘッダー定義と一致させること
  */
 
-var SHEET_ID_FALLBACK = '1mEPSJsN0Pt1GULgLIBqQXyUQg-L7a4QCvSLMvADejN8';
+var SPREADSHEET_ID_FALLBACK = '1mEPSJsN0Pt1GULgLIBqQXyUQg-L7a4QCvSLMvADejN8';
 
 var REQUESTS_HEADERS = [
   '受付日時',
@@ -50,8 +50,8 @@ var DRIVERS_HEADERS = [
   '経験年数',
   '稼働エリア',
   'メモ',
-  '免許証（表）提出',
-  '免許証（裏）提出',
+  '免許証表提出',
+  '免許証裏提出',
   '車検証提出',
   '任意保険提出',
   '経営届出書提出',
@@ -67,7 +67,6 @@ var DRIVERS_HEADERS = [
 ];
 
 var LOGS_HEADERS = ['日時', 'レベル', '処理', '受付番号', 'メッセージ', '詳細JSON'];
-
 var CONFIG_HEADERS = ['キー', '値'];
 
 var KEEP_SHEET_NAMES = ['配送依頼', 'ドライバー登録', 'ログ', '設定'];
@@ -80,19 +79,20 @@ function onOpen() {
     .addToUi();
 }
 
-/**
- * 環境を強制リセット
- * 1. シート名を日本語へ強制統一（Script Properties）
- * 2. 4シート以外を削除
- * 3. ヘッダーを最新仕様へ強制再設定
- * 4. 設定シートへ状態を書き込む
- * 5. ログへ完了記録を書く
- */
+function writeHeader_(sheet, headers) {
+  if (sheet.getMaxColumns() < headers.length) {
+    sheet.insertColumnsAfter(sheet.getMaxColumns(), headers.length - sheet.getMaxColumns());
+  }
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+  sheet.setFrozenRows(1);
+}
+
 function forceResetTakeEnvironment() {
   var props = PropertiesService.getScriptProperties();
 
   if (!props.getProperty('SPREADSHEET_ID')) {
-    var sid = props.getProperty('SHEET_ID') || props.getProperty('スプレッドシートID') || SHEET_ID_FALLBACK;
+    var sid = props.getProperty('SHEET_ID') || props.getProperty('スプレッドシートID') || SPREADSHEET_ID_FALLBACK;
     props.setProperty('SPREADSHEET_ID', sid);
   }
 
@@ -105,32 +105,24 @@ function forceResetTakeEnvironment() {
   props.setProperty('LOGS_SHEET_NAME', 'ログ');
   props.setProperty('CONFIG_SHEET_NAME', '設定');
 
-  var ssId = props.getProperty('SPREADSHEET_ID') || SHEET_ID_FALLBACK;
+  var ssId = props.getProperty('SPREADSHEET_ID') || SPREADSHEET_ID_FALLBACK;
   var ss = SpreadsheetApp.openById(ssId);
 
   var shRequests = ss.getSheetByName('配送依頼');
   if (!shRequests) shRequests = ss.insertSheet('配送依頼');
-  shRequests.getRange(1, 1, 1, REQUESTS_HEADERS.length).setValues([REQUESTS_HEADERS]);
-  shRequests.getRange(1, 1, 1, REQUESTS_HEADERS.length).setFontWeight('bold');
-  shRequests.setFrozenRows(1);
+  writeHeader_(shRequests, REQUESTS_HEADERS);
 
   var shDrivers = ss.getSheetByName('ドライバー登録');
   if (!shDrivers) shDrivers = ss.insertSheet('ドライバー登録');
-  shDrivers.getRange(1, 1, 1, DRIVERS_HEADERS.length).setValues([DRIVERS_HEADERS]);
-  shDrivers.getRange(1, 1, 1, DRIVERS_HEADERS.length).setFontWeight('bold');
-  shDrivers.setFrozenRows(1);
+  writeHeader_(shDrivers, DRIVERS_HEADERS);
 
   var shLogs = ss.getSheetByName('ログ');
   if (!shLogs) shLogs = ss.insertSheet('ログ');
-  shLogs.getRange(1, 1, 1, LOGS_HEADERS.length).setValues([LOGS_HEADERS]);
-  shLogs.getRange(1, 1, 1, LOGS_HEADERS.length).setFontWeight('bold');
-  shLogs.setFrozenRows(1);
+  writeHeader_(shLogs, LOGS_HEADERS);
 
   var shConfig = ss.getSheetByName('設定');
   if (!shConfig) shConfig = ss.insertSheet('設定');
-  shConfig.getRange(1, 1, 1, CONFIG_HEADERS.length).setValues([CONFIG_HEADERS]);
-  shConfig.getRange(1, 1, 1, CONFIG_HEADERS.length).setFontWeight('bold');
-  shConfig.setFrozenRows(1);
+  writeHeader_(shConfig, CONFIG_HEADERS);
 
   var configRows = [
     ['SPREADSHEET_ID', ssId],
@@ -145,8 +137,12 @@ function forceResetTakeEnvironment() {
     ['DRIVE_FOLDER_ID', props.getProperty('DRIVE_FOLDER_ID') ? '設定済み' : '未設定'],
     ['SPREADSHEET_URL', 'https://docs.google.com/spreadsheets/d/' + ssId + '/edit']
   ];
-  shConfig.getRange(2, 1, configRows.length + 1, 2).clearContent();
-  shConfig.getRange(2, 1, configRows.length + 1, 2).setValues(configRows);
+
+  var configDataRows = Math.max(shConfig.getLastRow() - 1, 0);
+  if (configDataRows > 0) {
+    shConfig.getRange(2, 1, configDataRows, 2).clearContent();
+  }
+  shConfig.getRange(2, 1, configRows.length, 2).setValues(configRows);
 
   var allSheets = ss.getSheets();
   for (var i = allSheets.length - 1; i >= 0; i--) {
@@ -176,7 +172,7 @@ function forceResetTakeEnvironment() {
 
 function showSpreadsheetUrl() {
   var props = PropertiesService.getScriptProperties();
-  var ssId = props.getProperty('SPREADSHEET_ID') || props.getProperty('SHEET_ID') || SHEET_ID_FALLBACK;
+  var ssId = props.getProperty('SPREADSHEET_ID') || props.getProperty('SHEET_ID') || SPREADSHEET_ID_FALLBACK;
   var url = 'https://docs.google.com/spreadsheets/d/' + ssId + '/edit';
   try {
     SpreadsheetApp.getUi().alert('スプレッドシートURL\n\n' + url);

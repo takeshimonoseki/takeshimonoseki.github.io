@@ -78,8 +78,8 @@ var DRIVERS_HEADERS = [
   '経験年数',
   '稼働エリア',
   'メモ',
-  '免許証（表）提出',
-  '免許証（裏）提出',
+  '免許証表提出',
+  '免許証裏提出',
   '車検証提出',
   '任意保険提出',
   '経営届出書提出',
@@ -95,10 +95,11 @@ var DRIVERS_HEADERS = [
 ];
 
 var LOGS_HEADERS = ['日時', 'レベル', '処理', '受付番号', 'メッセージ', '詳細JSON'];
-
 var CONFIG_HEADERS = ['キー', '値'];
 
-var SHEET_ID_FALLBACK = '1mEPSJsN0Pt1GULgLIBqQXyUQg-L7a4QCvSLMvADejN8';
+var SPREADSHEET_ID_FALLBACK = '1mEPSJsN0Pt1GULgLIBqQXyUQg-L7a4QCvSLMvADejN8';
+var DRIVE_FOLDER_ID_FALLBACK = '1jJeND1RbxHS0rcCUJC116um2VL-UXAiC';
+var ADMIN_EMAIL_FALLBACK = 'takeshimonoseki@gmail.com';
 
 function getSpreadsheetId_() {
   var props = PropertiesService.getScriptProperties();
@@ -106,7 +107,7 @@ function getSpreadsheetId_() {
     props.getProperty('SPREADSHEET_ID') ||
     props.getProperty('SHEET_ID') ||
     props.getProperty('スプレッドシートID') ||
-    SHEET_ID_FALLBACK
+    SPREADSHEET_ID_FALLBACK
   );
 }
 
@@ -131,7 +132,7 @@ function getConfigSheetName_() {
 }
 
 function getAdminEmail_() {
-  return PropertiesService.getScriptProperties().getProperty('ADMIN_EMAIL') || '';
+  return PropertiesService.getScriptProperties().getProperty('ADMIN_EMAIL') || ADMIN_EMAIL_FALLBACK;
 }
 
 function getLineToken_() {
@@ -154,7 +155,7 @@ function getLineToId_() {
 }
 
 function getDriveFolderId_() {
-  return PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID') || '';
+  return PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID') || DRIVE_FOLDER_ID_FALLBACK;
 }
 
 function getSpreadsheet_() {
@@ -199,19 +200,29 @@ function ensureSheet_(ss, sheetName, headers) {
     sh = ss.insertSheet(sheetName);
   }
 
-  if (sh.getLastRow() === 0) {
-    sh.getRange(1, 1, 1, headers.length).setValues([headers]);
-    sh.getRange(1, 1, 1, headers.length).setFontWeight('bold');
-    sh.setFrozenRows(1);
-    sh.autoResizeColumns(1, headers.length);
-    return sh;
+  if (sh.getMaxColumns() < headers.length) {
+    sh.insertColumnsAfter(sh.getMaxColumns(), headers.length - sh.getMaxColumns());
   }
 
-  if (sh.getLastRow() === 1) {
+  var currentHeaders = [];
+  if (sh.getLastRow() >= 1) {
+    currentHeaders = sh.getRange(1, 1, 1, headers.length).getValues()[0];
+  }
+
+  var needRewrite = sh.getLastRow() === 0;
+  if (!needRewrite) {
+    for (var i = 0; i < headers.length; i++) {
+      if (String(currentHeaders[i] || '') !== String(headers[i])) {
+        needRewrite = true;
+        break;
+      }
+    }
+  }
+
+  if (needRewrite) {
     sh.getRange(1, 1, 1, headers.length).setValues([headers]);
     sh.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sh.setFrozenRows(1);
-    sh.autoResizeColumns(1, headers.length);
   }
 
   return sh;
@@ -261,10 +272,39 @@ function buildSheetRowUrl_(sheet, rowNumber) {
 }
 
 function parseRequestBody_(e) {
-  if (!e || !e.postData || !e.postData.contents) {
-    throw new Error('POSTデータがありません。doPost を手動実行しないでください。');
+  if (e && e.postData && e.postData.contents) {
+    var raw = e.postData.contents;
+    try {
+      return JSON.parse(raw);
+    } catch (err) {
+      // JSONでなければ後段へ
+    }
   }
-  return JSON.parse(e.postData.contents);
+
+  if (e && e.parameter) {
+    if (e.parameter.payload) {
+      return JSON.parse(e.parameter.payload);
+    }
+
+    var obj = {};
+    for (var key in e.parameter) {
+      if (e.parameter.hasOwnProperty(key)) {
+        obj[key] = e.parameter[key];
+      }
+    }
+    if (Object.keys(obj).length > 0) {
+      return obj;
+    }
+  }
+
+  throw new Error('POSTデータを読み取れませんでした。');
+}
+
+function normalizeType_(body) {
+  var type = safeStr_(body.type, 50).toLowerCase();
+  if (type === 'customer' || type === 'request' || type === 'delivery') return 'customer';
+  if (type === 'driver' || type === 'register') return 'driver';
+  return type;
 }
 
 /**
@@ -274,6 +314,7 @@ function normalizePayloadToCustomerCanonical_(body) {
   var c = body.customer || {};
   var d = body.delivery || {};
   var est = body.estimate || {};
+
   return {
     receiptNo: safeStr_(body.receiptNo, 100) || buildReceiptNo_('T'),
     receptionType: safeStr_(body.receptionType, 100) || '依頼',
@@ -308,6 +349,7 @@ function normalizePayloadToDriverCanonical_(body) {
     var key = DRIVER_DOC_KEYS[i];
     docStatus[key] = files[key] ? '提出済み' : '未提出';
   }
+
   return {
     receiptNo: safeStr_(body.receiptNo, 100) || buildReceiptNo_('D'),
     name: safeStr_(body.name, 200),
@@ -540,8 +582,8 @@ function handleCustomer_(body, debugId, ss) {
   result.receipt_no = canon.receiptNo;
 
   var rawJson = safeJsonString_(body, 50000);
-
   var sheet = ensureSheet_(ss, getRequestsSheetName_(), REQUESTS_HEADERS);
+
   var row = [
     new Date().toISOString(),
     canon.receiptNo,
@@ -587,6 +629,7 @@ function handleCustomer_(body, debugId, ss) {
     mailOk = sendAdminMailForCustomer_(canon, sheetUrl);
   } catch (e1) {
     appendLog_(ss, 'ERROR', 'CUSTOMER_ADMIN_MAIL', canon.receiptNo, String(e1), {});
+    updateCellByHeader_(sheet, rowNumber, 'エラー内容', safeStr_(String(e1), 1000));
   }
 
   try {
@@ -611,10 +654,12 @@ function handleCustomer_(body, debugId, ss) {
     lineOk = sendAdminLine_(lineSummary, sheetUrl);
   } catch (e3) {
     appendLog_(ss, 'ERROR', 'CUSTOMER_LINE', canon.receiptNo, String(e3), {});
+    updateCellByHeader_(sheet, rowNumber, 'エラー内容', safeStr_(String(e3), 1000));
   }
 
   updateCellByHeader_(sheet, rowNumber, '管理者メール送信', mailOk);
   updateCellByHeader_(sheet, rowNumber, 'LINE通知送信', lineOk);
+  updateCellByHeader_(sheet, rowNumber, '受付状態', '受付完了');
 
   result.mail_sent = mailOk;
   result.line_sent = lineOk;
@@ -666,6 +711,7 @@ function handleDriver_(body, debugId, ss) {
     '貨物保険',
     'その他資料'
   ];
+
   for (var i = 0; i < docLabels.length; i++) {
     if (canon.docStatus[docLabels[i]] === '提出済み') {
       submittedList.push(docLabels[i]);
@@ -675,8 +721,8 @@ function handleDriver_(body, debugId, ss) {
   }
 
   var rawJson = safeJsonString_(body, 50000);
-
   var sheet = ensureSheet_(ss, getDriversSheetName_(), DRIVERS_HEADERS);
+
   var row = [
     new Date().toISOString(),
     canon.receiptNo,
@@ -725,6 +771,7 @@ function handleDriver_(body, debugId, ss) {
     );
   } catch (e2) {
     appendLog_(ss, 'ERROR', 'DRIVER_ADMIN_MAIL', canon.receiptNo, String(e2), {});
+    updateCellByHeader_(sheet, rowNumber, 'エラー内容', safeStr_(String(e2), 1000));
   }
 
   try {
@@ -743,21 +790,32 @@ function handleDriver_(body, debugId, ss) {
       'メーカー: ' + canon.maker,
       '車種: ' + canon.model,
       '経験年数: ' + canon.experience,
-      '提出済み: ' + (submittedList.length ? submittedList.slice(0, 5).join(', ') + (submittedList.length > 5 ? '...' : '') : 'なし')
+      '提出済み: ' +
+        (submittedList.length
+          ? submittedList.slice(0, 5).join(', ') + (submittedList.length > 5 ? '...' : '')
+          : 'なし')
     ].join('\n');
 
     lineOk = sendAdminLine_(lineSummary, sheetUrl);
   } catch (e4) {
     appendLog_(ss, 'ERROR', 'DRIVER_LINE', canon.receiptNo, String(e4), {});
+    updateCellByHeader_(sheet, rowNumber, 'エラー内容', safeStr_(String(e4), 1000));
   }
 
   updateCellByHeader_(sheet, rowNumber, '管理者メール送信', mailOk);
   updateCellByHeader_(sheet, rowNumber, 'LINE通知送信', lineOk);
+  updateCellByHeader_(sheet, rowNumber, '受付状態', '受付完了');
 
   result.mail_sent = mailOk;
   result.line_sent = lineOk;
   result.message = '登録完了';
   return result;
+}
+
+function buildJsonResponse_(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
@@ -767,67 +825,56 @@ function doPost(e) {
   try {
     ss = getSpreadsheet_();
   } catch (e0) {
-    return ContentService
-      .createTextOutput(
-        JSON.stringify({
-          result: 'NG',
-          receipt_no: '',
-          saved: false,
-          mail_sent: false,
-          line_sent: false,
-          message: 'スプレッドシートを開けません',
-          debugId: debugId
-        })
-      )
-      .setMimeType(ContentService.MimeType.JSON);
+    return buildJsonResponse_({
+      result: 'NG',
+      receipt_no: '',
+      saved: false,
+      mail_sent: false,
+      line_sent: false,
+      message: 'スプレッドシートを開けません',
+      debugId: debugId
+    });
   }
 
   try {
     var body = parseRequestBody_(e);
-    var type = safeStr_(body.type, 50).toLowerCase();
+    var type = normalizeType_(body);
+
+    appendLog_(ss, 'INFO', 'RECEIVE', safeStr_(body.receiptNo, 100), 'POST受信', {
+      type: type,
+      keys: Object.keys(body || {})
+    });
 
     if (type === 'customer') {
-      return ContentService
-        .createTextOutput(JSON.stringify(handleCustomer_(body, debugId, ss)))
-        .setMimeType(ContentService.MimeType.JSON);
+      return buildJsonResponse_(handleCustomer_(body, debugId, ss));
     }
 
     if (type === 'driver') {
-      return ContentService
-        .createTextOutput(JSON.stringify(handleDriver_(body, debugId, ss)))
-        .setMimeType(ContentService.MimeType.JSON);
+      return buildJsonResponse_(handleDriver_(body, debugId, ss));
     }
 
     appendLog_(ss, 'WARN', 'UNKNOWN_TYPE', safeStr_(body.receiptNo, 100), 'type が不明です', body);
 
-    return ContentService
-      .createTextOutput(
-        JSON.stringify({
-          result: 'NG',
-          receipt_no: safeStr_(body.receiptNo, 100),
-          saved: false,
-          mail_sent: false,
-          line_sent: false,
-          message: 'type が不明です',
-          debugId: debugId
-        })
-      )
-      .setMimeType(ContentService.MimeType.JSON);
+    return buildJsonResponse_({
+      result: 'NG',
+      receipt_no: safeStr_(body.receiptNo, 100),
+      saved: false,
+      mail_sent: false,
+      line_sent: false,
+      message: 'type が不明です',
+      debugId: debugId
+    });
   } catch (e1) {
     appendLog_(ss, 'ERROR', 'DO_POST', '', String(e1), {});
-    return ContentService
-      .createTextOutput(
-        JSON.stringify({
-          result: 'NG',
-          receipt_no: '',
-          saved: false,
-          mail_sent: false,
-          line_sent: false,
-          message: String(e1),
-          debugId: debugId
-        })
-      )
-      .setMimeType(ContentService.MimeType.JSON);
+    return buildJsonResponse_({
+      result: 'NG',
+      receipt_no: '',
+      saved: false,
+      mail_sent: false,
+      line_sent: false,
+      message: String(e1),
+      debugId: debugId
+    });
   }
 }
 
@@ -850,18 +897,12 @@ function doGet(e) {
       driveFolderIdSet: !!getDriveFolderId_()
     };
 
-    return ContentService
-      .createTextOutput(JSON.stringify(out))
-      .setMimeType(ContentService.MimeType.JSON);
+    return buildJsonResponse_(out);
   }
 
-  return ContentService
-    .createTextOutput(
-      JSON.stringify({
-        ok: true,
-        message: '軽貨物TAKE GAS',
-        spreadsheetId: getSpreadsheetId_()
-      })
-    )
-    .setMimeType(ContentService.MimeType.JSON);
+  return buildJsonResponse_({
+    ok: true,
+    message: '軽貨物TAKE GAS',
+    spreadsheetId: getSpreadsheetId_()
+  });
 }
