@@ -14,6 +14,8 @@ import {
   UserPlus,
   Zap
 } from 'lucide-react';
+import heroKanmonTake from './assets/hero-kanmon-take.png';
+import logoTakeCircle from './assets/logo-take-circle.png';
 
 type ViewState =
   | 'top'
@@ -22,14 +24,20 @@ type ViewState =
   | 'simulator'
   | 'consult-delivery-estimate'
   | 'consult-delivery-order'
-  | 'register';
+  | 'register'
+  | 'terms'
+  | 'privacy'
+  | 'notice'
+  | 'driver-notice';
 
 const SITE_NAME = '軽貨物TAKE';
 const LINE_ACCOUNT_NAME = '軽貨物TAKE';
 const LINE_FRIEND_ADD_URL = 'https://line.me/R/ti/p/%40822ashrr';
 const LINE_QR_URL = 'https://qr-official.line.me/gs/M_822ashrr_GW.png';
-const HERO_BG_URL = `${import.meta.env.BASE_URL}images/hero-bg.jpg`;
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwWQsnvGNke38i4luvYZM1SHmhScl7EEPLQli0-8ozVjQHfzeBJbyArcviVq02-ZOLWgQ/exec';
+const HERO_BG_URL = heroKanmonTake;
+const LOGO_IMAGE_URL = logoTakeCircle;
+const GAS_URL =
+  'https://script.google.com/macros/s/AKfycbwWQsnvGNke38i4luvYZM1SHmhScl7EEPLQli0-8ozVjQHfzeBJbyArcviVq02-ZOLWgQ/exec';
 const SIMULATOR_STORAGE_KEY = 'keikamotsu_take_simulator_input_v3';
 const DELIVERY_ESTIMATE_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_estimate_form_v3';
 const DELIVERY_ORDER_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_order_form_v3';
@@ -84,17 +92,21 @@ type DriverRegisterFormData = {
 
 type DriverFiles = Record<string, string>;
 
-/**
- * ドライバー書類定義（正本と完全一致）
- * key=filesキー名, label=フォーム表示名, driveName=Drive保存名
- */
 const DRIVER_DOC_REQUIRED: { key: string; label: string; driveName: string }[] = [
   { key: '免許証（表）', label: '免許証（表）', driveName: '01_免許証_表' },
   { key: '免許証（裏）', label: '免許証（裏）', driveName: '02_免許証_裏' },
   { key: '車検証', label: '車検証', driveName: '03_車検証' },
   { key: '任意保険', label: '任意保険', driveName: '04_任意保険' },
-  { key: '貨物軽自動車運送事業経営届出書', label: '貨物軽自動車運送事業経営届出書', driveName: '05_貨物軽自動車運送事業経営届出書' },
-  { key: '車両前面写真_黒ナンバー入り', label: '車両前面写真（黒ナンバーがはっきり写っているもの）', driveName: '06_車両前面写真_黒ナンバー入り' }
+  {
+    key: '貨物軽自動車運送事業経営届出書',
+    label: '貨物軽自動車運送事業経営届出書',
+    driveName: '05_貨物軽自動車運送事業経営届出書'
+  },
+  {
+    key: '車両前面写真_黒ナンバー入り',
+    label: '車両前面写真（黒ナンバーがはっきり写っているもの）',
+    driveName: '06_車両前面写真_黒ナンバー入り'
+  }
 ];
 const DRIVER_DOC_OPTIONAL: { key: string; label: string; driveName: string }[] = [
   { key: '貨物保険', label: '貨物保険', driveName: '07_貨物保険' },
@@ -113,17 +125,39 @@ const KEI_MAKERS: Record<string, string[]> = {
 };
 
 const COMMON_ROUTES = [
-  { label: '下関 ↔ 門司', dist: '10.0', origin: '山口県下関市', destination: '福岡県北九州市門司区' },
-  { label: '下関 ↔ 小倉', dist: '15.0', origin: '山口県下関市', destination: '福岡県北九州市小倉北区' },
-  { label: '下関 ↔ 福岡市', dist: '75.0', origin: '山口県下関市', destination: '福岡県福岡市' },
-  { label: '下関 ↔ 山口市', dist: '70.0', origin: '山口県下関市', destination: '山口県山口市' }
+  {
+    label: '下関 ↔ 門司',
+    dist: '10.0',
+    origin: '山口県下関市',
+    destination: '福岡県北九州市門司区'
+  },
+  {
+    label: '下関 ↔ 小倉',
+    dist: '15.0',
+    origin: '山口県下関市',
+    destination: '福岡県北九州市小倉北区'
+  },
+  {
+    label: '下関 ↔ 福岡市',
+    dist: '75.0',
+    origin: '山口県下関市',
+    destination: '福岡県福岡市'
+  },
+  {
+    label: '下関 ↔ 山口市',
+    dist: '70.0',
+    origin: '山口県下関市',
+    destination: '山口県山口市'
+  }
 ];
 
 function defaultSimulatorInput(): SimulatorInput {
   const d = new Date();
   d.setMinutes(0, 0, 0);
   d.setHours(d.getHours() + 2);
-  const preferredDate = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const preferredDate = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
 
   return {
     origin: '',
@@ -330,24 +364,28 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f4f7f6] font-sans text-slate-800">
-      <header className="bg-[#f4f7f6] border-b border-slate-200/60 sticky top-0 z-50">
+      <header className="bg-[#f4f7f6]/95 border-b border-slate-200/70 sticky top-0 z-50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <button
               type="button"
-              className="flex items-center gap-4"
+              className="flex items-center gap-3"
               onClick={() => setCurrentView('top')}
             >
-              <div className="flex flex-col items-center justify-center border border-slate-300 rounded-full w-12 h-12 bg-white text-[10px] font-bold text-slate-500 leading-tight">
-                <span>YAMAGUCHI</span>
-                <span>山口県</span>
+              <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-200 bg-white shadow-sm shrink-0">
+                <img
+                  src={LOGO_IMAGE_URL}
+                  alt={`${SITE_NAME} ロゴ`}
+                  className="w-full h-full object-cover"
+                />
               </div>
+
               <div className="flex flex-col text-left">
                 <span className="font-black text-xl tracking-tighter text-slate-800 leading-none">
                   {SITE_NAME}
                 </span>
-                <span className="text-[10px] font-bold text-slate-400 tracking-widest mt-1">
-                  下関市中心
+                <span className="text-[10px] font-bold text-slate-400 tracking-[0.22em] mt-1">
+                  SHIMONOSEKI AREA
                 </span>
               </div>
             </button>
@@ -420,12 +458,46 @@ export default function App() {
           />
         )}
         {currentView === 'register' && <RegisterView setView={setCurrentView} />}
+        {currentView === 'terms' && <TermsView setView={setCurrentView} />}
+        {currentView === 'privacy' && <PrivacyView setView={setCurrentView} />}
+        {currentView === 'notice' && <NoticeView setView={setCurrentView} />}
+        {currentView === 'driver-notice' && <DriverNoticeView setView={setCurrentView} />}
       </main>
 
-      <footer className="text-center py-12 text-xs text-slate-400 space-y-2 mt-20">
+      <footer className="text-center py-12 text-xs text-slate-400 space-y-2 mt-20 border-t border-slate-200">
         <p>{SITE_NAME} | 山口県下関市を中心に</p>
         <p>配送相談・協力ドライバー登録の窓口</p>
         <p>LINEは補助導線、受付完了はフォーム送信が正本です</p>
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-4">
+          <button
+            type="button"
+            onClick={() => setCurrentView('terms')}
+            className="hover:text-slate-600 underline"
+          >
+            利用案内
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentView('privacy')}
+            className="hover:text-slate-600 underline"
+          >
+            プライバシーポリシー
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentView('notice')}
+            className="hover:text-slate-600 underline"
+          >
+            ご利用上の注意
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentView('driver-notice')}
+            className="hover:text-slate-600 underline"
+          >
+            協力ドライバー登録について
+          </button>
+        </div>
       </footer>
     </div>
   );
@@ -433,71 +505,107 @@ export default function App() {
 
 function TopView({ setView }: { setView: (view: ViewState) => void }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-16">
-      <div className="relative overflow-hidden rounded-[3rem] bg-white py-16 px-8 md:px-16 text-center shadow-xl border border-slate-100">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-16"
+    >
+      <div className="relative overflow-hidden rounded-[3rem] min-h-[640px] md:min-h-[720px] shadow-xl border border-slate-100">
         <div className="absolute inset-0">
           <img
             src={HERO_BG_URL}
-            alt="Background"
-            className="w-full h-full object-cover opacity-40"
-            referrerPolicy="no-referrer"
+            alt="関門海峡と軽貨物TAKEのヒーロー画像"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: '78% center' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/70 to-white/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/94 via-white/72 to-white/18" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/10 via-transparent to-white/10" />
         </div>
 
-        <div className="relative z-10 space-y-8">
-          <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-bold border border-emerald-100">
-            <MapPin size={14} /> 山口県下関市を中心に
-          </div>
-
-          <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-            配送の相談も、
-            <br className="md:hidden" />
-            ドライバー登録も。
-          </h1>
-
-          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            下関発の軽貨物ネットワーク。配送のご依頼や協力ドライバー登録を受付中です。
-            <br className="hidden md:block" />
-            登録無料。顔出しなし。条件が合えばご連絡します。
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto text-left">
-            {[
-              { title: '登録無料', desc: '費用はかかりません。' },
-              { title: '顔出しなし', desc: '公開プロフィール一覧はありません。' },
-              { title: '下関市中心', desc: '最初は下関市まわりから始めます。' }
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="bg-white/85 backdrop-blur-sm p-4 rounded-2xl border border-slate-200 shadow-sm"
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <CheckCircle2 size={18} className="text-emerald-500" />
-                  <span className="font-bold text-slate-800 text-sm">{item.title}</span>
-                </div>
-                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+        <div className="relative z-10 flex min-h-[640px] md:min-h-[720px] items-center">
+          <div className="w-full px-6 py-10 md:px-14 md:py-14">
+            <div className="max-w-2xl space-y-7">
+              <div className="inline-flex items-center gap-2 bg-white/85 backdrop-blur-sm text-[#3d7a64] px-4 py-2 rounded-full text-xs font-black border border-white/80 shadow-sm">
+                <MapPin size={14} /> 山口県下関市中心
               </div>
-            ))}
-          </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <button
-              type="button"
-              onClick={() => setView('customer')}
-              className="bg-[#52a285] text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 flex items-center gap-3 group w-full sm:w-auto justify-center"
-            >
-              <Truck size={24} className="group-hover:scale-110 transition-transform" />
-              配送の相談をする
-            </button>
-            <button
-              type="button"
-              onClick={() => setView('driver')}
-              className="bg-slate-800 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-slate-900 transition-all shadow-lg flex items-center gap-3 group w-full sm:w-auto justify-center"
-            >
-              <UserPlus size={24} className="group-hover:scale-110 transition-transform" />
-              協力ドライバー登録
-            </button>
+              <div className="flex items-center gap-3">
+                <div className="w-14 h-14 rounded-full overflow-hidden border border-white/90 bg-white shadow-md shrink-0">
+                  <img
+                    src={LOGO_IMAGE_URL}
+                    alt={`${SITE_NAME} ロゴ`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="text-left">
+                  <p className="text-[11px] font-black tracking-[0.24em] text-slate-500">
+                    SHIMONOSEKI TRANSPORT
+                  </p>
+                  <p className="text-sm font-bold text-slate-700">配送相談・協力ドライバー登録窓口</p>
+                </div>
+              </div>
+
+              <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.08] drop-shadow-sm">
+                <span className="block">下関市中心。</span>
+                <span className="block">配送相談も、</span>
+                <span className="block">ドライバー登録も。</span>
+              </h1>
+
+              <p className="text-base md:text-xl text-slate-700 max-w-xl leading-relaxed font-medium">
+                軽貨物TAKEは、配送相談の受付と協力ドライバー登録の窓口です。
+                <br className="hidden md:block" />
+                登録しても個人は公開せず、案件に応じて運営よりご連絡します。
+              </p>
+
+              <div className="grid sm:grid-cols-3 gap-3 max-w-2xl">
+                {[
+                  {
+                    title: '審査済みドライバー在籍',
+                    desc: '書類確認済み。案件ごとにご案内します。'
+                  },
+                  {
+                    title: '公開名簿なし',
+                    desc: '登録してもサイトで個人を一覧公開しません。'
+                  },
+                  {
+                    title: 'LINEでも補助相談可',
+                    desc: '受付の正本はフォーム送信です。'
+                  }
+                ].map((item) => (
+                  <div
+                    key={item.title}
+                    className="bg-white/78 backdrop-blur-sm p-4 rounded-2xl border border-white/80 shadow-sm"
+                  >
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
+                      <span className="font-bold text-slate-800 text-sm leading-tight">
+                        {item.title}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-start gap-4 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setView('customer')}
+                  className="bg-[#52a285] text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 flex items-center gap-3 group w-full sm:w-auto justify-center"
+                >
+                  <Truck size={24} className="group-hover:scale-110 transition-transform" />
+                  配送の相談をする
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView('driver')}
+                  className="bg-slate-800 text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-slate-900 transition-all shadow-lg flex items-center gap-3 group w-full sm:w-auto justify-center"
+                >
+                  <UserPlus size={24} className="group-hover:scale-110 transition-transform" />
+                  協力ドライバー登録
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -512,7 +620,9 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
             <Truck size={32} />
           </div>
           <h3 className="text-2xl font-bold text-slate-800 mb-4">お客様向け</h3>
-          <p className="text-slate-600 mb-8">配送相談・見積依頼・正式依頼はこちらから。</p>
+          <p className="text-slate-600 mb-8">
+            配送相談・見積依頼・正式依頼はこちらから。
+          </p>
           <div className="bg-[#52a285] text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-[#3d7a64] transition-colors">
             配送の相談をする
           </div>
@@ -527,7 +637,9 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
             <UserPlus size={32} />
           </div>
           <h3 className="text-2xl font-bold text-slate-800 mb-4">ドライバー向け</h3>
-          <p className="text-slate-600 mb-8">協力ドライバー登録はこちらから。</p>
+          <p className="text-slate-600 mb-8">
+            協力ドライバー登録はこちらから。
+          </p>
           <div className="bg-slate-800 text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-slate-900 transition-colors">
             協力ドライバー登録
           </div>
@@ -539,7 +651,11 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
 
 function CustomerTopView({ setView }: { setView: (view: ViewState) => void }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-4xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-6 max-w-4xl mx-auto"
+    >
       <button
         type="button"
         onClick={() => setView('top')}
@@ -571,7 +687,11 @@ function CustomerTopView({ setView }: { setView: (view: ViewState) => void }) {
 
 function DriverTopView({ setView }: { setView: (view: ViewState) => void }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-4xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-6 max-w-4xl mx-auto"
+    >
       <button
         type="button"
         onClick={() => setView('top')}
@@ -593,8 +713,138 @@ function DriverTopView({ setView }: { setView: (view: ViewState) => void }) {
         className="w-full bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-slate-800 text-left transition-all"
       >
         <h3 className="font-bold text-lg mb-2 text-slate-800">協力ドライバー登録フォーム</h3>
-        <p className="text-sm text-slate-500">登録無料。顔出しなし。条件が合えば運営よりご連絡します。</p>
+        <p className="text-sm text-slate-500">
+          登録無料。顔出しなし。審査のうえ条件が合えば運営よりご連絡します。
+        </p>
       </button>
+    </motion.div>
+  );
+}
+
+function TermsView({ setView }: { setView: (view: ViewState) => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-2xl mx-auto space-y-6"
+    >
+      <button
+        type="button"
+        onClick={() => setView('top')}
+        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm"
+      >
+        <ArrowLeft size={16} /> トップに戻る
+      </button>
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+        <h1 className="text-xl font-bold text-slate-800 mb-6">利用案内</h1>
+        <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+          <p>
+            軽貨物TAKEは、配送相談の受付および協力ドライバー登録の受付を行う窓口です。下関市を中心に、お客様のご依頼内容に応じて紹介・調整を行います。
+          </p>
+          <p>
+            配送のご相談はフォームから送信してください。内容確認後、運営よりご連絡します。見積もりは概算です。正式な条件は個別にご案内します。
+          </p>
+          <p>
+            協力ドライバー登録は審査制です。登録いただいても、サイト上に個人情報やプロフィールは公開しません。案件に応じて運営側からご連絡する場合があります。
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function PrivacyView({ setView }: { setView: (view: ViewState) => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-2xl mx-auto space-y-6"
+    >
+      <button
+        type="button"
+        onClick={() => setView('top')}
+        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm"
+      >
+        <ArrowLeft size={16} /> トップに戻る
+      </button>
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+        <h1 className="text-xl font-bold text-slate-800 mb-6">プライバシーポリシー</h1>
+        <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+          <p>
+            ご入力いただいた氏名・住所・電話番号・メールアドレス等は、受付確認およびご連絡の目的で利用します。配送相談の内容は、案件に応じて協力ドライバーへ必要最小限の範囲で共有する場合があります。
+          </p>
+          <p>
+            ドライバー登録でご提出いただいた書類は、審査および業務のため当方で保管します。第三者に無断で提供することはありません。
+          </p>
+          <p>
+            サイトの改善のため、アクセス状況等を参照する場合があります。詳細は運営方針に準じます。
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function NoticeView({ setView }: { setView: (view: ViewState) => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-2xl mx-auto space-y-6"
+    >
+      <button
+        type="button"
+        onClick={() => setView('top')}
+        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm"
+      >
+        <ArrowLeft size={16} /> トップに戻る
+      </button>
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+        <h1 className="text-xl font-bold text-slate-800 mb-6">ご利用上の注意</h1>
+        <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+          <p>
+            軽貨物TAKEは配送相談・紹介・調整の窓口です。ご依頼内容に応じて、運営が自ら対応する場合と、承認済みの協力ドライバーをご紹介する場合があります。実際の条件調整や連絡は個別に行います。
+          </p>
+          <p>
+            運賃計算器の金額は概算です。実際の荷物・距離・作業内容等により変動することがあります。サイトの掲載情報や紹介内容は、時点や状況により変更されることがあります。
+          </p>
+          <p>
+            当サイトが確認している範囲と確認していない範囲を混同しないようご注意ください。不明点はお問い合わせください。
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function DriverNoticeView({ setView }: { setView: (view: ViewState) => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-2xl mx-auto space-y-6"
+    >
+      <button
+        type="button"
+        onClick={() => setView('top')}
+        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm"
+      >
+        <ArrowLeft size={16} /> トップに戻る
+      </button>
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+        <h1 className="text-xl font-bold text-slate-800 mb-6">協力ドライバー登録について</h1>
+        <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+          <p>
+            協力ドライバー登録は審査制です。登録いただいても、ホームページ上に氏名やプロフィールを公開することはありません。案件に応じて運営よりご連絡し、条件等を個別にご案内します。
+          </p>
+          <p>
+            ご提出いただいた書類は審査および業務に利用します。必要に応じて、お客様のご依頼内容を協力ドライバーに必要最小限の範囲で共有する場合があります。実際の配車・条件調整・連絡は運営を通じて行うことがあります。
+          </p>
+          <p>
+            登録内容の変更や登録の取り消しをご希望の場合は、運営までご連絡ください。
+          </p>
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -702,7 +952,11 @@ function SimulatorView({
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-3xl mx-auto space-y-6"
+    >
       <button
         type="button"
         onClick={() => setView('customer')}
@@ -808,7 +1062,9 @@ function SimulatorView({
                 placeholder="例：15"
                 className="w-full p-3 rounded-xl border border-blue-200 focus:border-blue-500 outline-none bg-white font-mono text-lg"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 font-bold">km</div>
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 font-bold">
+                km
+              </div>
             </div>
           </div>
 
@@ -817,7 +1073,9 @@ function SimulatorView({
               <label className="block text-sm font-bold text-slate-800 mb-2">荷物量</label>
               <select
                 value={simulatorInput.cargoSize}
-                onChange={(e) => update({ cargoSize: e.target.value as SimulatorInput['cargoSize'] })}
+                onChange={(e) =>
+                  update({ cargoSize: e.target.value as SimulatorInput['cargoSize'] })
+                }
                 className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
               >
                 <option value="小">小</option>
@@ -952,10 +1210,14 @@ function SimulatorView({
         </div>
 
         <div className="mt-8 bg-slate-900 p-6 rounded-3xl text-center text-white shadow-2xl overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-blue-500"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-blue-500" />
           <p className="text-xs font-bold text-slate-400 mb-2">概算見積額（税込・入力に応じて更新）</p>
-          <div className="text-5xl font-black text-emerald-400 mb-2">¥{fare.toLocaleString()}</div>
-          <p className="text-[10px] text-slate-500">※実際の荷物量や現地状況により変動する場合があります</p>
+          <div className="text-5xl font-black text-emerald-400 mb-2">
+            ¥{fare.toLocaleString()}
+          </div>
+          <p className="text-[10px] text-slate-500">
+            ※実際の荷物量や現地状況により変動する場合があります
+          </p>
         </div>
 
         {!requiredOk && (
@@ -1107,7 +1369,7 @@ function DeliveryRequestView({
     formData.address.trim() &&
     termsAgreed;
 
-  const requestLabel = isEstimate ? '見積依頼' : '正式依頼';
+  const requestLabel = mode === 'estimate' ? '見積依頼' : '正式依頼';
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1205,7 +1467,11 @@ function DeliveryRequestView({
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-3xl mx-auto space-y-6"
+    >
       <button
         type="button"
         onClick={() => setView('simulator')}
@@ -1218,7 +1484,7 @@ function DeliveryRequestView({
         <div className="flex items-center justify-between gap-4 mb-6">
           <div>
             <h2 className="text-2xl font-bold text-slate-800">
-              {isEstimate ? '見積依頼フォーム' : '正式依頼フォーム'}
+              {mode === 'estimate' ? '見積依頼フォーム' : '正式依頼フォーム'}
             </h2>
             <p className="text-sm text-slate-500 mt-1">
               フォーム送信が正本です。LINEは補助です。
@@ -1240,12 +1506,17 @@ function DeliveryRequestView({
             <SummaryItem label="距離" value={`${simulatorInput.distance}km`} />
             <SummaryItem label="配送スピード" value={simulatorInput.speedType} />
             <SummaryItem label="荷物量" value={simulatorInput.cargoSize} />
-            <SummaryItem label="希望日時" value={simulatorInput.preferredDate.replace('T', ' ')} />
+            <SummaryItem
+              label="希望日時"
+              value={simulatorInput.preferredDate.replace('T', ' ')}
+            />
           </div>
 
           <div>
             <p className="text-xs font-bold text-slate-400 mb-1">荷物内容</p>
-            <p className="text-sm text-slate-700 whitespace-pre-wrap">{simulatorInput.cargoDetail}</p>
+            <p className="text-sm text-slate-700 whitespace-pre-wrap">
+              {simulatorInput.cargoDetail}
+            </p>
           </div>
 
           <div>
@@ -1318,20 +1589,26 @@ function DeliveryRequestView({
                 checked={termsAgreed}
                 onChange={(e) => setTermsAgreed(e.target.checked)}
                 className={`mt-0.5 w-5 h-5 rounded border-slate-300 focus:ring-[#52a285] ${
-                  showErrors && !termsAgreed ? 'invalid-field outline outline-2 outline-red-500 outline-offset-2' : 'text-[#52a285]'
+                  showErrors && !termsAgreed
+                    ? 'invalid-field outline outline-2 outline-red-500 outline-offset-2'
+                    : 'text-[#52a285]'
                 }`}
               />
-              <span className={`text-sm font-bold ${showErrors && !termsAgreed ? 'text-red-500' : 'text-slate-800'}`}>
-                {isEstimate
-                  ? '入力内容の確認およびご連絡のため、個人情報の取り扱いに同意します'
-                  : '入力内容をもとに依頼受付を行うこと、および確認連絡のための個人情報の取り扱いに同意します'}
+              <span
+                className={`text-sm font-bold ${
+                  showErrors && !termsAgreed ? 'text-red-500' : 'text-slate-800'
+                }`}
+              >
+                {mode === 'estimate'
+                  ? '軽貨物TAKEが配送相談の窓口であること、確認・ご連絡のため個人情報を利用すること、案件に応じて協力ドライバーに必要最小限の情報を共有する場合があることに同意します'
+                  : '軽貨物TAKEが依頼受付・紹介・調整の窓口であること、確認連絡のため個人情報を利用すること、案件に応じて協力ドライバーに必要最小限の情報を共有する場合があることに同意します'}
                 <Badge type="required" />
                 <button
                   type="button"
                   onClick={() => setShowPrivacyPolicy(true)}
                   className="block mt-1 text-xs text-[#52a285] hover:underline"
                 >
-                  利用規約・プライバシーポリシーを読む
+                  利用案内・プライバシーポリシー・ご利用上の注意を読む
                 </button>
               </span>
             </label>
@@ -1350,13 +1627,13 @@ function DeliveryRequestView({
           >
             {isSubmitting ? (
               <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 送信中...
               </>
             ) : (
               <>
                 <Send size={20} />
-                {isEstimate ? 'この内容で見積依頼する' : 'この内容で依頼する'}
+                {mode === 'estimate' ? 'この内容で見積依頼する' : 'この内容で依頼する'}
               </>
             )}
           </button>
@@ -1371,24 +1648,40 @@ function DeliveryRequestView({
       {showPrivacyPolicy && (
         <Modal onClose={() => setShowPrivacyPolicy(false)}>
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-slate-800">利用規約・プライバシーポリシー</h3>
-            <button type="button" onClick={() => setShowPrivacyPolicy(false)} className="text-slate-400 hover:text-slate-600">
+            <h3 className="text-xl font-bold text-slate-800">
+              利用案内・プライバシー・ご利用上の注意
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowPrivacyPolicy(false)}
+              className="text-slate-400 hover:text-slate-600"
+            >
               ✕
             </button>
           </div>
 
           <div className="overflow-y-auto max-h-[60vh] pr-4 space-y-6 text-sm text-slate-600 leading-relaxed">
             <section>
+              <h4 className="font-bold text-slate-800 mb-2">窓口・紹介・調整</h4>
+              <p>
+                軽貨物TAKEは配送相談の受付および紹介・調整の窓口です。案件に応じて協力ドライバーに必要最小限の情報を共有する場合があります。
+              </p>
+            </section>
+            <section>
               <h4 className="font-bold text-slate-800 mb-2">個人情報の取扱い</h4>
-              <p>お預かりした氏名・住所・電話番号・メールアドレス等は、受付確認と配送連絡のために利用します。</p>
+              <p>氏名・住所・電話番号・メールアドレス等は、受付確認とご連絡のために利用します。</p>
             </section>
             <section>
               <h4 className="font-bold text-slate-800 mb-2">概算見積について</h4>
-              <p>運賃計算器の金額は概算です。実際の荷物量や現地状況により変動する場合があります。</p>
+              <p>
+                運賃計算器の金額は概算です。実際の荷物量や現地状況により変動する場合があります。
+              </p>
             </section>
             <section>
-              <h4 className="font-bold text-slate-800 mb-2">キャンセルについて</h4>
-              <p>正式依頼後の変更・キャンセルは、状況に応じて別途ご相談となります。確定前に必ず連絡を行います。</p>
+              <h4 className="font-bold text-slate-800 mb-2">変更・キャンセル</h4>
+              <p>
+                正式依頼後の変更・キャンセルは、状況に応じてご相談となります。確定前にご連絡します。
+              </p>
             </section>
           </div>
 
@@ -1414,7 +1707,7 @@ function DeliveryRequestView({
           </div>
 
           <h3 className="text-xl font-bold text-slate-800 mb-2">
-            {isEstimate ? '見積依頼を受け付けました' : '依頼を受け付けました'}
+            {mode === 'estimate' ? '見積依頼を受け付けました' : '依頼を受け付けました'}
           </h3>
 
           <p className="text-slate-600 mb-4 text-sm">
@@ -1427,7 +1720,9 @@ function DeliveryRequestView({
 
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 text-left">
             <p className="text-xs font-bold text-slate-500 mb-2">受付要約</p>
-            <pre className="text-xs text-slate-700 whitespace-pre-wrap font-sans break-words">{summaryText}</pre>
+            <pre className="text-xs text-slate-700 whitespace-pre-wrap font-sans break-words">
+              {summaryText}
+            </pre>
             <button
               type="button"
               onClick={() => {
@@ -1441,7 +1736,9 @@ function DeliveryRequestView({
           </div>
 
           <div className="border-t border-slate-100 pt-4 mb-6">
-            <p className="text-xs font-bold text-slate-500 mb-3">LINEで続けてやり取りしたい方（任意）</p>
+            <p className="text-xs font-bold text-slate-500 mb-3">
+              LINEで続けてやり取りしたい方（任意）
+            </p>
 
             {isMobile ? (
               <a
@@ -1486,7 +1783,9 @@ function DeliveryRequestView({
           </div>
 
           <h3 className="text-xl font-bold text-slate-800 mb-2">送信エラー</h3>
-          <p className="text-slate-600 mb-6 text-sm">通信状況をご確認のうえ、もう一度お試しください。</p>
+          <p className="text-slate-600 mb-6 text-sm">
+            通信状況をご確認のうえ、もう一度お試しください。
+          </p>
 
           <button
             type="button"
@@ -1502,7 +1801,9 @@ function DeliveryRequestView({
 }
 
 function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
-  const [formData, setFormData] = useState<DriverRegisterFormData>(defaultDriverRegisterFormData());
+  const [formData, setFormData] = useState<DriverRegisterFormData>(
+    defaultDriverRegisterFormData()
+  );
   const [files, setFiles] = useState<DriverFiles>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -1602,7 +1903,11 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-4xl mx-auto space-y-6"
+    >
       <button
         type="button"
         onClick={() => setView('driver')}
@@ -1622,9 +1927,11 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
           </span>
         </div>
 
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">協力ドライバー登録フォーム</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
+          協力ドライバー登録フォーム
+        </h1>
         <p className="text-slate-600 text-sm">
-          顔出しなし。公開プロフィール一覧なし。裏側で名簿として管理します。
+          登録してもサイト上に個人を公開しません。審査のうえ、案件に応じて運営よりご連絡します。
         </p>
       </div>
 
@@ -1686,7 +1993,9 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
               </label>
               <select
                 value={formData.maker}
-                onChange={(e) => setFormData((prev) => ({ ...prev, maker: e.target.value, model: '' }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, maker: e.target.value, model: '' }))
+                }
                 className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
               >
                 <option value="">選択してください</option>
@@ -1708,7 +2017,9 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                 disabled={!formData.maker}
                 className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white disabled:bg-slate-50 disabled:text-slate-400"
               >
-                <option value="">{formData.maker ? '選択してください' : 'メーカーを選択してください'}</option>
+                <option value="">
+                  {formData.maker ? '選択してください' : 'メーカーを選択してください'}
+                </option>
                 {formData.maker &&
                   KEI_MAKERS[formData.maker]?.map((model) => (
                     <option key={model} value={model}>
@@ -1724,7 +2035,9 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
               </label>
               <select
                 value={formData.experience}
-                onChange={(e) => setFormData((prev) => ({ ...prev, experience: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, experience: e.target.value }))
+                }
                 className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
               >
                 <option value="">選択してください</option>
@@ -1756,7 +2069,10 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
           </div>
         </SectionCard>
 
-        <SectionCard title="書類アップロード" icon={<ShieldCheck className="text-[#52a285]" size={22} />}>
+        <SectionCard
+          title="書類アップロード"
+          icon={<ShieldCheck className="text-[#52a285]" size={22} />}
+        >
           <p className="text-sm text-slate-600 mb-4">
             必須6種：免許証（表・裏）、車検証、任意保険、貨物軽自動車運送事業経営届出書、車両前面写真（黒ナンバー入り）
           </p>
@@ -1784,9 +2100,11 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
 
         <SectionCard title="送信" icon={<Send className="text-[#52a285]" size={22} />}>
           <div className="bg-[#fcfaf2] border border-amber-200 rounded-xl p-6 text-sm text-slate-600 space-y-2 mb-6">
-            <p>・これは求人ではなく登録プールです。</p>
-            <p>・入力内容は連絡・配車判断のために利用します。</p>
-            <p>・登録後でも変更や削除依頼は可能です。</p>
+            <p>・登録は審査制です。サイト上に氏名・プロフィールは公開しません。</p>
+            <p>
+              ・入力内容・書類は連絡・審査・案件マッチングのために利用します。案件に応じて必要最小限の情報をお客様側に共有する場合があります。
+            </p>
+            <p>・登録内容の変更や取り消しは運営までご連絡ください。</p>
           </div>
 
           <label className="flex items-start gap-3 cursor-pointer mb-6">
@@ -1796,7 +2114,9 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
               onChange={(e) => setFormData((prev) => ({ ...prev, agreed: e.target.checked }))}
               className="mt-1 w-5 h-5 text-[#52a285] rounded border-slate-300 focus:ring-[#52a285]"
             />
-            <span className="font-bold text-slate-800">上記内容に同意して登録します</span>
+            <span className="font-bold text-slate-800">
+              上記および利用案内・協力ドライバー登録についての注意を確認し、同意して登録します
+            </span>
           </label>
 
           {!isFormValid && (
@@ -1832,7 +2152,9 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
           </p>
 
           <div className="border-t border-slate-100 pt-4 mb-6">
-            <p className="text-xs font-bold text-slate-500 mb-3">LINEで続けてやり取りしたい方（任意）</p>
+            <p className="text-xs font-bold text-slate-500 mb-3">
+              LINEで続けてやり取りしたい方（任意）
+            </p>
             {isMobile ? (
               <a
                 href={LINE_FRIEND_ADD_URL}
@@ -1899,7 +2221,9 @@ function SummaryItem({
   return (
     <div>
       <p className="text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">{label}</p>
-      <p className={strong ? 'font-bold text-[#52a285] text-lg' : 'font-bold text-slate-700'}>{value}</p>
+      <p className={strong ? 'font-bold text-[#52a285] text-lg' : 'font-bold text-slate-700'}>
+        {value}
+      </p>
     </div>
   );
 }
@@ -1937,7 +2261,9 @@ function FormInput({
         }}
         placeholder={placeholder}
         className={`w-full p-3 rounded-xl border outline-none transition-all ${
-          invalid ? 'border-red-500 bg-red-50/50 invalid-field' : 'border-slate-200 focus:border-[#52a285]'
+          invalid
+            ? 'border-red-500 bg-red-50/50 invalid-field'
+            : 'border-slate-200 focus:border-[#52a285]'
         }`}
       />
       {invalid && errorText && (
@@ -2017,7 +2343,9 @@ function FileUpload({
           ファイルを選択
           <input type="file" className="hidden" accept="image/*,.pdf" onChange={handleChange} />
         </label>
-        <span className="text-sm text-slate-400 truncate">{fileName || '選択されていません'}</span>
+        <span className="text-sm text-slate-400 truncate">
+          {fileName || '選択されていません'}
+        </span>
       </div>
 
       {errorMsg && <p className="text-xs text-red-500 mt-2 font-bold">{errorMsg}</p>}

@@ -2,8 +2,9 @@
 
 ## 正本
 - `gas/Code.gs` … doPost/doGet、payload→canonical正規化、保存・通知
-- `gas/SETUP.gs` … 環境強制リセット（forceResetTakeEnvironment）
+- `gas/SETUP.gs` … 環境強制リセット（forceResetTakeEnvironment）のみ
 - `gas/appsscript.json`
+- **データ構造の正本**: `docs/canonical-data-structure.md`（customer/driver 項目・書類定義・ヘッダー順はここに準拠）
 
 ## 反映
 ```bash
@@ -38,9 +39,9 @@ forceResetTakeEnvironment 実行時に上書きされる。
 | ログ | エラー・監査ログ |
 | 設定 | 現在の設定状態 |
 
-## 正本データ構造
-- スプレッドシートが正本
-- payload → canonical に正規化し、保存・メール・LINE・Drive はすべて canonical から生成
+## 正本データ構造・整合性
+- スプレッドシートが保存の正本。payload → canonical に正規化し、保存・メール・LINE・Drive はすべて canonical から生成。
+- **変更時**: ホームページ入力項目・GAS受信項目・スプレッドシート列・LINE/メール文面・Drive保存名は必ず `docs/canonical-data-structure.md` に合わせて同時に揃える。
 - 詳細: `docs/canonical-data-structure.md`
 
 ## 処理フロー
@@ -51,9 +52,9 @@ forceResetTakeEnvironment 実行時に上書きされる。
 5. 保存成功ならメール/LINE失敗でも受付成功。失敗はログへ。
 
 ## Drive保存ルール（ドライバー登録）
-- 1受付につき1フォルダ
-- フォルダ名: `氏名_受付番号`
-- ファイル名: 01_免許証_表 〜 08_その他資料（正本と完全一致）
+- 1受付につき1フォルダ。フォルダ名: `氏名_受付番号`
+- ファイル名: 01_免許証_表 〜 08_その他資料（Code.gs の DRIVER_DOC_TO_FILENAME と一致）
+- Drive保存先URL をスプレッドシート「Drive保存先」列に記録
 - 詳細: `docs/canonical-data-structure.md`
 
 ## 環境強制リセット手順
