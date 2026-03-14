@@ -26,10 +26,16 @@ import {
 
 type ViewState = 'top' | 'customer' | 'driver' | 'simulator' | 'consult-delivery' | 'register' | 'consult-vehicle' | 'consult-business' | 'consult-vehicle-buy' | 'consult-vehicle-repair' | 'consult-vehicle-inspect' | 'takesan-log';
 
+// --- 公開してよいLINE・サイト情報（秘密情報は含めない）---
+const SITE_NAME = '軽貨物TAKE';
+const LINE_ACCOUNT_NAME = '軽貨物TAKE';
+const LINE_BOT_BASIC_ID = '@822ashrr';
+const LINE_FRIEND_ADD_URL = 'https://line.me/R/ti/p/%40822ashrr';
+const LINE_QR_URL = 'https://qr-official.line.me/gs/M_822ashrr_GW.png';
+
 const PROFILE_IMAGE_URL = `${import.meta.env.BASE_URL}images/profile.jpg`;
 const HERO_BG_URL = `${import.meta.env.BASE_URL}images/hero-bg.jpg`;
 const VAN_IMAGE_URL = `${import.meta.env.BASE_URL}images/van.jpg`;
-const LINE_QR_URL = 'https://qr-official.line.me/gs/M_771sxuxl_GW.png';
 
 // --- Data Constants ---
 const KEI_MAKERS = {
@@ -108,9 +114,115 @@ const BANKS_DATA: Record<string, string[]> = {
 
 const GAS_URL = 'https://script.google.com/macros/s/AKfycby75uR-03pmmMZPJJ5gcIsUM4HVKGxFAssCu6XZXiSsRiXEen2LEcK6kGHgA67KtHH2Mg/exec';
 
+const SIMULATOR_STORAGE_KEY = 'keikamotsu_take_simulator_input';
+const DELIVERY_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_form';
+
+export type SimulatorInput = {
+  origin: string;
+  destination: string;
+  distance: string;
+  cargoSize: string;
+  walkDistLoad: string;
+  walkDistUnload: string;
+  waitTimeLoad: string;
+  waitTimeUnload: string;
+  stairsLoad: string;
+  stairsUnload: string;
+  extraWorkers: string;
+  vehicleCount: string;
+  speedType: string;
+  weather: string;
+  startTime: string;
+  endTime: string;
+};
+
+const defaultSimulatorInput = (): SimulatorInput => {
+  const d = new Date();
+  d.setMinutes(0, 0, 0);
+  const start = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  const d2 = new Date();
+  d2.setHours(d2.getHours() + 2);
+  d2.setMinutes(0, 0, 0);
+  const end = new Date(d2.getTime() - d2.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  return {
+    origin: '',
+    destination: '',
+    distance: '',
+    cargoSize: '小',
+    walkDistLoad: '20',
+    walkDistUnload: '20',
+    waitTimeLoad: '0',
+    waitTimeUnload: '0',
+    stairsLoad: '1',
+    stairsUnload: '1',
+    extraWorkers: '0',
+    vehicleCount: '1',
+    speedType: '通常便',
+    weather: '晴れ/曇り',
+    startTime: start,
+    endTime: end
+  };
+};
+
+function loadSimulatorInput(): SimulatorInput {
+  try {
+    const raw = localStorage.getItem(SIMULATOR_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<SimulatorInput>;
+      return { ...defaultSimulatorInput(), ...parsed };
+    }
+  } catch (_) {}
+  return defaultSimulatorInput();
+}
+
+export type DeliveryFormData = {
+  name: string;
+  email: string;
+  phone: string;
+  zipcode: string;
+  address: string;
+  contactMethod: 'line' | 'email';
+  details: string;
+};
+
+const defaultDeliveryFormData = (): DeliveryFormData => ({
+  name: '',
+  email: '',
+  phone: '',
+  zipcode: '',
+  address: '',
+  contactMethod: 'line',
+  details: ''
+});
+
+function loadDeliveryFormData(): DeliveryFormData {
+  try {
+    const raw = localStorage.getItem(DELIVERY_FORM_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<DeliveryFormData>;
+      return { ...defaultDeliveryFormData(), ...parsed };
+    }
+  } catch (_) {}
+  return defaultDeliveryFormData();
+}
+
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>('top');
   const [simulatorData, setSimulatorData] = useState<any>(null);
+  const [simulatorInput, setSimulatorInput] = useState<SimulatorInput>(loadSimulatorInput);
+  const [deliveryFormData, setDeliveryFormData] = useState<DeliveryFormData>(loadDeliveryFormData);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SIMULATOR_STORAGE_KEY, JSON.stringify(simulatorInput));
+    } catch (_) {}
+  }, [simulatorInput]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(DELIVERY_FORM_STORAGE_KEY, JSON.stringify(deliveryFormData));
+    } catch (_) {}
+  }, [deliveryFormData]);
 
   return (
     <div className="min-h-screen bg-[#f4f7f6] font-sans text-slate-800">
@@ -147,10 +259,10 @@ export default function App() {
               
               {/* Header QR Code */}
               <div className="flex items-center gap-2 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm ml-2">
-                <img src={LINE_QR_URL} alt="LINE QR" className="w-10 h-10" />
+                <img src={LINE_QR_URL} alt={`${LINE_ACCOUNT_NAME} QR`} className="w-10 h-10" />
                 <div className="flex flex-col">
-                  <span className="text-[8px] font-bold text-slate-400 leading-none mb-0.5">LINE公式</span>
-                  <a href="https://lin.ee/lTCUeadq" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-[#06C755] hover:underline flex items-center gap-1">
+                  <span className="text-[8px] font-bold text-slate-400 leading-none mb-0.5">{LINE_ACCOUNT_NAME}</span>
+                  <a href={LINE_FRIEND_ADD_URL} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-[#06C755] hover:underline flex items-center gap-1">
                     <MessageCircle size={12} className="fill-[#06C755] text-white" /> 友達追加
                   </a>
                 </div>
@@ -165,8 +277,8 @@ export default function App() {
         {currentView === 'top' && <TopView setView={setCurrentView} />}
         {currentView === 'customer' && <CustomerTopView setView={setCurrentView} />}
         {currentView === 'driver' && <DriverTopView setView={setCurrentView} />}
-        {currentView === 'simulator' && <SimulatorView setView={setCurrentView} setSimulatorData={setSimulatorData} />}
-        {currentView === 'consult-delivery' && <ConsultDeliveryView setView={setCurrentView} simulatorData={simulatorData} />}
+        {currentView === 'simulator' && <SimulatorView setView={setCurrentView} setSimulatorData={setSimulatorData} simulatorInput={simulatorInput} setSimulatorInput={setSimulatorInput} />}
+        {currentView === 'consult-delivery' && <ConsultDeliveryView setView={setCurrentView} simulatorData={simulatorData} formData={deliveryFormData} setFormData={setDeliveryFormData} />}
         {currentView === 'register' && <RegisterView setView={setCurrentView} />}
         {currentView === 'consult-vehicle' && <ConsultVehicleView setView={setCurrentView} />}
         {currentView === 'consult-vehicle-buy' && <ConsultVehicleBuyView setView={setCurrentView} />}
@@ -185,7 +297,7 @@ export default function App() {
 
       {/* Floating LINE Button */}
       <a 
-        href="https://lin.ee/lTCUeadq" 
+        href={LINE_FRIEND_ADD_URL}
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-8 right-8 z-[100] bg-[#06C755] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center group"
@@ -256,7 +368,7 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
               className="bg-[#52a285] text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 flex items-center gap-3 group"
             >
               <UserPlus size={24} className="group-hover:scale-110 transition-transform" /> 
-              ドライバー登録（仮）はこちら
+              ドライバー登録はこちら
             </button>
             <button 
               onClick={scrollToProfile}
@@ -372,7 +484,7 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
             <a href="https://twitcasting.tv/c:keikamotsutake" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-600 transition-colors">
               ツイキャス配信
             </a>
-            <a href="https://lin.ee/lTCUeadq" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#06C755] text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-[#05b34c] transition-colors">
+            <a href={LINE_FRIEND_ADD_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#06C755] text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-[#05b34c] transition-colors">
               <MessageCircle size={14} /> LINEで相談
             </a>
           </div>
@@ -935,7 +1047,7 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                   </ol>
                   
                   <div className="flex justify-center mb-4">
-                    <img src={LINE_QR_URL} alt="LINE QR" className="w-32 h-32 border border-slate-200 rounded-xl" />
+                    <img src={LINE_QR_URL} alt={`${LINE_ACCOUNT_NAME} QR`} className="w-32 h-32 border border-slate-200 rounded-xl" />
                   </div>
                   
                   <div className="flex items-center gap-2 mb-4 mt-4">
@@ -952,7 +1064,7 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                       コピー
                     </button>
                   </div>
-                  <a href={`https://line.me/R/oaMessage/@771sxuxl/?text=${encodeURIComponent(`受付番号:${receiptNo}`)}`} target="_blank" rel="noopener noreferrer" className="w-full bg-[#06C755] text-white font-bold py-3 rounded-xl hover:bg-[#05b34c] transition-colors flex items-center justify-center gap-2">
+                  <a href={LINE_FRIEND_ADD_URL} target="_blank" rel="noopener noreferrer" className="w-full bg-[#06C755] text-white font-bold py-3 rounded-xl hover:bg-[#05b34c] transition-colors flex items-center justify-center gap-2">
                     <MessageCircle size={20} /> LINEを開く
                   </a>
                 </div>
@@ -1768,14 +1880,10 @@ function CustomerTopView({ setView }: { setView: (view: ViewState) => void }) {
         <div className="bg-[#e6f0ec] p-3 rounded-xl text-[#52a285]"><Truck size={28}/></div>
         <h1 className="text-3xl font-bold text-slate-800">お客様向けポータル</h1>
       </div>
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         <button onClick={() => setView('simulator')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-[#52a285] text-left transition-all">
-          <h3 className="font-bold text-lg mb-2 text-slate-800">💰 運賃シミュレーター</h3>
-          <p className="text-sm text-slate-500">距離や条件を入力して、おおよその配送料金を計算します。</p>
-        </button>
-        <button onClick={() => setView('consult-delivery')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-[#52a285] text-left transition-all">
-          <h3 className="font-bold text-lg mb-2 text-slate-800">📦 配送・お見積り依頼</h3>
-          <p className="text-sm text-slate-500">実際の配送依頼や、詳細なお見積りはこちらからお問い合わせください。</p>
+          <h3 className="font-bold text-lg mb-2 text-slate-800">💰 運賃計算器</h3>
+          <p className="text-sm text-slate-500">距離や条件を入力すると、その場で概算金額が更新されます。計算後、そのまま見積依頼にも進めます。</p>
         </button>
         <button onClick={() => setView('consult-vehicle')} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-[#52a285] text-left transition-all">
           <h3 className="font-bold text-lg mb-2 text-slate-800">🔧 車両トラブル相談</h3>
@@ -1810,11 +1918,41 @@ function DriverTopView({ setView }: { setView: (view: ViewState) => void }) {
   );
 }
 
-function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewState) => void, setSimulatorData: (data: any) => void }) {
-  const [origin, setOrigin] = useState('');
-  const [destination, setDestination] = useState('');
-  const [distance, setDistance] = useState('');
-  
+function SimulatorView({ setView, setSimulatorData, simulatorInput, setSimulatorInput }: { setView: (view: ViewState) => void, setSimulatorData: (data: any) => void, simulatorInput: SimulatorInput, setSimulatorInput: React.Dispatch<React.SetStateAction<SimulatorInput>> }) {
+  const update = (partial: Partial<SimulatorInput>) => setSimulatorInput(prev => ({ ...prev, ...partial }));
+  const origin = simulatorInput.origin;
+  const setOrigin = (v: string) => update({ origin: v });
+  const destination = simulatorInput.destination;
+  const setDestination = (v: string) => update({ destination: v });
+  const distance = simulatorInput.distance;
+  const setDistance = (v: string) => update({ distance: v });
+  const cargoSize = simulatorInput.cargoSize;
+  const setCargoSize = (v: string) => update({ cargoSize: v });
+  const walkDistLoad = simulatorInput.walkDistLoad;
+  const setWalkDistLoad = (v: string) => update({ walkDistLoad: v });
+  const walkDistUnload = simulatorInput.walkDistUnload;
+  const setWalkDistUnload = (v: string) => update({ walkDistUnload: v });
+  const waitTimeLoad = simulatorInput.waitTimeLoad;
+  const setWaitTimeLoad = (v: string) => update({ waitTimeLoad: v });
+  const waitTimeUnload = simulatorInput.waitTimeUnload;
+  const setWaitTimeUnload = (v: string) => update({ waitTimeUnload: v });
+  const stairsLoad = simulatorInput.stairsLoad;
+  const setStairsLoad = (v: string) => update({ stairsLoad: v });
+  const stairsUnload = simulatorInput.stairsUnload;
+  const setStairsUnload = (v: string) => update({ stairsUnload: v });
+  const extraWorkers = simulatorInput.extraWorkers;
+  const setExtraWorkers = (v: string) => update({ extraWorkers: v });
+  const vehicleCount = simulatorInput.vehicleCount;
+  const setVehicleCount = (v: string) => update({ vehicleCount: v });
+  const speedType = simulatorInput.speedType;
+  const setSpeedType = (v: string) => update({ speedType: v });
+  const weather = simulatorInput.weather;
+  const setWeather = (v: string) => update({ weather: v });
+  const startTime = simulatorInput.startTime;
+  const setStartTime = (v: string) => update({ startTime: v });
+  const endTime = simulatorInput.endTime;
+  const setEndTime = (v: string) => update({ endTime: v });
+
   // 主要ルートのプリセット（APIが動かない時のための根本的改善）
   const COMMON_ROUTES = [
     { label: '下関 ↔ 門司', dist: '10.0', icon: '⚓', dest: '福岡県北九州市門司区' },
@@ -1824,33 +1962,7 @@ function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewStat
     { label: '下関 ↔ 広島市', dist: '200.0', icon: '🍁', dest: '広島県広島市' },
     { label: '下関 ↔ 岡山県', dist: '350.0', icon: '🍑', dest: '岡山県岡山市' },
   ];
-  const [cargoSize, setCargoSize] = useState('小');
-  const [walkDistLoad, setWalkDistLoad] = useState('20');
-  const [walkDistUnload, setWalkDistUnload] = useState('20');
-  const [waitTimeLoad, setWaitTimeLoad] = useState('0');
-  const [waitTimeUnload, setWaitTimeUnload] = useState('0');
-  const [stairsLoad, setStairsLoad] = useState('1');
-  const [stairsUnload, setStairsUnload] = useState('1');
-  const [extraWorkers, setExtraWorkers] = useState('0');
-  const [vehicleCount, setVehicleCount] = useState('1');
-
-  // --- 150点・収益爆増エンジン用ステート ---
-  const [speedType, setSpeedType] = useState('通常便'); // 通常, お急ぎ(+20%), 超特急(+40%)
-  const [weather, setWeather] = useState('晴れ/曇り');
   const [isLocating, setIsLocating] = useState(false);
-
-  // 配送日時ステート
-  const [startTime, setStartTime] = useState(() => {
-    const d = new Date();
-    d.setMinutes(0, 0, 0);
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-  });
-  const [endTime, setEndTime] = useState(() => {
-    const d = new Date();
-    d.setHours(d.getHours() + 2);
-    d.setMinutes(0, 0, 0);
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-  });
   const [holidaysMap, setHolidaysMap] = useState<Record<string, string>>({});
 
   // 休日・天候の自動取得
@@ -1939,8 +2051,7 @@ function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewStat
   };
 
   const calculateFare = () => {
-    const dist = parseFloat(distance) || 0;
-    if (dist === 0) return 0;
+    const dist = Math.max(parseFloat(distance) || 0, 0);
 
     let baseFare = 3000;
     let distFare = 0;
@@ -2012,7 +2123,7 @@ function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewStat
       <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100">
         <div className="flex items-center gap-3 mb-6">
           <div className="bg-amber-100 p-2 rounded-lg text-amber-600"><Zap size={24} /></div>
-          <h2 className="text-2xl font-bold text-slate-800">運賃シミュレーター</h2>
+          <h2 className="text-2xl font-bold text-slate-800">運賃計算器</h2>
         </div>
 
         <div className="space-y-6">
@@ -2242,7 +2353,7 @@ function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewStat
         {/* 総額表示 */}
         <div className="mt-8 bg-slate-900 p-6 rounded-3xl text-center text-white shadow-2xl overflow-hidden relative">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-blue-500"></div>
-          <p className="text-xs font-bold text-slate-400 mb-2">概算お見積り総額（税込）</p>
+          <p className="text-xs font-bold text-slate-400 mb-2">概算見積額（税込・入力に応じて更新）</p>
           <div className="text-5xl font-black text-emerald-400 mb-2">
             ¥{calculateFare().toLocaleString()}
           </div>
@@ -2283,7 +2394,7 @@ function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewStat
             }} 
             className="w-full bg-slate-800 text-white font-black py-5 rounded-2xl hover:bg-slate-900 transition-all shadow-lg text-lg flex items-center justify-center gap-2"
           >
-            見積もりを依頼する
+            この内容で見積依頼する
           </button>
           <button 
             onClick={() => {
@@ -2306,7 +2417,7 @@ function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewStat
             }} 
             className="w-full bg-[#52a285] text-white font-black py-5 rounded-2xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 text-lg flex items-center justify-center gap-2"
           >
-            <Send size={20} /> 正式に依頼する
+            <Send size={20} /> この内容で依頼する
           </button>
         </div>
       </div>
@@ -2314,14 +2425,22 @@ function SimulatorView({ setView, setSimulatorData }: { setView: (view: ViewStat
   );
 }
 
-function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewState) => void, simulatorData: any }) {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [contactMethod, setContactMethod] = useState<'line' | 'email'>('line');
-  const [zipcode, setZipcode] = useState('');
-  const [address, setAddress] = useState('');
-  
+function ConsultDeliveryView({ setView, simulatorData, formData, setFormData }: { setView: (view: ViewState) => void, simulatorData: any, formData: DeliveryFormData, setFormData: React.Dispatch<React.SetStateAction<DeliveryFormData>> }) {
+  const name = formData.name;
+  const setName = (v: string) => setFormData(prev => ({ ...prev, name: v }));
+  const phone = formData.phone;
+  const setPhone = (v: string) => setFormData(prev => ({ ...prev, phone: v }));
+  const email = formData.email;
+  const setEmail = (v: string) => setFormData(prev => ({ ...prev, email: v }));
+  const contactMethod = formData.contactMethod;
+  const setContactMethod = (v: 'line' | 'email') => setFormData(prev => ({ ...prev, contactMethod: v }));
+  const zipcode = formData.zipcode;
+  const setZipcode = (v: string) => setFormData(prev => ({ ...prev, zipcode: v }));
+  const address = formData.address;
+  const setAddress = (v: string) => setFormData(prev => ({ ...prev, address: v }));
+  const details = formData.details;
+  const setDetails = (v: string) => setFormData(prev => ({ ...prev, details: v }));
+
   const [origin] = useState(simulatorData?.origin || '');
   const [destination] = useState(simulatorData?.destination || '');
   const [distance] = useState(simulatorData?.distance || '');
@@ -2330,8 +2449,7 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
   const [speedType] = useState(simulatorData?.speedType || '通常便');
   const [receiptNo] = useState(simulatorData?.receiptNo || '');
   const [isEstimate] = useState(simulatorData?.isEstimate || false);
-  
-  const [details, setDetails] = useState('');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [termsAgreed, setTermsAgreed] = useState(false);
@@ -2343,7 +2461,7 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
     const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     setIsMobile(mobile);
     if (!mobile) {
-      setContactMethod('email');
+      setFormData(prev => ({ ...prev, contactMethod: 'email' }));
     }
     window.scrollTo(0, 0);
   }, []);
@@ -2373,7 +2491,8 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
     e.preventDefault();
     setShowErrors(true);
 
-    if (!name || !phone || !details || !termsAgreed || !email) {
+    const requiredOk = name && phone && email && zipcode && address && details && termsAgreed;
+    if (!requiredOk) {
       setTimeout(() => {
         const firstInvalid = document.querySelector('.invalid-field');
         if (firstInvalid) {
@@ -2402,6 +2521,7 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
         name,
         phone,
         email,
+        zipcode,
         address,
         origin,
         destination,
@@ -2434,12 +2554,12 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto space-y-6">
       <button onClick={() => setView('simulator')} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm mb-4">
-        <ArrowLeft size={16} /> シミュレーターに戻る
+        <ArrowLeft size={16} /> 運賃計算器に戻る
       </button>
 
       <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-slate-800">{isEstimate ? '見積もり依頼フォーム' : '正式依頼フォーム'}</h2>
+          <h2 className="text-2xl font-bold text-slate-800">{isEstimate ? '見積依頼フォーム' : '正式依頼フォーム'}</h2>
           <div className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full text-slate-500">No. {receiptNo}</div>
         </div>
 
@@ -2502,12 +2622,14 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
 
           <div className="grid md:grid-cols-3 gap-4">
             <div className="md:col-span-1">
-              <label className="block text-sm font-bold text-slate-800 mb-2">郵便番号 <Badge type="optional" /></label>
-              <input type="text" value={zipcode} onChange={handleZipcodeChange} placeholder="例：1234567" maxLength={7} className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none transition-all" />
+              <label className="block text-sm font-bold text-slate-800 mb-2">郵便番号 <Badge type="required" /></label>
+              <input type="text" value={zipcode} onChange={handleZipcodeChange} placeholder="例：1234567" maxLength={7} className={`w-full p-3 rounded-xl border outline-none transition-all ${showErrors && !zipcode ? 'border-red-500 bg-red-50/50 invalid-field' : 'border-slate-200 focus:border-[#52a285]'}`} />
+              {showErrors && !zipcode && <p className="text-red-500 text-xs mt-1 font-bold flex items-center gap-1"><Info size={12} /> 郵便番号を入力してください</p>}
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-bold text-slate-800 mb-2">ご住所 <Badge type="optional" /></label>
-              <input id="address-input" type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="例：山口県下関市〇〇1-2-3" className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none transition-all" />
+              <label className="block text-sm font-bold text-slate-800 mb-2">住所 <Badge type="required" /></label>
+              <input id="address-input" type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="例：山口県下関市〇〇1-2-3" className={`w-full p-3 rounded-xl border outline-none transition-all ${showErrors && !address ? 'border-red-500 bg-red-50/50 invalid-field' : 'border-slate-200 focus:border-[#52a285]'}`} />
+              {showErrors && !address && <p className="text-red-500 text-xs mt-1 font-bold flex items-center gap-1"><Info size={12} /> 住所を入力してください</p>}
             </div>
           </div>
 
@@ -2518,10 +2640,12 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
           </div>
 
           <div className="pt-4 border-t border-slate-100">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input type="checkbox" checked={termsAgreed} onChange={e => setTermsAgreed(e.target.checked)} className={`w-5 h-5 rounded border-slate-300 focus:ring-[#52a285] transition-all ${showErrors && !termsAgreed ? 'invalid-field outline outline-2 outline-red-500 outline-offset-2' : 'text-[#52a285]'}`} required />
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" checked={termsAgreed} onChange={e => setTermsAgreed(e.target.checked)} className={`mt-0.5 w-5 h-5 rounded border-slate-300 focus:ring-[#52a285] transition-all ${showErrors && !termsAgreed ? 'invalid-field outline outline-2 outline-red-500 outline-offset-2' : 'text-[#52a285]'}`} required />
               <span className={`text-sm font-bold ${showErrors && !termsAgreed ? 'text-red-500' : 'text-slate-800'}`}>
-                <button type="button" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} className="text-[#52a285] hover:underline">利用規約とプライバシーポリシー</button>に同意する <Badge type="required" />
+                {isEstimate ? '入力内容の確認およびご連絡のため、個人情報の取り扱いに同意します。' : '入力内容をもとに依頼受付を行うこと、および確認連絡のための個人情報の取り扱いに同意します。'}
+                <Badge type="required" />
+                <button type="button" onClick={(e) => { e.preventDefault(); setShowPrivacyPolicy(true); }} className="block mt-1 text-xs text-[#52a285] hover:underline">利用規約・プライバシーポリシーを読む</button>
               </span>
             </label>
             {showErrors && !termsAgreed && <p className="text-red-500 text-xs mt-1 font-bold flex items-center gap-1"><Info size={12} /> 同意が必要です</p>}
@@ -2536,7 +2660,7 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
                 </>
               ) : (
                 <>
-                  <Send size={20} /> {isEstimate ? 'この内容で見積もりを依頼する' : 'この内容で正式に依頼する'}
+                  <Send size={20} /> {isEstimate ? 'この内容で見積依頼する' : 'この内容で依頼する'}
                 </>
               )}
             </button>
@@ -2603,78 +2727,69 @@ function ConsultDeliveryView({ setView, simulatorData }: { setView: (view: ViewS
       )}
 
       {/* Success Modal */}
-      {submitStatus === 'success' && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-[2rem] p-8 max-w-md w-full text-center shadow-2xl">
-            
-            {contactMethod === 'line' ? (
-              <>
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 size={32} />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">送信完了！...あと1ステップです</h3>
-                <p className="text-slate-600 mb-4 text-sm">
-                  ご依頼データは<strong className="text-emerald-600">無事にたけさんへ送信されました</strong>のでご安心ください。<br/>
-                  最後に、今後のスムーズなやり取りのため、公式LINEへ以下の受付番号を送信してください。
-                </p>
-                
-                <div className="bg-slate-50 p-4 rounded-xl mb-6 text-left border border-slate-200">
-                  <p className="text-sm font-bold text-slate-800 mb-2">📱 スマホをご利用の方</p>
-                  <ol className="text-xs text-slate-600 mb-4 space-y-1 list-decimal list-inside">
-                    <li>下の「受付番号」をコピーする</li>
-                    <li>「LINEを開く」ボタンを押す</li>
-                    <li>トーク画面に番号を貼り付けて送信！</li>
-                  </ol>
+      {submitStatus === 'success' && (() => {
+        const summaryText = [
+          `【軽貨物TAKE 受付内容】`,
+          `受付番号: ${receiptNo}`,
+          `受付種別: ${isEstimate ? '見積依頼' : '正式依頼'}`,
+          `お名前: ${name}`,
+          `ルート: ${origin} → ${destination} (${distance}km)`,
+          `概算: ¥${Number(estimatedFare).toLocaleString()}`,
+          ``,
+          `※この受付はフォーム送信を正本として完了しています。ご連絡は原則メールで行います。`
+        ].join('\n');
+        return (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm overflow-y-auto py-8">
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white rounded-[2rem] p-8 max-w-lg w-full shadow-2xl my-auto">
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">{isEstimate ? '見積依頼を受け付けました' : '依頼を受け付けました'}</h3>
+              <p className="text-slate-600 mb-4 text-sm">
+                このたびは<strong>フォーム送信により正式に受付が完了</strong>しています。ご連絡は<strong>メール</strong>を基本とし、入力いただいたアドレス宛に折り返しご連絡します。
+              </p>
+              <p className="text-slate-500 text-xs mb-4">受付番号: <span className="font-bold text-emerald-600">{receiptNo}</span></p>
 
-                  <p className="text-sm font-bold text-slate-800 mb-2 mt-4">💻 PCをご利用の方</p>
-                  <ol className="text-xs text-slate-600 mb-4 space-y-1 list-decimal list-inside">
-                    <li>スマホのカメラで下のQRコードを読み取る</li>
-                    <li>スマホのLINEで友達追加する</li>
-                    <li>トーク画面に下の「受付番号」を手入力して送信！</li>
-                  </ol>
-                  
-                  <div className="flex justify-center mb-4">
-                    <img src={LINE_QR_URL} alt="LINE QR" className="w-32 h-32 border border-slate-200 rounded-xl" />
-                  </div>
-                  
-                  <div className="flex items-center gap-2 mb-4 mt-4">
-                    <code className="flex-1 bg-white p-2 rounded border border-slate-200 text-emerald-600 font-bold text-center">
-                      {receiptNo}
-                    </code>
-                    <button 
-                      onClick={() => {
-                        navigator.clipboard.writeText(receiptNo);
-                        alert('受付番号をコピーしました！');
-                      }} 
-                      className="p-2 bg-slate-200 rounded hover:bg-slate-300 text-xs font-bold"
-                    >
-                      コピー
-                    </button>
-                  </div>
-                  <a href={`https://line.me/R/oaMessage/@771sxuxl/?text=${encodeURIComponent(`受付番号:${receiptNo}`)}`} target="_blank" rel="noopener noreferrer" className="w-full bg-[#06C755] text-white font-bold py-3 rounded-xl hover:bg-[#05b34c] transition-colors flex items-center justify-center gap-2">
-                    <MessageCircle size={20} /> LINEを開く
-                  </a>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 size={32} />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">{isEstimate ? '見積もり依頼を受け付けました！' : 'ご依頼ありがとうございます！'}</h3>
-                <p className="text-slate-600 mb-6 text-sm">
-                  受付番号: <span className="font-bold text-emerald-600">{receiptNo}</span><br/>
-                  ご入力いただいたメールアドレス宛に、折り返しご連絡差し上げます。
-                </p>
-              </>
-            )}
+              {/* 受付要約（コピペ用） */}
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 text-left">
+                <p className="text-xs font-bold text-slate-500 mb-2">受付要約（コピーしてLINEなどに貼り付けできます）</p>
+                <pre className="text-xs text-slate-700 whitespace-pre-wrap font-sans break-words">{summaryText}</pre>
+                <button
+                  type="button"
+                  onClick={() => { navigator.clipboard.writeText(summaryText); alert('受付要約をコピーしました'); }}
+                  className="mt-2 w-full py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-xs font-bold text-slate-700"
+                >
+                  要約をコピー
+                </button>
+              </div>
 
-            <button onClick={() => setView('top')} className="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition-colors mt-2">
-              トップページへ戻る
-            </button>
-          </motion.div>
-        </div>
-      )}
+              {/* LINE補助: スマホは導線・PCはQR */}
+              <div className="border-t border-slate-100 pt-4 mb-6">
+                <p className="text-xs font-bold text-slate-500 mb-3">LINEで続けてやり取りしたい方（任意）</p>
+                {isMobile ? (
+                  <div className="space-y-2">
+                    <p className="text-xs text-slate-600">LINEで続けてやり取りしやすい方はこちらから。</p>
+                    <a href={LINE_FRIEND_ADD_URL} target="_blank" rel="noopener noreferrer" className="w-full bg-[#06C755] text-white font-bold py-3 rounded-xl hover:bg-[#05b34c] transition-colors flex items-center justify-center gap-2">
+                      <MessageCircle size={20} /> LINEを開く
+                    </a>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-xs text-slate-600">スマホでQRコードを読み取ると、LINEでもやり取りしやすくなります。フォーム送信だけで受付は完了しています。</p>
+                    <div className="flex justify-center">
+                      <img src={LINE_QR_URL} alt={`${LINE_ACCOUNT_NAME} QR`} className="w-28 h-28 border border-slate-200 rounded-xl" />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button onClick={() => setView('top')} className="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition-colors">
+                トップページへ戻る
+              </button>
+            </motion.div>
+          </div>
+        );
+      })()}
 
       {/* Error Modal */}
       {submitStatus === 'error' && (
