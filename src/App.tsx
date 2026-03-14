@@ -16,11 +16,13 @@ import {
 } from 'lucide-react';
 import heroKanmonTake from './assets/hero-kanmon-take.png';
 import logoTakeCircle from './assets/logo-take-circle.png';
+import lineQrTake from './assets/line-qr-take.png';
 
 type ViewState =
   | 'top'
   | 'customer'
   | 'driver'
+  | 'vehicle'
   | 'simulator'
   | 'consult-delivery-estimate'
   | 'consult-delivery-order'
@@ -30,20 +32,22 @@ type ViewState =
   | 'notice'
   | 'driver-notice';
 
+type VehicleConsultKind = 'purchase' | 'repair' | 'inspection';
+
 const SITE_NAME = '軽貨物TAKE';
 const LINE_ACCOUNT_NAME = '軽貨物TAKE';
-const LINE_FRIEND_ADD_URL = 'https://line.me/R/ti/p/%40822ashrr';
-const LINE_QR_URL = 'https://qr-official.line.me/gs/M_822ashrr_GW.png';
+const LINE_FRIEND_ADD_URL = 'https://lin.ee/S0eHL2o';
+const LINE_QR_URL = lineQrTake;
 const HERO_BG_URL = heroKanmonTake;
 const LOGO_IMAGE_URL = logoTakeCircle;
 const GAS_URL =
   'https://script.google.com/macros/s/AKfycbwWQsnvGNke38i4luvYZM1SHmhScl7EEPLQli0-8ozVjQHfzeBJbyArcviVq02-ZOLWgQ/exec';
+
 const SIMULATOR_STORAGE_KEY = 'keikamotsu_take_simulator_input_v3';
 const DELIVERY_ESTIMATE_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_estimate_form_v3';
 const DELIVERY_ORDER_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_order_form_v3';
-const DRIVER_REGISTER_FORM_STORAGE_KEY = 'keikamotsu_take_driver_register_form_v3';
-const DRIVER_REGISTER_FILES_STORAGE_KEY = 'keikamotsu_take_driver_register_files_v3';
-const DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY = 'keikamotsu_take_driver_register_file_names_v3';
+const VEHICLE_FORM_STORAGE_KEY = 'keikamotsu_take_vehicle_form_v1';
+const VEHICLE_KIND_STORAGE_KEY = 'keikamotsu_take_vehicle_kind_v1';
 
 const ENABLE_TEST_FILL = import.meta.env.DEV;
 
@@ -96,6 +100,25 @@ type DriverRegisterFormData = {
 type DriverFiles = Record<string, string>;
 type DriverFileNames = Record<string, string>;
 
+type VehicleConsultFormData = {
+  name: string;
+  phone: string;
+  email: string;
+  maker: string;
+  model: string;
+  modelUndecided: boolean;
+  purchaseBudget: string;
+  purchaseDelivery: string;
+  purchaseNotes: string;
+  repairSymptom: string;
+  repairSince: string;
+  repairDrivable: string;
+  repairNotes: string;
+  inspectionTiming: string;
+  inspectionPreference: string;
+  inspectionNotes: string;
+};
+
 const DRIVER_DOC_REQUIRED: { key: string; label: string; driveName: string }[] = [
   { key: '免許証（表）', label: '免許証（表）', driveName: '01_免許証_表' },
   { key: '免許証（裏）', label: '免許証（裏）', driveName: '02_免許証_裏' },
@@ -112,6 +135,7 @@ const DRIVER_DOC_REQUIRED: { key: string; label: string; driveName: string }[] =
     driveName: '06_車両前面写真_黒ナンバー入り'
   }
 ];
+
 const DRIVER_DOC_OPTIONAL: { key: string; label: string; driveName: string }[] = [
   { key: '貨物保険', label: '貨物保険', driveName: '07_貨物保険' },
   { key: 'その他資料', label: 'その他補足資料', driveName: '08_その他資料' }
@@ -153,6 +177,230 @@ const COMMON_ROUTES = [
     origin: '山口県下関市',
     destination: '山口県山口市'
   }
+];
+
+const VEHICLE_MODELS_BY_MAKER: Record<string, string[]> = {
+  トヨタ: [
+    'アルファード',
+    'ヴェルファイア',
+    'ハイエース',
+    'プロボックス',
+    'ノア',
+    'ヴォクシー',
+    'シエンタ',
+    'ヤリス',
+    'カローラ',
+    'プリウス',
+    'アクア',
+    'クラウン',
+    'ランドクルーザー',
+    'RAV4',
+    'ハリアー',
+    'ルーミー',
+    'タウンエース',
+    'ライトエース',
+    'その他'
+  ],
+  レクサス: ['LS', 'ES', 'IS', 'GS', 'LC', 'UX', 'NX', 'RX', 'LX', 'LM', 'その他'],
+  日産: [
+    'セレナ',
+    'ノート',
+    'リーフ',
+    'エクストレイル',
+    'キックス',
+    'NV200バネット',
+    'キャラバン',
+    'AD',
+    'デイズ',
+    'ルークス',
+    'スカイライン',
+    'フェアレディZ',
+    'エルグランド',
+    'クリッパー',
+    'その他'
+  ],
+  ホンダ: [
+    'N-BOX',
+    'N-WGN',
+    'N-ONE',
+    'N-VAN',
+    'フィット',
+    'フリード',
+    'ステップワゴン',
+    'ヴェゼル',
+    'ZR-V',
+    'CR-V',
+    'シビック',
+    'アコード',
+    'オデッセイ',
+    'その他'
+  ],
+  スズキ: [
+    'アルト',
+    'ワゴンR',
+    'スペーシア',
+    'ハスラー',
+    'ラパン',
+    'ジムニー',
+    'エブリイ',
+    'キャリイ',
+    'ソリオ',
+    'スイフト',
+    'クロスビー',
+    'イグニス',
+    'その他'
+  ],
+  ダイハツ: [
+    'タント',
+    'ムーヴ',
+    'ミライース',
+    'ムーヴキャンバス',
+    'ハイゼットカーゴ',
+    'ハイゼットトラック',
+    'アトレー',
+    'ロッキー',
+    'トール',
+    'コペン',
+    'その他'
+  ],
+  マツダ: [
+    'MAZDA2',
+    'MAZDA3',
+    'MAZDA6',
+    'CX-3',
+    'CX-5',
+    'CX-8',
+    'CX-30',
+    'CX-60',
+    'CX-80',
+    'ロードスター',
+    'ボンゴ',
+    'スクラム',
+    'その他'
+  ],
+  スバル: [
+    'レヴォーグ',
+    'インプレッサ',
+    'WRX',
+    'フォレスター',
+    'XV',
+    'クロストレック',
+    'アウトバック',
+    'レガシィ',
+    'サンバー',
+    'その他'
+  ],
+  三菱: [
+    'デリカD:5',
+    'デリカミニ',
+    'eKワゴン',
+    'eKスペース',
+    'ミニキャブ',
+    'アウトランダー',
+    'エクリプスクロス',
+    'RVR',
+    'トライトン',
+    'その他'
+  ],
+  いすゞ: ['エルフ', 'フォワード', 'ギガ', 'ファーゴ', 'その他'],
+  日野: ['デュトロ', 'レンジャー', 'プロフィア', 'その他'],
+  UDトラックス: ['カゼット', 'コンドル', 'クオン', 'その他'],
+  BMW: [
+    '1シリーズ',
+    '2シリーズ',
+    '3シリーズ',
+    '4シリーズ',
+    '5シリーズ',
+    '7シリーズ',
+    'X1',
+    'X3',
+    'X5',
+    'X7',
+    'MINI',
+    'その他'
+  ],
+  メルセデスベンツ: [
+    'Aクラス',
+    'Bクラス',
+    'Cクラス',
+    'Eクラス',
+    'Sクラス',
+    'CLA',
+    'GLA',
+    'GLB',
+    'GLC',
+    'GLE',
+    'Vクラス',
+    'スプリンター',
+    'その他'
+  ],
+  アウディ: ['A1', 'A3', 'A4', 'A6', 'Q2', 'Q3', 'Q5', 'Q7', 'TT', 'その他'],
+  フォルクスワーゲン: [
+    'up!',
+    'Polo',
+    'Golf',
+    'Passat',
+    'T-Cross',
+    'T-Roc',
+    'Tiguan',
+    'Touran',
+    'Sharan',
+    'その他'
+  ],
+  ポルシェ: ['911', '718', 'Panamera', 'Macan', 'Cayenne', 'Taycan', 'その他'],
+  ボルボ: ['V40', 'V60', 'V90', 'XC40', 'XC60', 'XC90', 'S60', 'S90', 'その他'],
+  プジョー: ['208', '2008', '308', '3008', '5008', 'リフター', 'その他'],
+  シトロエン: ['C3', 'C4', 'ベルランゴ', 'C5', 'その他'],
+  ルノー: ['ルーテシア', 'カングー', 'メガーヌ', 'キャプチャー', 'アルカナ', 'その他'],
+  フィアット: ['500', 'Panda', 'Tipo', 'Doblo', 'その他'],
+  アルファロメオ: ['ジュリア', 'ステルヴィオ', 'トナーレ', 'その他'],
+  ジープ: ['ラングラー', 'レネゲード', 'コンパス', 'チェロキー', 'グランドチェロキー', 'その他'],
+  ランドローバー: ['ディフェンダー', 'ディスカバリー', 'レンジローバー', 'イヴォーク', 'その他'],
+  テスラ: ['Model 3', 'Model Y', 'Model S', 'Model X', 'その他'],
+  シボレー: ['カマロ', 'コルベット', 'トレイルブレイザー', 'その他'],
+  フォード: ['マスタング', 'エクスプローラー', 'F-150', 'その他'],
+  その他: ['その他']
+};
+
+const VEHICLE_PURCHASE_BUDGETS = [
+  '50万円未満',
+  '50〜100万円',
+  '100〜150万円',
+  '150〜200万円',
+  '200〜300万円',
+  '300〜500万円',
+  '500万円以上',
+  '相談したい'
+];
+
+const VEHICLE_PURCHASE_DELIVERY = ['急ぎ', '1か月以内', '3か月以内', '半年以内', '急がない'];
+
+const VEHICLE_REPAIR_SYMPTOMS = [
+  '異音',
+  'エアコン不調',
+  'ブレーキ',
+  'エンジン不調',
+  'バッテリー',
+  'オイル / 液漏れ',
+  '警告灯',
+  'その他'
+];
+
+const VEHICLE_REPAIR_SINCE = ['今日', '数日前', '1週間以上前', '前から', 'わからない'];
+
+const VEHICLE_REPAIR_DRIVABLE = [
+  '普通に走れる',
+  'なるべく早く見てほしい',
+  '走行が不安',
+  '動かせない'
+];
+
+const VEHICLE_INSPECTION_TIMING = ['今月', '来月', '3ヶ月以上先'];
+
+const VEHICLE_INSPECTION_PREFERENCES = [
+  '最低限でOK',
+  'しっかり整備してほしい',
+  '相談して決めたい'
 ];
 
 function defaultSimulatorInput(): SimulatorInput {
@@ -211,6 +459,27 @@ function defaultDriverRegisterFormData(): DriverRegisterFormData {
   };
 }
 
+function defaultVehicleConsultFormData(): VehicleConsultFormData {
+  return {
+    name: '',
+    phone: '',
+    email: '',
+    maker: '',
+    model: '',
+    modelUndecided: false,
+    purchaseBudget: '',
+    purchaseDelivery: '',
+    purchaseNotes: '',
+    repairSymptom: '',
+    repairSince: '',
+    repairDrivable: '',
+    repairNotes: '',
+    inspectionTiming: '',
+    inspectionPreference: '',
+    inspectionNotes: ''
+  };
+}
+
 function loadLocalStorage<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
@@ -229,7 +498,7 @@ function saveLocalStorage<T>(key: string, value: T) {
   }
 }
 
-function clearLocalStorage(key: string) {
+function removeLocalStorage(key: string) {
   try {
     localStorage.removeItem(key);
   } catch {
@@ -257,7 +526,7 @@ async function searchAddressByZip(zipcode: string) {
   return `${result.address1}${result.address2}${result.address3}`;
 }
 
-function generateReceiptNo(prefix: 'T' | 'D') {
+function generateReceiptNo(prefix: 'T' | 'D' | 'V') {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const randomNum = Math.floor(Math.random() * 100000)
     .toString()
@@ -350,6 +619,12 @@ async function submitToGas(payload: unknown) {
   ]);
 }
 
+function getVehicleKindLabel(kind: VehicleConsultKind) {
+  if (kind === 'purchase') return '車両購入相談';
+  if (kind === 'repair') return '修理・整備相談';
+  return '車検相談';
+}
+
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>('top');
   const [simulatorInput, setSimulatorInput] = useState<SimulatorInput>(() =>
@@ -378,10 +653,10 @@ export default function App() {
     <div className="min-h-screen bg-[#f4f7f6] font-sans text-slate-800">
       <header className="bg-[#f4f7f6]/95 border-b border-slate-200/70 sticky top-0 z-50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-20 gap-4">
             <button
               type="button"
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 min-w-0"
               onClick={() => setCurrentView('top')}
             >
               <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-200 bg-white shadow-sm shrink-0">
@@ -392,7 +667,7 @@ export default function App() {
                 />
               </div>
 
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-left min-w-0">
                 <span className="font-black text-xl tracking-tighter text-slate-800 leading-none">
                   {SITE_NAME}
                 </span>
@@ -436,6 +711,35 @@ export default function App() {
                 協力ドライバー登録
               </button>
             </div>
+
+            <div className="hidden xl:flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
+              <img
+                src={LINE_QR_URL}
+                alt={`${LINE_ACCOUNT_NAME} QRコード`}
+                className="w-14 h-14 rounded-lg border border-slate-200 bg-white"
+              />
+              <div className="text-left">
+                <p className="text-[11px] font-black text-slate-700">LINEで補助相談</p>
+                <p className="text-[10px] text-slate-400 mb-1">正式受付はフォーム送信</p>
+                <a
+                  href={LINE_FRIEND_ADD_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] font-bold text-[#06C755] hover:underline"
+                >
+                  友だち追加はこちら
+                </a>
+              </div>
+            </div>
+
+            <a
+              href={LINE_FRIEND_ADD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="xl:hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-[#06C755] shadow-sm"
+            >
+              LINE追加
+            </a>
           </div>
         </div>
       </header>
@@ -444,6 +748,7 @@ export default function App() {
         {currentView === 'top' && <TopView setView={setCurrentView} />}
         {currentView === 'customer' && <CustomerTopView setView={setCurrentView} />}
         {currentView === 'driver' && <DriverTopView setView={setCurrentView} />}
+        {currentView === 'vehicle' && <VehicleConsultView setView={setCurrentView} />}
         {currentView === 'simulator' && (
           <SimulatorView
             setView={setCurrentView}
@@ -478,7 +783,7 @@ export default function App() {
 
       <footer className="text-center py-12 text-xs text-slate-400 space-y-2 mt-20 border-t border-slate-200">
         <p>{SITE_NAME} | 山口県下関市を中心に</p>
-        <p>配送相談・協力ドライバー登録の窓口</p>
+        <p>配送相談・協力ドライバー登録・車両相談の窓口</p>
         <p>LINEは補助導線、受付完了はフォーム送信が正本です</p>
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-4">
           <button
@@ -632,9 +937,7 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
             <Truck size={32} />
           </div>
           <h3 className="text-2xl font-bold text-slate-800 mb-4">お客様向け</h3>
-          <p className="text-slate-600 mb-8">
-            配送相談・見積依頼・正式依頼はこちらから。
-          </p>
+          <p className="text-slate-600 mb-8">配送相談・見積依頼・正式依頼はこちらから。</p>
           <div className="bg-[#52a285] text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-[#3d7a64] transition-colors">
             すぐ運賃計算へ進む
           </div>
@@ -649,56 +952,72 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
             <UserPlus size={32} />
           </div>
           <h3 className="text-2xl font-bold text-slate-800 mb-4">ドライバー向け</h3>
-          <p className="text-slate-600 mb-8">
-            協力ドライバー登録はこちらから。
-          </p>
+          <p className="text-slate-600 mb-8">協力ドライバー登録はこちらから。</p>
           <div className="bg-slate-800 text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-slate-900 transition-colors">
             すぐ登録フォームへ進む
           </div>
         </button>
       </div>
 
-      <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-slate-100">
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className="bg-amber-50 text-amber-700 text-xs px-3 py-1 rounded-full font-bold border border-amber-100">
-            車両の購入・修理のご相談も対応
-          </span>
-          <span className="bg-slate-100 text-slate-600 text-xs px-3 py-1 rounded-full font-bold border border-slate-200">
-            配送以外の相談もOK
-          </span>
+      <div className="grid lg:grid-cols-[1.4fr_0.6fr] gap-6">
+        <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-slate-100">
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="bg-amber-50 text-amber-700 text-xs px-3 py-1 rounded-full font-bold border border-amber-100">
+              サブ導線
+            </span>
+            <span className="bg-slate-100 text-slate-600 text-xs px-3 py-1 rounded-full font-bold border border-slate-200">
+              車両購入 / 修理・整備 / 車検
+            </span>
+          </div>
+
+          <h3 className="text-2xl font-bold text-slate-800 mb-3">車両の相談</h3>
+          <p className="text-slate-600 leading-relaxed mb-6">
+            車両購入・修理整備・車検の相談も受けています。配送相談とドライバー登録がメインですが、
+            車まわりもまとめて相談したい方向けのページです。
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setView('vehicle')}
+              className="bg-white border border-slate-200 text-slate-800 px-6 py-4 rounded-2xl font-bold hover:border-[#52a285] hover:text-[#3d7a64] transition-colors"
+            >
+              車両の相談ページへ
+            </button>
+            <a
+              href={LINE_FRIEND_ADD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#06C755] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#05b34c] transition-colors text-center"
+            >
+              LINEで補助相談する
+            </a>
+          </div>
+
+          <p className="text-xs text-slate-400 mt-4">
+            ※正式な受付・記録はフォーム送信が正本です。LINEは補助導線です。
+          </p>
         </div>
 
-        <h3 className="text-2xl font-bold text-slate-800 mb-3">
-          営業用の軽バン探し・乗り換え・修理のご相談も受けています
-        </h3>
-
-        <p className="text-slate-600 leading-relaxed mb-6">
-          車両の購入・修理のご相談も受付しています。ご希望の車種、予算、修理内容などは
-          配送相談フォームの備考に書いてください。内容を確認して、運営よりご連絡します。
-        </p>
-
-        <div className="grid sm:grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => setView('simulator')}
-            className="bg-[#52a285] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#3d7a64] transition-colors"
-          >
-            車両の相談をする
-          </button>
-
+        <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
+          <p className="text-xs font-black text-slate-500 mb-3">LINEで補助相談</p>
+          <img
+            src={LINE_QR_URL}
+            alt={`${LINE_ACCOUNT_NAME} QRコード`}
+            className="w-full max-w-[180px] mx-auto rounded-2xl border border-slate-200 bg-white"
+          />
           <a
             href={LINE_FRIEND_ADD_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-white text-slate-700 px-6 py-4 rounded-2xl font-bold border border-slate-200 hover:bg-slate-50 transition-colors text-center"
+            className="mt-4 block w-full rounded-xl bg-[#06C755] px-4 py-3 text-center text-sm font-bold text-white hover:bg-[#05b34c]"
           >
-            LINEで補助相談する
+            友だち追加はこちら
           </a>
+          <p className="mt-3 text-[11px] text-slate-400 leading-relaxed">
+            スマホはボタンから追加、PCはQR読み取りで使えます。
+          </p>
         </div>
-
-        <p className="text-xs text-slate-400 mt-4">
-          ※正式な受付・記録はフォーム送信が正本です。LINEは補助導線です。
-        </p>
       </div>
     </motion.div>
   );
@@ -773,6 +1092,764 @@ function DriverTopView({ setView }: { setView: (view: ViewState) => void }) {
         </p>
       </button>
     </motion.div>
+  );
+}
+
+function VehicleConsultView({ setView }: { setView: (view: ViewState) => void }) {
+  const [kind, setKind] = useState<VehicleConsultKind>(() => {
+    try {
+      return (localStorage.getItem(VEHICLE_KIND_STORAGE_KEY) as VehicleConsultKind) || 'purchase';
+    } catch {
+      return 'purchase';
+    }
+  });
+  const [formData, setFormData] = useState<VehicleConsultFormData>(() =>
+    loadLocalStorage(VEHICLE_FORM_STORAGE_KEY, defaultVehicleConsultFormData())
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitError, setSubmitError] = useState('');
+  const [receiptNo, setReceiptNo] = useState('');
+  const [showErrors, setShowErrors] = useState(false);
+  const isMobile = isMobileDevice();
+
+  useEffect(() => {
+    saveLocalStorage(VEHICLE_FORM_STORAGE_KEY, formData);
+  }, [formData]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(VEHICLE_KIND_STORAGE_KEY, kind);
+    } catch {
+      // no-op
+    }
+  }, [kind]);
+
+  const vehicleModels = useMemo(() => {
+    if (!formData.maker) return [];
+    return VEHICLE_MODELS_BY_MAKER[formData.maker] || ['その他'];
+  }, [formData.maker]);
+
+  const isValid =
+    formData.name.trim() && formData.phone.trim() && formData.email.trim();
+
+  const fillTestData = () => {
+    setFormData({
+      name: 'テスト太郎',
+      phone: '09012345678',
+      email: 'test@example.com',
+      maker: 'トヨタ',
+      model: 'ハイエース',
+      modelUndecided: false,
+      purchaseBudget: '200〜300万円',
+      purchaseDelivery: '3か月以内',
+      purchaseNotes: '軽貨物にも使える車を相談したいです',
+      repairSymptom: '異音',
+      repairSince: '数日前',
+      repairDrivable: '普通に走れる',
+      repairNotes: '段差でコトコト音がします',
+      inspectionTiming: '来月',
+      inspectionPreference: '相談して決めたい',
+      inspectionNotes: '代車の有無も相談したいです'
+    });
+    setShowErrors(false);
+    setSubmitError('');
+  };
+
+  const activeNotes =
+    kind === 'purchase'
+      ? formData.purchaseNotes
+      : kind === 'repair'
+      ? formData.repairNotes
+      : formData.inspectionNotes;
+
+  const summaryText = [
+    `【${SITE_NAME} 車両相談】`,
+    `受付番号: ${receiptNo}`,
+    `相談種別: ${getVehicleKindLabel(kind)}`,
+    `お名前: ${formData.name}`,
+    `電話番号: ${formData.phone}`,
+    `メール: ${formData.email}`,
+    `メーカー: ${formData.maker || '未入力'}`,
+    `車種: ${formData.modelUndecided ? '車種未定' : formData.model || '未入力'}`,
+    kind === 'purchase' ? `予算: ${formData.purchaseBudget || '未入力'}` : '',
+    kind === 'purchase' ? `希望納期: ${formData.purchaseDelivery || '未入力'}` : '',
+    kind === 'repair' ? `症状: ${formData.repairSymptom || '未入力'}` : '',
+    kind === 'repair' ? `いつからその症状が出ていますか: ${formData.repairSince || '未入力'}` : '',
+    kind === 'repair' ? `走行可否: ${formData.repairDrivable || '未入力'}` : '',
+    kind === 'inspection' ? `車検時期: ${formData.inspectionTiming || '未入力'}` : '',
+    kind === 'inspection' ? `希望: ${formData.inspectionPreference || '未入力'}` : '',
+    `備考: ${activeNotes || 'なし'}`
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowErrors(true);
+    setSubmitError('');
+
+    if (!isValid) {
+      setSubmitError('名前・電話番号・メールアドレスを入力してください。');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const newReceiptNo = generateReceiptNo('V');
+      const correlationId = generateCorrelationId();
+      const idempotencyKey = generateIdempotencyKey('vehicle');
+
+      const payload = {
+        action: 'CREATE',
+        apiVersion: '2026-03-15',
+        clientVersion: 'web-app-v1',
+        type: 'vehicle',
+        receptionType: '車両相談',
+        vehicleCategory: kind,
+        vehicleCategoryLabel: getVehicleKindLabel(kind),
+        receiptNo: newReceiptNo,
+        correlationId,
+        idempotencyKey,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        maker: formData.maker,
+        model: formData.modelUndecided ? '車種未定' : formData.model,
+        purchaseBudget: formData.purchaseBudget,
+        purchaseDelivery: formData.purchaseDelivery,
+        purchaseNotes: formData.purchaseNotes,
+        repairSymptom: formData.repairSymptom,
+        repairSince: formData.repairSince,
+        repairDrivable: formData.repairDrivable,
+        repairNotes: formData.repairNotes,
+        inspectionTiming: formData.inspectionTiming,
+        inspectionPreference: formData.inspectionPreference,
+        inspectionNotes: formData.inspectionNotes
+      };
+
+      await submitToGas(payload);
+      setReceiptNo(newReceiptNo);
+      setSubmitStatus('success');
+      setSubmitError('');
+      setFormData(defaultVehicleConsultFormData());
+      removeLocalStorage(VEHICLE_FORM_STORAGE_KEY);
+    } catch (error) {
+      console.error(error);
+      setSubmitStatus('error');
+      setSubmitError(
+        '送信に失敗しました。入力内容は保持されています。そのまま再送してください。'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-6"
+    >
+      <button
+        type="button"
+        onClick={() => setView('top')}
+        className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm"
+      >
+        <ArrowLeft size={16} /> トップに戻る
+      </button>
+
+      <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold mb-3">
+              サブ導線
+            </div>
+            <h1 className="text-3xl md:text-4xl font-black text-slate-800">車両の相談</h1>
+            <p className="text-slate-500 mt-2">
+              車両購入・修理整備・車検の相談をまとめて受け付けます。
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <img
+              src={LINE_QR_URL}
+              alt={`${LINE_ACCOUNT_NAME} QRコード`}
+              className="hidden sm:block w-16 h-16 rounded-xl border border-slate-200 bg-white"
+            />
+            <div>
+              <p className="text-xs font-bold text-slate-700">LINEで補助相談</p>
+              <p className="text-[11px] text-slate-400">正式受付はフォーム送信</p>
+              <a
+                href={LINE_FRIEND_ADD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-bold text-[#06C755] hover:underline"
+              >
+                友だち追加はこちら
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {submitError && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+          <div className="flex items-start gap-2">
+            <Info size={18} className="mt-0.5 shrink-0" />
+            <div>
+              <p className="font-bold mb-1">送信エラー</p>
+              <p>{submitError}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid lg:grid-cols-[1fr_300px] gap-6 items-start">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <SectionCard title="相談種別" icon={<Truck className="text-[#52a285]" size={22} />}>
+            <div className="grid sm:grid-cols-3 gap-3">
+              <VehicleTabButton
+                active={kind === 'purchase'}
+                title="車両購入"
+                desc="買いたい車の相談"
+                onClick={() => setKind('purchase')}
+              />
+              <VehicleTabButton
+                active={kind === 'repair'}
+                title="修理・整備"
+                desc="不調や故障の相談"
+                onClick={() => setKind('repair')}
+              />
+              <VehicleTabButton
+                active={kind === 'inspection'}
+                title="車検"
+                desc="車検時期や内容の相談"
+                onClick={() => setKind('inspection')}
+              />
+            </div>
+          </SectionCard>
+
+          <SectionCard title="連絡先" icon={<User className="text-[#52a285]" size={22} />}>
+            <DevTestBar onFill={fillTestData} />
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <FormInput
+                label="名前"
+                required
+                value={formData.name}
+                onChange={(value) => setFormData((prev) => ({ ...prev, name: value }))}
+                placeholder="例：山田 太郎"
+                invalid={showErrors && !formData.name.trim()}
+                errorText="名前を入力してください"
+              />
+              <FormInput
+                label="電話番号"
+                required
+                type="tel"
+                value={formData.phone}
+                onChange={(value) => setFormData((prev) => ({ ...prev, phone: value }))}
+                placeholder="例：09012345678"
+                invalid={showErrors && !formData.phone.trim()}
+                errorText="電話番号を入力してください"
+              />
+            </div>
+
+            <div className="mt-4">
+              <FormInput
+                label="メールアドレス"
+                required
+                type="email"
+                value={formData.email}
+                onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
+                placeholder="例：example@mail.com"
+                invalid={showErrors && !formData.email.trim()}
+                errorText="メールアドレスを入力してください"
+              />
+            </div>
+          </SectionCard>
+
+          <SectionCard title="車両情報" icon={<Truck className="text-[#52a285]" size={22} />}>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                  メーカー
+                  <Badge type="optional" />
+                </label>
+                <select
+                  value={formData.maker}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      maker: e.target.value,
+                      model: '',
+                      modelUndecided: false
+                    }))
+                  }
+                  className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                >
+                  <option value="">選択しなくてもOK</option>
+                  {Object.keys(VEHICLE_MODELS_BY_MAKER).map((maker) => (
+                    <option key={maker} value={maker}>
+                      {maker}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                  車種
+                  <Badge type="optional" />
+                </label>
+                <select
+                  value={formData.model}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, model: e.target.value }))}
+                  disabled={!formData.maker || formData.modelUndecided}
+                  className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white disabled:bg-slate-50 disabled:text-slate-400"
+                >
+                  <option value="">
+                    {formData.maker ? '選択しなくてもOK' : 'メーカーを先に選んでください'}
+                  </option>
+                  {vehicleModels.map((model) => (
+                    <option key={model} value={model}>
+                      {model}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <label className="mt-4 flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.modelUndecided}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    modelUndecided: e.target.checked,
+                    model: e.target.checked ? '' : prev.model
+                  }))
+                }
+                className="w-4 h-4 accent-[#52a285]"
+              />
+              <span className="text-sm font-medium text-slate-700">車種未定</span>
+            </label>
+          </SectionCard>
+
+          {kind === 'purchase' && (
+            <SectionCard title="車両購入の相談" icon={<Truck className="text-[#52a285]" size={22} />}>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                    予算
+                    <Badge type="optional" />
+                  </label>
+                  <select
+                    value={formData.purchaseBudget}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, purchaseBudget: e.target.value }))
+                    }
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                  >
+                    <option value="">選択しなくてもOK</option>
+                    {VEHICLE_PURCHASE_BUDGETS.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                    希望納期
+                    <Badge type="optional" />
+                  </label>
+                  <select
+                    value={formData.purchaseDelivery}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, purchaseDelivery: e.target.value }))
+                    }
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                  >
+                    <option value="">選択しなくてもOK</option>
+                    {VEHICLE_PURCHASE_DELIVERY.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                  備考
+                  <Badge type="optional" />
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.purchaseNotes}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, purchaseNotes: e.target.value }))
+                  }
+                  placeholder="例：予算重視、軽バン希望、ハイブリッド希望、走行距離の目安など"
+                  className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none resize-none"
+                />
+              </div>
+            </SectionCard>
+          )}
+
+          {kind === 'repair' && (
+            <SectionCard title="修理・整備の相談" icon={<ShieldCheck className="text-[#52a285]" size={22} />}>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                    症状
+                    <Badge type="optional" />
+                  </label>
+                  <select
+                    value={formData.repairSymptom}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, repairSymptom: e.target.value }))
+                    }
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                  >
+                    <option value="">選択しなくてもOK</option>
+                    {VEHICLE_REPAIR_SYMPTOMS.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                    いつからその症状が出ていますか
+                    <Badge type="optional" />
+                  </label>
+                  <select
+                    value={formData.repairSince}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, repairSince: e.target.value }))
+                    }
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                  >
+                    <option value="">選択しなくてもOK</option>
+                    {VEHICLE_REPAIR_SINCE.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                    走行可否
+                    <Badge type="optional" />
+                  </label>
+                  <select
+                    value={formData.repairDrivable}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, repairDrivable: e.target.value }))
+                    }
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                  >
+                    <option value="">選択しなくてもOK</option>
+                    {VEHICLE_REPAIR_DRIVABLE.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                  備考
+                  <Badge type="optional" />
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.repairNotes}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, repairNotes: e.target.value }))
+                  }
+                  placeholder="例：異音がする / エアコンが効かない / ブレーキの感じが変 / 警告灯が点いた など"
+                  className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none resize-none"
+                />
+              </div>
+            </SectionCard>
+          )}
+
+          {kind === 'inspection' && (
+            <SectionCard title="車検の相談" icon={<ShieldCheck className="text-[#52a285]" size={22} />}>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                    車検時期
+                    <Badge type="optional" />
+                  </label>
+                  <select
+                    value={formData.inspectionTiming}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, inspectionTiming: e.target.value }))
+                    }
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                  >
+                    <option value="">選択しなくてもOK</option>
+                    {VEHICLE_INSPECTION_TIMING.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                    希望
+                    <Badge type="optional" />
+                  </label>
+                  <select
+                    value={formData.inspectionPreference}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, inspectionPreference: e.target.value }))
+                    }
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                  >
+                    <option value="">選択しなくてもOK</option>
+                    {VEHICLE_INSPECTION_PREFERENCES.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                  備考
+                  <Badge type="optional" />
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.inspectionNotes}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, inspectionNotes: e.target.value }))
+                  }
+                  placeholder="例：最低限で通したい / しっかり見てほしい / 相談しながら決めたい など"
+                  className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none resize-none"
+                />
+              </div>
+            </SectionCard>
+          )}
+
+          <SectionCard title="送信" icon={<Send className="text-[#52a285]" size={22} />}>
+            <div className="bg-[#fcfaf2] border border-amber-200 rounded-xl p-6 text-sm text-slate-600 space-y-2 mb-6">
+              <p>・LINEは補助導線です。正式な受付はフォーム送信が正本です。</p>
+              <p>・メーカー・車種は未定でも送れます。</p>
+              <p>・送信後、内容確認のうえご連絡します。</p>
+            </div>
+
+            {!isValid && (
+              <p className="text-xs text-red-500 font-bold mb-4">
+                ※名前・電話番号・メールアドレスを入力してください。
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={!isValid || isSubmitting}
+              className={`w-full font-bold text-lg py-4 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 ${
+                isValid && !isSubmitting
+                  ? 'bg-[#3d7a64] text-white hover:bg-[#2d5a4a]'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              }`}
+            >
+              <Send size={18} />
+              {isSubmitting ? '送信中...' : `${getVehicleKindLabel(kind)}を送信する`}
+            </button>
+          </SectionCard>
+        </form>
+
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+            <p className="text-sm font-black text-slate-800 mb-3">LINEで補助相談</p>
+            {isMobile ? (
+              <a
+                href={LINE_FRIEND_ADD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-[#06C755] text-white font-bold py-3 rounded-xl hover:bg-[#05b34c] transition-colors flex items-center justify-center gap-2"
+              >
+                <MessageCircle size={20} />
+                LINEを開く
+              </a>
+            ) : (
+              <>
+                <img
+                  src={LINE_QR_URL}
+                  alt={`${LINE_ACCOUNT_NAME} QRコード`}
+                  className="w-full max-w-[220px] mx-auto rounded-2xl border border-slate-200 bg-white"
+                />
+                <a
+                  href={LINE_FRIEND_ADD_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 block w-full rounded-xl bg-[#06C755] px-4 py-3 text-center text-sm font-bold text-white hover:bg-[#05b34c]"
+                >
+                  友だち追加はこちら
+                </a>
+              </>
+            )}
+            <p className="mt-3 text-[11px] text-slate-400 leading-relaxed">
+              LINEは補助相談用です。正式な受付・記録はフォーム送信で行います。
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+            <p className="text-sm font-black text-slate-800 mb-3">今送る内容</p>
+            <div className="space-y-2 text-sm text-slate-600">
+              <div className="flex justify-between gap-3">
+                <span className="text-slate-400">相談種別</span>
+                <span className="font-bold text-slate-800">{getVehicleKindLabel(kind)}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-slate-400">メーカー</span>
+                <span className="font-bold text-slate-800">{formData.maker || '未入力'}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-slate-400">車種</span>
+                <span className="font-bold text-slate-800">
+                  {formData.modelUndecided ? '車種未定' : formData.model || '未入力'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {submitStatus === 'success' && (
+        <Modal onClose={() => setView('top')}>
+          <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle2 size={32} />
+          </div>
+
+          <h3 className="text-xl font-bold text-slate-800 mb-2">車両相談を受け付けました</h3>
+          <p className="text-slate-600 mb-4 text-sm">
+            フォーム送信で受付完了です。ご連絡は原則メールまたは電話で行います。
+          </p>
+
+          <p className="text-slate-500 text-xs mb-4">
+            受付番号: <span className="font-bold text-emerald-600">{receiptNo}</span>
+          </p>
+
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 text-left">
+            <p className="text-xs font-bold text-slate-500 mb-2">受付要約</p>
+            <pre className="text-xs text-slate-700 whitespace-pre-wrap font-sans break-words">
+              {summaryText}
+            </pre>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(summaryText);
+                alert('受付要約をコピーしました');
+              }}
+              className="mt-2 w-full py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-xs font-bold text-slate-700"
+            >
+              要約をコピー
+            </button>
+          </div>
+
+          <div className="border-t border-slate-100 pt-4 mb-6">
+            <p className="text-xs font-bold text-slate-500 mb-3">LINEで続けてやり取りしたい方（任意）</p>
+
+            {isMobile ? (
+              <a
+                href={LINE_FRIEND_ADD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-[#06C755] text-white font-bold py-3 rounded-xl hover:bg-[#05b34c] transition-colors flex items-center justify-center gap-2"
+              >
+                <MessageCircle size={20} />
+                LINEを開く
+              </a>
+            ) : (
+              <div className="flex justify-center">
+                <img
+                  src={LINE_QR_URL}
+                  alt={`${LINE_ACCOUNT_NAME} QR`}
+                  className="w-28 h-28 border border-slate-200 rounded-xl"
+                />
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setView('top')}
+            className="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition-colors"
+          >
+            トップページへ戻る
+          </button>
+        </Modal>
+      )}
+
+      {submitStatus === 'error' && (
+        <Modal onClose={() => setSubmitStatus('idle')}>
+          <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Info size={32} />
+          </div>
+
+          <h3 className="text-xl font-bold text-slate-800 mb-2">送信エラー</h3>
+          <p className="text-slate-600 mb-6 text-sm">
+            入力内容は保持されています。通信状況をご確認のうえ、そのまま再送してください。
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setSubmitStatus('idle')}
+            className="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition-colors"
+          >
+            閉じる
+          </button>
+        </Modal>
+      )}
+    </motion.div>
+  );
+}
+
+function VehicleTabButton({
+  active,
+  title,
+  desc,
+  onClick
+}: {
+  active: boolean;
+  title: string;
+  desc: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-2xl border p-4 text-left transition-all ${
+        active
+          ? 'border-[#52a285] bg-[#eef6f2] shadow-sm'
+          : 'border-slate-200 bg-white hover:border-slate-300'
+      }`}
+    >
+      <p className={`font-black ${active ? 'text-[#3d7a64]' : 'text-slate-800'}`}>{title}</p>
+      <p className="mt-1 text-xs text-slate-500">{desc}</p>
+    </button>
   );
 }
 
@@ -1856,32 +2933,16 @@ function DeliveryRequestView({
 }
 
 function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
-  const [formData, setFormData] = useState<DriverRegisterFormData>(() =>
-    loadLocalStorage(DRIVER_REGISTER_FORM_STORAGE_KEY, defaultDriverRegisterFormData())
+  const [formData, setFormData] = useState<DriverRegisterFormData>(
+    defaultDriverRegisterFormData()
   );
-  const [files, setFiles] = useState<DriverFiles>(() =>
-    loadLocalStorage(DRIVER_REGISTER_FILES_STORAGE_KEY, {} as DriverFiles)
-  );
-  const [fileNames, setFileNames] = useState<DriverFileNames>(() =>
-    loadLocalStorage(DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY, {} as DriverFileNames)
-  );
+  const [files, setFiles] = useState<DriverFiles>({});
+  const [fileNames, setFileNames] = useState<DriverFileNames>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState('');
   const [receiptNo, setReceiptNo] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const isMobile = isMobileDevice();
-
-  useEffect(() => {
-    saveLocalStorage(DRIVER_REGISTER_FORM_STORAGE_KEY, formData);
-  }, [formData]);
-
-  useEffect(() => {
-    saveLocalStorage(DRIVER_REGISTER_FILES_STORAGE_KEY, files);
-  }, [files]);
-
-  useEffect(() => {
-    saveLocalStorage(DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY, fileNames);
-  }, [fileNames]);
 
   const fillTestData = () => {
     setFormData({
@@ -1900,19 +2961,17 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
     });
 
     const testFiles: DriverFiles = {};
-    const testFileNames: DriverFileNames = {};
+    const testNames: DriverFileNames = {};
     DRIVER_DOC_REQUIRED.forEach((d) => {
       testFiles[d.key] = TEST_IMAGE_DATA_URL;
-      testFileNames[d.key] = `${d.driveName}.png`;
+      testNames[d.key] = `${d.driveName}.png`;
     });
     setFiles(testFiles);
-    setFileNames(testFileNames);
+    setFileNames(testNames);
     setSubmitError('');
   };
 
   const requiredFilesOk = DRIVER_DOC_REQUIRED.every((d) => !!files[d.key]);
-  const uploadedRequiredCount = DRIVER_DOC_REQUIRED.filter((d) => !!files[d.key]).length;
-
   const isFormValid =
     formData.name.trim() &&
     formData.furigana.trim() &&
@@ -1945,7 +3004,6 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
 
     if (!isFormValid) {
       setSubmitError('必須項目・必須ファイル・同意チェックを確認してください。');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -1976,16 +3034,12 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
       setFormData(defaultDriverRegisterFormData());
       setFiles({});
       setFileNames({});
-      clearLocalStorage(DRIVER_REGISTER_FORM_STORAGE_KEY);
-      clearLocalStorage(DRIVER_REGISTER_FILES_STORAGE_KEY);
-      clearLocalStorage(DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY);
       window.scrollTo(0, 0);
     } catch (error) {
       console.error(error);
       setSubmitError(
-        '送信に失敗しました。入力内容と選択済みファイル名は保持されています。通信環境をご確認のうえ、そのまま再送してください。'
+        '送信に失敗しました。入力内容と選択済みファイルはこのまま保持されています。ページを閉じず、そのまま再送してください。'
       );
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsSubmitting(false);
     }
@@ -2022,15 +3076,6 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
         <p className="text-slate-600 text-sm">
           登録してもサイト上に個人を公開しません。審査のうえ、案件に応じて運営よりご連絡します。
         </p>
-
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-          <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-600">
-            必須書類 {uploadedRequiredCount} / {DRIVER_DOC_REQUIRED.length}
-          </span>
-          <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-600">
-            入力内容は保持されます
-          </span>
-        </div>
       </div>
 
       {submitError && (
@@ -2038,7 +3083,7 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
           <div className="flex items-start gap-2">
             <Info size={18} className="mt-0.5 shrink-0" />
             <div>
-              <p className="font-bold mb-1">送信できませんでした</p>
+              <p className="font-bold mb-1">送信エラー</p>
               <p>{submitError}</p>
             </div>
           </div>
@@ -2197,11 +3242,8 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
           title="書類アップロード"
           icon={<ShieldCheck className="text-[#52a285]" size={22} />}
         >
-          <p className="text-sm text-slate-600 mb-2">
+          <p className="text-sm text-slate-600 mb-4">
             必須6種：免許証（表・裏）、車検証、任意保険、貨物軽自動車運送事業経営届出書、車両前面写真（黒ナンバー入り）
-          </p>
-          <p className="text-xs text-slate-400 mb-4">
-            選択したファイル名は保持されます。送信失敗時もそのまま再送しやすくしています。
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             {DRIVER_DOC_REQUIRED.map((d, i) => (
@@ -2210,9 +3252,9 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                   label={d.label}
                   required
                   initialFileName={fileNames[d.key]}
-                  onFileSelect={(base64, name) => {
+                  onFileSelect={(base64, fileName) => {
                     setFiles((prev) => ({ ...prev, [d.key]: base64 }));
-                    setFileNames((prev) => ({ ...prev, [d.key]: name }));
+                    setFileNames((prev) => ({ ...prev, [d.key]: fileName }));
                     setSubmitError('');
                   }}
                 />
@@ -2224,9 +3266,9 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                   label={d.label}
                   required={false}
                   initialFileName={fileNames[d.key]}
-                  onFileSelect={(base64, name) => {
+                  onFileSelect={(base64, fileName) => {
                     setFiles((prev) => ({ ...prev, [d.key]: base64 }));
-                    setFileNames((prev) => ({ ...prev, [d.key]: name }));
+                    setFileNames((prev) => ({ ...prev, [d.key]: fileName }));
                     setSubmitError('');
                   }}
                 />
