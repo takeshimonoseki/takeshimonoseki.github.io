@@ -29,9 +29,7 @@ const LINE_ACCOUNT_NAME = '軽貨物TAKE';
 const LINE_FRIEND_ADD_URL = 'https://line.me/R/ti/p/%40822ashrr';
 const LINE_QR_URL = 'https://qr-official.line.me/gs/M_822ashrr_GW.png';
 const HERO_BG_URL = `${import.meta.env.BASE_URL}images/hero-bg.jpg`;
-const GAS_URL =https://script.google.com/macros/s/AKfycbwWQsnvGNke38i4luvYZM1SHmhScl7EEPLQli0-8ozVjQHfzeBJbyArcviVq02-ZOLWgQ/exec
-  'https://script.google.com/macros/s/AKfycby75uR-03pmmMZPJJ5gcIsUM4HVKGxFAssCu6XZXiSsRiXEen2LEcK6kGHgA67KtHH2Mg/exec';
-
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwWQsnvGNke38i4luvYZM1SHmhScl7EEPLQli0-8ozVjQHfzeBJbyArcviVq02-ZOLWgQ/exec';
 const SIMULATOR_STORAGE_KEY = 'keikamotsu_take_simulator_input_v3';
 const DELIVERY_ESTIMATE_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_estimate_form_v3';
 const DELIVERY_ORDER_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_order_form_v3';
@@ -85,6 +83,23 @@ type DriverRegisterFormData = {
 };
 
 type DriverFiles = Record<string, string>;
+
+/**
+ * ドライバー書類定義（正本と完全一致）
+ * key=filesキー名, label=フォーム表示名, driveName=Drive保存名
+ */
+const DRIVER_DOC_REQUIRED: { key: string; label: string; driveName: string }[] = [
+  { key: '免許証（表）', label: '免許証（表）', driveName: '01_免許証_表' },
+  { key: '免許証（裏）', label: '免許証（裏）', driveName: '02_免許証_裏' },
+  { key: '車検証', label: '車検証', driveName: '03_車検証' },
+  { key: '任意保険', label: '任意保険', driveName: '04_任意保険' },
+  { key: '貨物軽自動車運送事業経営届出書', label: '貨物軽自動車運送事業経営届出書', driveName: '05_貨物軽自動車運送事業経営届出書' },
+  { key: '車両前面写真_黒ナンバー入り', label: '車両前面写真（黒ナンバーがはっきり写っているもの）', driveName: '06_車両前面写真_黒ナンバー入り' }
+];
+const DRIVER_DOC_OPTIONAL: { key: string; label: string; driveName: string }[] = [
+  { key: '貨物保険', label: '貨物保険', driveName: '07_貨物保険' },
+  { key: 'その他資料', label: 'その他補足資料', driveName: '08_その他資料' }
+];
 
 const KEI_MAKERS: Record<string, string[]> = {
   ダイハツ: ['ハイゼットカーゴ', 'ハイゼットトラック', 'アトレー', 'その他'],
@@ -1169,39 +1184,13 @@ function DeliveryRequestView({
         origin: simulatorInput.origin,
         destination: simulatorInput.destination,
         distance: simulatorInput.distance,
+        cargoSize: simulatorInput.cargoSize,
         cargoDetail: simulatorInput.cargoDetail,
         preferredDate: simulatorInput.preferredDate,
         memo: simulatorInput.memo,
         estimatedFare: fare,
         speedType: simulatorInput.speedType,
-        options: getOptionsSummary(simulatorInput),
-        customer: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          zipcode: formData.zipcode,
-          address: formData.address
-        },
-        delivery: {
-          origin: simulatorInput.origin,
-          destination: simulatorInput.destination,
-          distance: simulatorInput.distance,
-          cargoSize: simulatorInput.cargoSize,
-          cargoDetail: simulatorInput.cargoDetail,
-          preferredDate: simulatorInput.preferredDate,
-          memo: simulatorInput.memo,
-          options: getOptionsSummary(simulatorInput)
-        },
-        estimate: {
-          price: fare,
-          speedType: simulatorInput.speedType
-        },
-        consent: {
-          agreed: true,
-          text: isEstimate
-            ? '入力内容の確認およびご連絡のため、個人情報の取り扱いに同意します'
-            : '入力内容をもとに依頼受付を行うこと、および確認連絡のための個人情報の取り扱いに同意します'
-        }
+        options: getOptionsSummary(simulatorInput)
       };
 
       await submitToGas(payload);
@@ -1536,14 +1525,14 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
       agreed: true
     });
 
-    setFiles({
-      ['免許証（表）']: TEST_IMAGE_DATA_URL,
-      ['免許証（裏）']: TEST_IMAGE_DATA_URL,
-      ['車検証']: TEST_IMAGE_DATA_URL,
-      ['任意保険']: TEST_IMAGE_DATA_URL
+    const testFiles: DriverFiles = {};
+    DRIVER_DOC_REQUIRED.forEach((d) => {
+      testFiles[d.key] = TEST_IMAGE_DATA_URL;
     });
+    setFiles(testFiles);
   };
 
+  const requiredFilesOk = DRIVER_DOC_REQUIRED.every((d) => !!files[d.key]);
   const isFormValid =
     formData.name.trim() &&
     formData.furigana.trim() &&
@@ -1553,10 +1542,7 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
     formData.model.trim() &&
     formData.experience.trim() &&
     formData.agreed &&
-    files['免許証（表）'] &&
-    files['免許証（裏）'] &&
-    files['車検証'] &&
-    files['任意保険'];
+    requiredFilesOk;
 
   const handleZipChange = async (value: string) => {
     const zip = normalizeZip(value);
@@ -1771,27 +1757,28 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
         </SectionCard>
 
         <SectionCard title="書類アップロード" icon={<ShieldCheck className="text-[#52a285]" size={22} />}>
+          <p className="text-sm text-slate-600 mb-4">
+            必須6種：免許証（表・裏）、車検証、任意保険、貨物軽自動車運送事業経営届出書、車両前面写真（黒ナンバー入り）
+          </p>
           <div className="grid md:grid-cols-2 gap-4">
-            <FileUpload
-              label="免許証（表）"
-              required
-              onFileSelect={(base64) => setFiles((prev) => ({ ...prev, ['免許証（表）']: base64 }))}
-            />
-            <FileUpload
-              label="免許証（裏）"
-              required
-              onFileSelect={(base64) => setFiles((prev) => ({ ...prev, ['免許証（裏）']: base64 }))}
-            />
-            <FileUpload
-              label="車検証"
-              required
-              onFileSelect={(base64) => setFiles((prev) => ({ ...prev, ['車検証']: base64 }))}
-            />
-            <FileUpload
-              label="任意保険"
-              required
-              onFileSelect={(base64) => setFiles((prev) => ({ ...prev, ['任意保険']: base64 }))}
-            />
+            {DRIVER_DOC_REQUIRED.map((d, i) => (
+              <React.Fragment key={`req-${i}`}>
+                <FileUpload
+                  label={d.label}
+                  required
+                  onFileSelect={(base64) => setFiles((prev) => ({ ...prev, [d.key]: base64 }))}
+                />
+              </React.Fragment>
+            ))}
+            {DRIVER_DOC_OPTIONAL.map((d, i) => (
+              <React.Fragment key={`opt-${i}`}>
+                <FileUpload
+                  label={d.label}
+                  required={false}
+                  onFileSelect={(base64) => setFiles((prev) => ({ ...prev, [d.key]: base64 }))}
+                />
+              </React.Fragment>
+            ))}
           </div>
         </SectionCard>
 

@@ -1,8 +1,8 @@
 # GAS運用メモ
 
 ## 正本
-- `gas/Code.gs` … doPost/doGet、保存・通知
-- `gas/SETUP.gs` … 環境強制リセット
+- `gas/Code.gs` … doPost/doGet、payload→canonical正規化、保存・通知
+- `gas/SETUP.gs` … 環境強制リセット（forceResetTakeEnvironment）
 - `gas/appsscript.json`
 
 ## 反映
@@ -16,9 +16,14 @@ npm run gas:push
 | SPREADSHEET_ID | スプレッドシートID |
 | ADMIN_EMAIL | 管理者メール |
 | LINE_CHANNEL_ACCESS_TOKEN | LINE Messaging API トークン |
-| LINE_TO_USER_ID | LINE通知先 |
+| LINE_TO_USER_ID または LINE_TO_GROUP_ID | LINE通知先 |
 
-## Script Properties（シート名・強制）
+## Script Properties（任意）
+| キー | 説明 |
+|------|------|
+| DRIVE_FOLDER_ID | ドライバー登録の書類保存先フォルダID |
+
+## シート名（強制）
 forceResetTakeEnvironment 実行時に上書きされる。
 - REQUESTS_SHEET_NAME = 配送依頼
 - DRIVERS_SHEET_NAME = ドライバー登録
@@ -33,8 +38,26 @@ forceResetTakeEnvironment 実行時に上書きされる。
 | ログ | エラー・監査ログ |
 | 設定 | 現在の設定状態 |
 
+## 正本データ構造
+- スプレッドシートが正本
+- payload → canonical に正規化し、保存・メール・LINE・Drive はすべて canonical から生成
+- 詳細: `docs/canonical-data-structure.md`
+
 ## 処理フロー
 1. ホームページ送信（type=customer / type=driver）
-2. スプレッドシート保存（最優先）
-3. 管理者メール → 管理者LINE → ユーザー確認メール
-4. 保存成功ならメール/LINE失敗でも受付成功。失敗はログへ。
+2. payload を canonical に正規化
+3. スプレッドシート保存（最優先）
+4. 管理者メール → 管理者LINE → ユーザー確認メール
+5. 保存成功ならメール/LINE失敗でも受付成功。失敗はログへ。
+
+## Drive保存ルール（ドライバー登録）
+- 1受付につき1フォルダ
+- フォルダ名: `氏名_受付番号`
+- ファイル名: 01_免許証_表 〜 08_その他資料（正本と完全一致）
+- 詳細: `docs/canonical-data-structure.md`
+
+## 環境強制リセット手順
+1. スプレッドシートを開く
+2. 拡張機能 → Apps Script を開く
+3. メニュー「軽貨物TAKE」→「環境を強制リセット」を1回実行
+4. 配送依頼 / ドライバー登録 / ログ / 設定 の4タブのみ残ることを確認

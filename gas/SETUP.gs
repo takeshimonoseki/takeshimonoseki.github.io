@@ -3,20 +3,67 @@
  * 軽貨物TAKE セットアップ
  * - forceResetTakeEnvironment: 環境を強制リセット（4タブのみ残し、他は削除）
  * - メニュー: 環境を強制リセット / スプレッドシートURLを表示
+ *
+ * 4シート: 配送依頼, ドライバー登録, ログ, 設定
+ * Code.gs のヘッダー定義と一致させること
  */
 
 var SHEET_ID_FALLBACK = '1mEPSJsN0Pt1GULgLIBqQXyUQg-L7a4QCvSLMvADejN8';
 
 var REQUESTS_HEADERS = [
-  '受付日時', '受付番号', '受付種別', '名前', 'メールアドレス', '電話番号', '郵便番号', '住所',
-  '集荷先', '納品先', '距離km', '荷物量', '荷物内容', '希望日時', '備考', '概算金額', '配送スピード', '詳細条件',
-  '管理者メール送信', 'LINE通知送信', '受付状態', 'エラー内容', '受信JSON'
+  '受付日時',
+  '受付番号',
+  '受付種別',
+  '名前',
+  'メールアドレス',
+  '電話番号',
+  '郵便番号',
+  '住所',
+  '集荷先',
+  '納品先',
+  '距離km',
+  '荷物量',
+  '荷物内容',
+  '希望日時',
+  '備考',
+  '概算金額',
+  '配送スピード',
+  '詳細条件',
+  '管理者メール送信',
+  'LINE通知送信',
+  '受付状態',
+  'エラー内容',
+  '受信JSON'
 ];
 
 var DRIVERS_HEADERS = [
-  '受付日時', '受付番号', '氏名', 'ふりがな', '電話番号', 'メールアドレス', '郵便番号', '住所',
-  'メーカー', '車種', '経験年数', '稼働エリア', 'メモ', 'Drive保存先',
-  '管理者メール送信', 'LINE通知送信', '受付状態', 'エラー内容', '受信JSON'
+  '受付日時',
+  '受付番号',
+  '氏名',
+  'ふりがな',
+  '電話番号',
+  'メールアドレス',
+  '郵便番号',
+  '住所',
+  'メーカー',
+  '車種',
+  '経験年数',
+  '稼働エリア',
+  'メモ',
+  '免許証表提出',
+  '免許証裏提出',
+  '車検証提出',
+  '任意保険提出',
+  '経営届出書提出',
+  '車両前面写真提出',
+  '貨物保険提出',
+  'その他資料提出',
+  'Drive保存先',
+  '管理者メール送信',
+  'LINE通知送信',
+  '受付状態',
+  'エラー内容',
+  '受信JSON'
 ];
 
 var LOGS_HEADERS = ['日時', 'レベル', '処理', '受付番号', 'メッセージ', '詳細JSON'];
@@ -35,12 +82,11 @@ function onOpen() {
 
 /**
  * 環境を強制リセット
- * 1. Script Properties のシート名系を日本語に強制上書き
- * 2. 配送依頼 / ドライバー登録 / ログ / 設定 の4タブを必ず作成
- * 3. 4タブのヘッダーを日本語で強制再設定
- * 4. 4タブ以外をすべて削除
- * 5. 設定シートに現在の設定状態を書き込む
- * 6. ログに「環境強制リセット完了」を残す
+ * 1. シート名を日本語へ強制統一（Script Properties）
+ * 2. 4シート以外を削除
+ * 3. ヘッダーを最新仕様へ強制再設定
+ * 4. 設定シートへ状態を書き込む
+ * 5. ログへ完了記録を書く
  */
 function forceResetTakeEnvironment() {
   var props = PropertiesService.getScriptProperties();
@@ -95,11 +141,12 @@ function forceResetTakeEnvironment() {
     ['ADMIN_EMAIL', props.getProperty('ADMIN_EMAIL') ? '設定済み' : '未設定'],
     ['LINE_CHANNEL_ACCESS_TOKEN', props.getProperty('LINE_CHANNEL_ACCESS_TOKEN') ? '設定済み' : '未設定'],
     ['LINE_TO_USER_ID', props.getProperty('LINE_TO_USER_ID') ? '設定済み' : '未設定'],
+    ['LINE_TO_GROUP_ID', props.getProperty('LINE_TO_GROUP_ID') ? '設定済み' : '未設定'],
     ['DRIVE_FOLDER_ID', props.getProperty('DRIVE_FOLDER_ID') ? '設定済み' : '未設定'],
     ['SPREADSHEET_URL', 'https://docs.google.com/spreadsheets/d/' + ssId + '/edit']
   ];
-  shConfig.getRange(2, 1, 1 + configRows.length, 2).clearContent();
-  shConfig.getRange(2, 1, 1 + configRows.length, 2).setValues(configRows);
+  shConfig.getRange(2, 1, configRows.length + 1, 2).clearContent();
+  shConfig.getRange(2, 1, configRows.length + 1, 2).setValues(configRows);
 
   var allSheets = ss.getSheets();
   for (var i = allSheets.length - 1; i >= 0; i--) {

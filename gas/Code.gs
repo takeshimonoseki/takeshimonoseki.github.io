@@ -3,9 +3,8 @@
  * 軽貨物TAKE GAS バックエンド
  * - type=customer: 配送相談（見積依頼 / 正式依頼）→ 「配送依頼」シート
  * - type=driver: 協力ドライバー登録 → 「ドライバー登録」シート
- * - 保存最優先
- * - メール / LINE が失敗しても保存成功なら受付成功
- * - 失敗内容は「ログ」シートに記録
+ * - 正本: スプレッドシート。payload → canonical に正規化し、全処理は canonical から生成
+ * - 保存最優先。通知失敗でも保存成功なら受付成功。失敗はログへ
  *
  * Script Properties（必須）
  * - SPREADSHEET_ID
@@ -14,10 +13,6 @@
  * - LINE_TO_USER_ID または LINE_TO_GROUP_ID
  *
  * Script Properties（任意）
- * - REQUESTS_SHEET_NAME（既定: 配送依頼）
- * - DRIVERS_SHEET_NAME（既定: ドライバー登録）
- * - LOGS_SHEET_NAME（既定: ログ）
- * - CONFIG_SHEET_NAME（既定: 設定）
  * - DRIVE_FOLDER_ID（ドライバー登録ファイル保存先）
  */
 
@@ -47,6 +42,28 @@ var REQUESTS_HEADERS = [
   '受信JSON'
 ];
 
+var DRIVER_DOC_KEYS = [
+  '免許証（表）',
+  '免許証（裏）',
+  '車検証',
+  '任意保険',
+  '貨物軽自動車運送事業経営届出書',
+  '車両前面写真_黒ナンバー入り',
+  '貨物保険',
+  'その他資料'
+];
+
+var DRIVER_DOC_TO_FILENAME = {
+  '免許証（表）': '01_免許証_表',
+  '免許証（裏）': '02_免許証_裏',
+  '車検証': '03_車検証',
+  '任意保険': '04_任意保険',
+  '貨物軽自動車運送事業経営届出書': '05_貨物軽自動車運送事業経営届出書',
+  '車両前面写真_黒ナンバー入り': '06_車両前面写真_黒ナンバー入り',
+  '貨物保険': '07_貨物保険',
+  'その他資料': '08_その他資料'
+};
+
 var DRIVERS_HEADERS = [
   '受付日時',
   '受付番号',
@@ -61,6 +78,14 @@ var DRIVERS_HEADERS = [
   '経験年数',
   '稼働エリア',
   'メモ',
+  '免許証表提出',
+  '免許証裏提出',
+  '車検証提出',
+  '任意保険提出',
+  '経営届出書提出',
+  '車両前面写真提出',
+  '貨物保険提出',
+  'その他資料提出',
   'Drive保存先',
   '管理者メール送信',
   'LINE通知送信',
@@ -69,14 +94,7 @@ var DRIVERS_HEADERS = [
   '受信JSON'
 ];
 
-var LOGS_HEADERS = [
-  '日時',
-  'レベル',
-  '処理',
-  '受付番号',
-  'メッセージ',
-  '詳細JSON'
-];
+var LOGS_HEADERS = ['日時', 'レベル', '処理', '受付番号', 'メッセージ', '詳細JSON'];
 
 var CONFIG_HEADERS = ['キー', '値'];
 
@@ -249,6 +267,65 @@ function parseRequestBody_(e) {
   return JSON.parse(e.postData.contents);
 }
 
+/**
+ * payload を customer 正本オブジェクトに正規化
+ */
+function normalizePayloadToCustomerCanonical_(body) {
+  var c = body.customer || {};
+  var d = body.delivery || {};
+  var est = body.estimate || {};
+  return {
+    receiptNo: safeStr_(body.receiptNo, 100) || buildReceiptNo_('T'),
+    receptionType: safeStr_(body.receptionType, 100) || '依頼',
+    name: safeStr_(body.name || c.name, 200),
+    email: safeStr_(body.email || c.email, 200),
+    phone: safeStr_(body.phone || c.phone, 100),
+    zipcode: safeStr_(body.zipcode || c.zipcode, 30),
+    address: safeStr_(body.address || c.address, 500),
+    origin: safeStr_(body.origin || d.origin, 500),
+    destination: safeStr_(body.destination || d.destination, 500),
+    distance: safeStr_(body.distance || d.distance, 50),
+    cargoSize: safeStr_(body.cargoSize || d.cargoSize, 100),
+    cargoDetail: safeStr_(body.cargoDetail || d.cargoDetail, 2000),
+    preferredDate: safeStr_(body.preferredDate || d.preferredDate, 100),
+    memo: safeStr_(body.memo || d.memo, 3000),
+    estimatedFare: safeStr_(
+      body.estimatedFare != null ? body.estimatedFare : est.price != null ? est.price : '',
+      100
+    ),
+    speedType: safeStr_(body.speedType || est.speedType, 100),
+    options: safeStr_(body.options || d.options, 2000)
+  };
+}
+
+/**
+ * payload を driver 正本オブジェクトに正規化
+ */
+function normalizePayloadToDriverCanonical_(body) {
+  var files = body.files || {};
+  var docStatus = {};
+  for (var i = 0; i < DRIVER_DOC_KEYS.length; i++) {
+    var key = DRIVER_DOC_KEYS[i];
+    docStatus[key] = files[key] ? '提出済み' : '未提出';
+  }
+  return {
+    receiptNo: safeStr_(body.receiptNo, 100) || buildReceiptNo_('D'),
+    name: safeStr_(body.name, 200),
+    furigana: safeStr_(body.furigana, 200),
+    phone: safeStr_(body.phone, 100),
+    email: safeStr_(body.email, 200),
+    zipcode: safeStr_(body.zipcode, 30),
+    address: safeStr_(body.address, 500),
+    maker: safeStr_(body.maker, 100),
+    model: safeStr_(body.model, 100),
+    experience: safeStr_(body.experience, 100),
+    workingArea: safeStr_(body.workingArea, 500),
+    notes: safeStr_(body.notes, 3000),
+    files: files,
+    docStatus: docStatus
+  };
+}
+
 function buildLineMessage_(summaryText, sheetUrl) {
   var text = (summaryText || '').trim();
   if (sheetUrl) {
@@ -257,60 +334,56 @@ function buildLineMessage_(summaryText, sheetUrl) {
   return [{ type: 'text', text: text.slice(0, 4500) }];
 }
 
-function sendAdminMailForCustomer_(payload) {
+function sendAdminMailForCustomer_(canon, sheetUrl) {
   var adminEmail = getAdminEmail_();
-  if (!adminEmail) {
-    return false;
-  }
+  if (!adminEmail) return false;
 
-  var subject = '【' + payload.receptionType + '】受付番号 ' + payload.receiptNo;
+  var subject = '【' + canon.receptionType + '】受付番号 ' + canon.receiptNo;
   var bodyText = [
-    '受付番号: ' + payload.receiptNo,
-    '受付種別: ' + payload.receptionType,
+    '受付番号: ' + canon.receiptNo,
+    '受付種別: ' + canon.receptionType,
     '',
     '【依頼者】',
-    '名前: ' + payload.name,
-    'メール: ' + payload.email,
-    '電話番号: ' + payload.phone,
-    '郵便番号: ' + payload.zipcode,
-    '住所: ' + payload.address,
+    '名前: ' + canon.name,
+    'メール: ' + canon.email,
+    '電話番号: ' + canon.phone,
+    '郵便番号: ' + canon.zipcode,
+    '住所: ' + canon.address,
     '',
     '【配送内容】',
-    '集荷先: ' + payload.origin,
-    '納品先: ' + payload.destination,
-    '距離: ' + payload.distance + ' km',
-    '荷物量: ' + payload.cargoSize,
-    '荷物内容: ' + payload.cargoDetail,
-    '希望日時: ' + payload.preferredDate,
-    '概算金額: ' + payload.estimatedFare + ' 円',
-    '配送スピード: ' + payload.speedType,
-    '詳細条件: ' + payload.options,
-    '備考: ' + payload.memo,
+    '集荷先: ' + canon.origin,
+    '納品先: ' + canon.destination,
+    '距離: ' + canon.distance + ' km',
+    '荷物量: ' + canon.cargoSize,
+    '荷物内容: ' + canon.cargoDetail,
+    '希望日時: ' + canon.preferredDate,
+    '概算金額: ' + canon.estimatedFare + ' 円',
+    '配送スピード: ' + canon.speedType,
+    '詳細条件: ' + canon.options,
+    '備考: ' + canon.memo,
     '',
-    '確認URL: ' + payload.sheetUrl
+    '確認URL: ' + sheetUrl
   ].join('\n');
 
   MailApp.sendEmail(adminEmail, subject, bodyText);
   return true;
 }
 
-function sendUserMailForCustomer_(payload) {
-  if (!payload.email) {
-    return false;
-  }
+function sendUserMailForCustomer_(canon) {
+  if (!canon.email) return false;
 
-  var subject = '【軽貨物TAKE】受付完了 - 受付番号 ' + payload.receiptNo;
+  var subject = '【軽貨物TAKE】受付完了 - 受付番号 ' + canon.receiptNo;
   var bodyText = [
     '軽貨物TAKEでございます。',
     '',
     '以下の内容で受付いたしました。',
     '',
-    '受付種別: ' + payload.receptionType,
-    '受付番号: ' + payload.receiptNo,
-    '集荷先: ' + payload.origin,
-    '納品先: ' + payload.destination,
-    '距離: ' + payload.distance + ' km',
-    '概算金額: ' + payload.estimatedFare + ' 円',
+    '受付種別: ' + canon.receptionType,
+    '受付番号: ' + canon.receiptNo,
+    '集荷先: ' + canon.origin,
+    '納品先: ' + canon.destination,
+    '距離: ' + canon.distance + ' km',
+    '概算金額: ' + canon.estimatedFare + ' 円',
     '',
     '折り返しご連絡いたします。',
     'しばらくお待ちください。',
@@ -318,16 +391,68 @@ function sendUserMailForCustomer_(payload) {
     '軽貨物TAKE'
   ].join('\n');
 
-  MailApp.sendEmail(payload.email, subject, bodyText);
+  MailApp.sendEmail(canon.email, subject, bodyText);
+  return true;
+}
+
+function sendAdminMailForDriver_(canon, submittedList, missingList, driveUrl, sheetUrl) {
+  var adminEmail = getAdminEmail_();
+  if (!adminEmail) return false;
+
+  var subject = '【協力ドライバー登録】受付番号 ' + canon.receiptNo;
+  var bodyText = [
+    '受付番号: ' + canon.receiptNo,
+    '氏名: ' + canon.name,
+    'ふりがな: ' + canon.furigana,
+    '電話番号: ' + canon.phone,
+    'メールアドレス: ' + canon.email,
+    '郵便番号: ' + canon.zipcode,
+    '住所: ' + canon.address,
+    'メーカー: ' + canon.maker,
+    '車種: ' + canon.model,
+    '経験年数: ' + canon.experience,
+    '稼働エリア: ' + canon.workingArea,
+    'メモ: ' + canon.notes,
+    '',
+    '【提出済み書類】',
+    submittedList,
+    '',
+    '【未提出書類】',
+    missingList,
+    '',
+    'Drive保存先: ' + (driveUrl || 'なし'),
+    '',
+    '確認URL: ' + sheetUrl
+  ].join('\n');
+
+  MailApp.sendEmail(adminEmail, subject, bodyText);
+  return true;
+}
+
+function sendUserMailForDriver_(canon) {
+  if (!canon.email) return false;
+
+  var subject = '【軽貨物TAKE】協力ドライバー登録受付完了 - 受付番号 ' + canon.receiptNo;
+  var bodyText = [
+    '軽貨物TAKEでございます。',
+    '',
+    '協力ドライバー登録を受け付けました。',
+    '受付番号: ' + canon.receiptNo,
+    '',
+    '折り返しご連絡いたします。',
+    'しばらくお待ちください。',
+    '',
+    '軽貨物TAKE'
+  ].join('\n');
+
+  MailApp.sendEmail(canon.email, subject, bodyText);
   return true;
 }
 
 function sendAdminLine_(summaryText, sheetUrl) {
   var token = getLineToken_();
   var toId = getLineToId_();
-  if (!token || !toId) {
-    return false;
-  }
+  if (!token || !toId) return false;
 
   var response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
     method: 'post',
@@ -350,15 +475,20 @@ function sendAdminLine_(summaryText, sheetUrl) {
   return true;
 }
 
-function saveDriverFiles_(receiptNo, name, files, ss) {
+/**
+ * ドライバー書類をDriveに保存。フォルダ名: 氏名_受付番号
+ */
+function saveDriverFiles_(canon, ss) {
   var folderId = getDriveFolderId_();
-  if (!folderId || !files || typeof files !== 'object') {
+  if (!folderId || !canon.files || typeof canon.files !== 'object') {
     return '';
   }
 
   var rootFolder = DriveApp.getFolderById(folderId);
   var folderName =
-    safeStr_(name || receiptNo, 50).replace(/[\\\/:*?"<>|]/g, '_') + '_' + receiptNo;
+    safeStr_(canon.name || canon.receiptNo, 50).replace(/[\\\/:*?"<>|]/g, '_') +
+    '_' +
+    canon.receiptNo;
 
   var subFolder;
   var it = rootFolder.getFoldersByName(folderName);
@@ -368,21 +498,10 @@ function saveDriverFiles_(receiptNo, name, files, ss) {
     subFolder = rootFolder.createFolder(folderName);
   }
 
-  var fileBaseNames = {
-    '免許証（表）': '01_免許証_表',
-    '免許証（裏）': '02_免許証_裏',
-    '車両（前面）': '03_車両_前面',
-    '車検証': '04_車検証',
-    '自賠責': '05_自賠責',
-    '任意保険': '06_任意保険',
-    '経営届出書': '07_経営届出書',
-    '貨物保険': '08_貨物保険'
-  };
+  for (var key in canon.files) {
+    if (!canon.files.hasOwnProperty(key)) continue;
 
-  for (var key in files) {
-    if (!files.hasOwnProperty(key)) continue;
-
-    var dataUrl = files[key];
+    var dataUrl = canon.files[key];
     if (!dataUrl || typeof dataUrl !== 'string') continue;
 
     var match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
@@ -393,12 +512,12 @@ function saveDriverFiles_(receiptNo, name, files, ss) {
     var bytes = Utilities.base64Decode(base64Data);
 
     if (bytes.length > 5 * 1024 * 1024) {
-      appendLog_(ss, 'WARN', 'DRIVE_SAVE_SKIP', receiptNo, '5MB超のため保存スキップ: ' + key, {});
+      appendLog_(ss, 'WARN', 'DRIVE_SAVE_SKIP', canon.receiptNo, '5MB超のため保存スキップ: ' + key, {});
       continue;
     }
 
+    var baseName = DRIVER_DOC_TO_FILENAME[key] || safeStr_(key, 100).replace(/[\\\/:*?"<>|]/g, '_');
     var extension = mimeType.indexOf('pdf') >= 0 ? '.pdf' : '.jpg';
-    var baseName = fileBaseNames[key] || safeStr_(key, 100).replace(/[\\\/:*?"<>|]/g, '_');
     var blob = Utilities.newBlob(bytes, mimeType, baseName + extension);
     subFolder.createFile(blob);
   }
@@ -417,58 +536,31 @@ function handleCustomer_(body, debugId, ss) {
     debugId: debugId
   };
 
-  var receiptNo = safeStr_(body.receiptNo, 100) || buildReceiptNo_('T');
-  result.receipt_no = receiptNo;
-
-  var receptionType = safeStr_(body.receptionType, 100) || '依頼';
-  var name = safeStr_(body.name || (body.customer && body.customer.name), 200);
-  var email = safeStr_(body.email || (body.customer && body.customer.email), 200);
-  var phone = safeStr_(body.phone || (body.customer && body.customer.phone), 100);
-  var zipcode = safeStr_(body.zipcode || (body.customer && body.customer.zipcode), 30);
-  var address = safeStr_(body.address || (body.customer && body.customer.address), 500);
-  var origin = safeStr_(body.origin || (body.delivery && body.delivery.origin), 500);
-  var destination = safeStr_(body.destination || (body.delivery && body.delivery.destination), 500);
-  var distance = safeStr_(body.distance || (body.delivery && body.delivery.distance), 50);
-  var cargoSize = safeStr_(body.cargoSize || (body.delivery && body.delivery.cargoSize), 100);
-  var cargoDetail = safeStr_(body.cargoDetail || (body.delivery && body.delivery.cargoDetail), 2000);
-  var preferredDate = safeStr_(body.preferredDate || (body.delivery && body.delivery.preferredDate), 100);
-  var memo = safeStr_(body.memo || (body.delivery && body.delivery.memo), 3000);
-  var estimatedFare = safeStr_(
-    body.estimatedFare != null
-      ? body.estimatedFare
-      : body.estimate && body.estimate.price != null
-      ? body.estimate.price
-      : '',
-    100
-  );
-  var speedType = safeStr_(
-    body.speedType || (body.estimate && body.estimate.speedType),
-    100
-  );
-  var options = safeStr_(body.options || (body.delivery && body.delivery.options), 2000);
+  var canon = normalizePayloadToCustomerCanonical_(body);
+  result.receipt_no = canon.receiptNo;
 
   var rawJson = safeJsonString_(body, 50000);
 
   var sheet = ensureSheet_(ss, getRequestsSheetName_(), REQUESTS_HEADERS);
   var row = [
     new Date().toISOString(),
-    receiptNo,
-    receptionType,
-    name,
-    email,
-    phone,
-    zipcode,
-    address,
-    origin,
-    destination,
-    distance,
-    cargoSize,
-    cargoDetail,
-    preferredDate,
-    memo,
-    estimatedFare,
-    speedType,
-    options,
+    canon.receiptNo,
+    canon.receptionType,
+    canon.name,
+    canon.email,
+    canon.phone,
+    canon.zipcode,
+    canon.address,
+    canon.origin,
+    canon.destination,
+    canon.distance,
+    canon.cargoSize,
+    canon.cargoDetail,
+    canon.preferredDate,
+    canon.memo,
+    canon.estimatedFare,
+    canon.speedType,
+    canon.options,
     false,
     false,
     '保存完了',
@@ -482,7 +574,7 @@ function handleCustomer_(body, debugId, ss) {
     result.result = 'OK';
     result.message = '受付を保存しました';
   } catch (e) {
-    appendLog_(ss, 'ERROR', 'CUSTOMER_SAVE', receiptNo, String(e), body);
+    appendLog_(ss, 'ERROR', 'CUSTOMER_SAVE', canon.receiptNo, String(e), body);
     result.message = '保存に失敗しました';
     return result;
   }
@@ -492,60 +584,33 @@ function handleCustomer_(body, debugId, ss) {
 
   var mailOk = false;
   try {
-    mailOk = sendAdminMailForCustomer_({
-      receiptNo: receiptNo,
-      receptionType: receptionType,
-      name: name,
-      email: email,
-      phone: phone,
-      zipcode: zipcode,
-      address: address,
-      origin: origin,
-      destination: destination,
-      distance: distance,
-      cargoSize: cargoSize,
-      cargoDetail: cargoDetail,
-      preferredDate: preferredDate,
-      memo: memo,
-      estimatedFare: estimatedFare,
-      speedType: speedType,
-      options: options,
-      sheetUrl: sheetUrl
-    });
+    mailOk = sendAdminMailForCustomer_(canon, sheetUrl);
   } catch (e1) {
-    appendLog_(ss, 'ERROR', 'CUSTOMER_ADMIN_MAIL', receiptNo, String(e1), {});
+    appendLog_(ss, 'ERROR', 'CUSTOMER_ADMIN_MAIL', canon.receiptNo, String(e1), {});
   }
 
   try {
-    sendUserMailForCustomer_({
-      receiptNo: receiptNo,
-      receptionType: receptionType,
-      email: email,
-      origin: origin,
-      destination: destination,
-      distance: distance,
-      estimatedFare: estimatedFare
-    });
+    sendUserMailForCustomer_(canon);
   } catch (e2) {
-    appendLog_(ss, 'ERROR', 'CUSTOMER_USER_MAIL', receiptNo, String(e2), {});
+    appendLog_(ss, 'ERROR', 'CUSTOMER_USER_MAIL', canon.receiptNo, String(e2), {});
   }
 
   var lineOk = false;
   try {
     var lineSummary = [
-      '【' + receptionType + '】',
-      '受付番号: ' + receiptNo,
-      '名前: ' + name,
-      '電話番号: ' + phone,
-      '集荷先: ' + origin,
-      '納品先: ' + destination,
-      '距離: ' + distance + 'km',
-      '概算金額: ' + estimatedFare + '円'
+      '【' + canon.receptionType + '】',
+      '受付番号: ' + canon.receiptNo,
+      '名前: ' + canon.name,
+      '電話番号: ' + canon.phone,
+      '集荷先: ' + canon.origin,
+      '納品先: ' + canon.destination,
+      '距離: ' + canon.distance + 'km',
+      '概算金額: ' + canon.estimatedFare + '円'
     ].join('\n');
 
     lineOk = sendAdminLine_(lineSummary, sheetUrl);
   } catch (e3) {
-    appendLog_(ss, 'ERROR', 'CUSTOMER_LINE', receiptNo, String(e3), {});
+    appendLog_(ss, 'ERROR', 'CUSTOMER_LINE', canon.receiptNo, String(e3), {});
   }
 
   updateCellByHeader_(sheet, rowNumber, '管理者メール送信', mailOk);
@@ -568,51 +633,72 @@ function handleDriver_(body, debugId, ss) {
     debugId: debugId
   };
 
-  var receiptNo = safeStr_(body.receiptNo, 100) || buildReceiptNo_('D');
-  result.receipt_no = receiptNo;
-
-  var name = safeStr_(body.name, 200);
-  var furigana = safeStr_(body.furigana, 200);
-  var phone = safeStr_(body.phone, 100);
-  var email = safeStr_(body.email, 200);
-  var zipcode = safeStr_(body.zipcode, 30);
-  var address = safeStr_(body.address, 500);
-  var maker = safeStr_(body.maker, 100);
-  var model = safeStr_(body.model, 100);
-  var experience = safeStr_(body.experience, 100);
-  var workingArea = safeStr_(body.workingArea, 500);
-  var notes = safeStr_(body.notes, 3000);
-  var rawJson = safeJsonString_(body, 50000);
+  var canon = normalizePayloadToDriverCanonical_(body);
+  result.receipt_no = canon.receiptNo;
 
   var driveFolderUrl = '';
   try {
-    driveFolderUrl = saveDriverFiles_(receiptNo, name, body.files || {}, ss);
+    driveFolderUrl = saveDriverFiles_(canon, ss);
   } catch (e0) {
-    appendLog_(ss, 'ERROR', 'DRIVER_DRIVE', receiptNo, String(e0), {});
+    appendLog_(ss, 'ERROR', 'DRIVER_DRIVE', canon.receiptNo, String(e0), {});
   }
+
+  var docCols = [
+    canon.docStatus['免許証（表）'],
+    canon.docStatus['免許証（裏）'],
+    canon.docStatus['車検証'],
+    canon.docStatus['任意保険'],
+    canon.docStatus['貨物軽自動車運送事業経営届出書'],
+    canon.docStatus['車両前面写真_黒ナンバー入り'],
+    canon.docStatus['貨物保険'],
+    canon.docStatus['その他資料']
+  ];
+
+  var submittedList = [];
+  var missingList = [];
+  var docLabels = [
+    '免許証（表）',
+    '免許証（裏）',
+    '車検証',
+    '任意保険',
+    '貨物軽自動車運送事業経営届出書',
+    '車両前面写真_黒ナンバー入り',
+    '貨物保険',
+    'その他資料'
+  ];
+  for (var i = 0; i < docLabels.length; i++) {
+    if (canon.docStatus[docLabels[i]] === '提出済み') {
+      submittedList.push(docLabels[i]);
+    } else {
+      missingList.push(docLabels[i]);
+    }
+  }
+
+  var rawJson = safeJsonString_(body, 50000);
 
   var sheet = ensureSheet_(ss, getDriversSheetName_(), DRIVERS_HEADERS);
   var row = [
     new Date().toISOString(),
-    receiptNo,
-    name,
-    furigana,
-    phone,
-    email,
-    zipcode,
-    address,
-    maker,
-    model,
-    experience,
-    workingArea,
-    notes,
+    canon.receiptNo,
+    canon.name,
+    canon.furigana,
+    canon.phone,
+    canon.email,
+    canon.zipcode,
+    canon.address,
+    canon.maker,
+    canon.model,
+    canon.experience,
+    canon.workingArea,
+    canon.notes
+  ].concat(docCols).concat([
     driveFolderUrl,
     false,
     false,
     '保存完了',
     '',
     rawJson
-  ];
+  ]);
 
   try {
     sheet.appendRow(row);
@@ -620,7 +706,7 @@ function handleDriver_(body, debugId, ss) {
     result.result = 'OK';
     result.message = '登録を保存しました';
   } catch (e1) {
-    appendLog_(ss, 'ERROR', 'DRIVER_SAVE', receiptNo, String(e1), body);
+    appendLog_(ss, 'ERROR', 'DRIVER_SAVE', canon.receiptNo, String(e1), body);
     result.message = '保存に失敗しました';
     return result;
   }
@@ -630,66 +716,39 @@ function handleDriver_(body, debugId, ss) {
 
   var mailOk = false;
   try {
-    var adminEmail = getAdminEmail_();
-    if (adminEmail) {
-      var subject = '【協力ドライバー登録】受付番号 ' + receiptNo;
-      var bodyText = [
-        '受付番号: ' + receiptNo,
-        '氏名: ' + name,
-        'ふりがな: ' + furigana,
-        '電話番号: ' + phone,
-        'メールアドレス: ' + email,
-        'メーカー: ' + maker,
-        '車種: ' + model,
-        '経験年数: ' + experience,
-        '稼働エリア: ' + workingArea,
-        'メモ: ' + notes,
-        'Drive保存先: ' + driveFolderUrl,
-        '',
-        '確認URL: ' + sheetUrl
-      ].join('\n');
-      MailApp.sendEmail(adminEmail, subject, bodyText);
-      mailOk = true;
-    }
+    mailOk = sendAdminMailForDriver_(
+      canon,
+      submittedList.length ? submittedList.join(', ') : 'なし',
+      missingList.length ? missingList.join(', ') : 'なし',
+      driveFolderUrl,
+      sheetUrl
+    );
   } catch (e2) {
-    appendLog_(ss, 'ERROR', 'DRIVER_ADMIN_MAIL', receiptNo, String(e2), {});
+    appendLog_(ss, 'ERROR', 'DRIVER_ADMIN_MAIL', canon.receiptNo, String(e2), {});
   }
 
   try {
-    if (email) {
-      var userSubject = '【軽貨物TAKE】協力ドライバー登録受付完了 - 受付番号 ' + receiptNo;
-      var userBody = [
-        '軽貨物TAKEでございます。',
-        '',
-        '協力ドライバー登録を受け付けました。',
-        '受付番号: ' + receiptNo,
-        '',
-        '折り返しご連絡いたします。',
-        'しばらくお待ちください。',
-        '',
-        '軽貨物TAKE'
-      ].join('\n');
-      MailApp.sendEmail(email, userSubject, userBody);
-    }
+    sendUserMailForDriver_(canon);
   } catch (e3) {
-    appendLog_(ss, 'ERROR', 'DRIVER_USER_MAIL', receiptNo, String(e3), {});
+    appendLog_(ss, 'ERROR', 'DRIVER_USER_MAIL', canon.receiptNo, String(e3), {});
   }
 
   var lineOk = false;
   try {
     var lineSummary = [
       '【協力ドライバー登録】',
-      '受付番号: ' + receiptNo,
-      '氏名: ' + name,
-      '電話番号: ' + phone,
-      'メーカー: ' + maker,
-      '車種: ' + model,
-      '経験年数: ' + experience
+      '受付番号: ' + canon.receiptNo,
+      '氏名: ' + canon.name,
+      '電話番号: ' + canon.phone,
+      'メーカー: ' + canon.maker,
+      '車種: ' + canon.model,
+      '経験年数: ' + canon.experience,
+      '提出済み: ' + (submittedList.length ? submittedList.slice(0, 5).join(', ') + (submittedList.length > 5 ? '...' : '') : 'なし')
     ].join('\n');
 
     lineOk = sendAdminLine_(lineSummary, sheetUrl);
   } catch (e4) {
-    appendLog_(ss, 'ERROR', 'DRIVER_LINE', receiptNo, String(e4), {});
+    appendLog_(ss, 'ERROR', 'DRIVER_LINE', canon.receiptNo, String(e4), {});
   }
 
   updateCellByHeader_(sheet, rowNumber, '管理者メール送信', mailOk);
