@@ -41,6 +41,9 @@ const GAS_URL =
 const SIMULATOR_STORAGE_KEY = 'keikamotsu_take_simulator_input_v3';
 const DELIVERY_ESTIMATE_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_estimate_form_v3';
 const DELIVERY_ORDER_FORM_STORAGE_KEY = 'keikamotsu_take_delivery_order_form_v3';
+const DRIVER_REGISTER_FORM_STORAGE_KEY = 'keikamotsu_take_driver_register_form_v3';
+const DRIVER_REGISTER_FILES_STORAGE_KEY = 'keikamotsu_take_driver_register_files_v3';
+const DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY = 'keikamotsu_take_driver_register_file_names_v3';
 
 const ENABLE_TEST_FILL = import.meta.env.DEV;
 
@@ -91,6 +94,7 @@ type DriverRegisterFormData = {
 };
 
 type DriverFiles = Record<string, string>;
+type DriverFileNames = Record<string, string>;
 
 const DRIVER_DOC_REQUIRED: { key: string; label: string; driveName: string }[] = [
   { key: '免許証（表）', label: '免許証（表）', driveName: '01_免許証_表' },
@@ -220,6 +224,14 @@ function loadLocalStorage<T>(key: string, fallback: T): T {
 function saveLocalStorage<T>(key: string, value: T) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // no-op
+  }
+}
+
+function clearLocalStorage(key: string) {
+  try {
+    localStorage.removeItem(key);
   } catch {
     // no-op
   }
@@ -402,7 +414,7 @@ export default function App() {
               </button>
               <button
                 type="button"
-                onClick={() => setCurrentView('customer')}
+                onClick={() => setCurrentView('simulator')}
                 className={`hover:text-[#52a285] transition-colors ${
                   currentView === 'customer' ||
                   currentView === 'simulator' ||
@@ -416,7 +428,7 @@ export default function App() {
               </button>
               <button
                 type="button"
-                onClick={() => setCurrentView('driver')}
+                onClick={() => setCurrentView('register')}
                 className={`hover:text-[#52a285] transition-colors ${
                   currentView === 'driver' || currentView === 'register' ? 'text-[#52a285]' : ''
                 }`}
@@ -590,7 +602,7 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
               <div className="flex flex-col sm:flex-row items-center justify-start gap-4 pt-2">
                 <button
                   type="button"
-                  onClick={() => setView('customer')}
+                  onClick={() => setView('simulator')}
                   className="bg-[#52a285] text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 flex items-center gap-3 group w-full sm:w-auto justify-center"
                 >
                   <Truck size={24} className="group-hover:scale-110 transition-transform" />
@@ -598,7 +610,7 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setView('driver')}
+                  onClick={() => setView('register')}
                   className="bg-slate-800 text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-slate-900 transition-all shadow-lg flex items-center gap-3 group w-full sm:w-auto justify-center"
                 >
                   <UserPlus size={24} className="group-hover:scale-110 transition-transform" />
@@ -614,7 +626,7 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
         <button
           type="button"
           className="bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border-2 border-transparent hover:border-[#52a285] transition-all text-left group"
-          onClick={() => setView('customer')}
+          onClick={() => setView('simulator')}
         >
           <div className="w-16 h-16 bg-[#e6f0ec] rounded-2xl flex items-center justify-center text-[#52a285] mb-6 group-hover:scale-110 transition-transform">
             <Truck size={32} />
@@ -624,14 +636,14 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
             配送相談・見積依頼・正式依頼はこちらから。
           </p>
           <div className="bg-[#52a285] text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-[#3d7a64] transition-colors">
-            配送の相談をする
+            すぐ運賃計算へ進む
           </div>
         </button>
 
         <button
           type="button"
           className="bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border-2 border-transparent hover:border-slate-800 transition-all text-left group"
-          onClick={() => setView('driver')}
+          onClick={() => setView('register')}
         >
           <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-6 group-hover:scale-110 transition-transform">
             <UserPlus size={32} />
@@ -641,9 +653,52 @@ function TopView({ setView }: { setView: (view: ViewState) => void }) {
             協力ドライバー登録はこちらから。
           </p>
           <div className="bg-slate-800 text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-slate-900 transition-colors">
-            協力ドライバー登録
+            すぐ登録フォームへ進む
           </div>
         </button>
+      </div>
+
+      <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-slate-100">
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="bg-amber-50 text-amber-700 text-xs px-3 py-1 rounded-full font-bold border border-amber-100">
+            車両の購入・修理のご相談も対応
+          </span>
+          <span className="bg-slate-100 text-slate-600 text-xs px-3 py-1 rounded-full font-bold border border-slate-200">
+            配送以外の相談もOK
+          </span>
+        </div>
+
+        <h3 className="text-2xl font-bold text-slate-800 mb-3">
+          営業用の軽バン探し・乗り換え・修理のご相談も受けています
+        </h3>
+
+        <p className="text-slate-600 leading-relaxed mb-6">
+          車両の購入・修理のご相談も受付しています。ご希望の車種、予算、修理内容などは
+          配送相談フォームの備考に書いてください。内容を確認して、運営よりご連絡します。
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setView('simulator')}
+            className="bg-[#52a285] text-white px-6 py-4 rounded-2xl font-bold hover:bg-[#3d7a64] transition-colors"
+          >
+            車両の相談をする
+          </button>
+
+          <a
+            href={LINE_FRIEND_ADD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-slate-700 px-6 py-4 rounded-2xl font-bold border border-slate-200 hover:bg-slate-50 transition-colors text-center"
+          >
+            LINEで補助相談する
+          </a>
+        </div>
+
+        <p className="text-xs text-slate-400 mt-4">
+          ※正式な受付・記録はフォーム送信が正本です。LINEは補助導線です。
+        </p>
       </div>
     </motion.div>
   );
@@ -959,10 +1014,10 @@ function SimulatorView({
     >
       <button
         type="button"
-        onClick={() => setView('customer')}
+        onClick={() => setView('top')}
         className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm"
       >
-        <ArrowLeft size={16} /> 配送相談に戻る
+        <ArrowLeft size={16} /> トップに戻る
       </button>
 
       <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100">
@@ -1112,7 +1167,7 @@ function SimulatorView({
               rows={3}
               value={simulatorInput.memo}
               onChange={(e) => update({ memo: e.target.value })}
-              placeholder="例：午前中希望、建物前に一時停車可、など"
+              placeholder="例：午前中希望、建物前に一時停車可、車両購入や修理の相談内容など"
               className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none resize-none"
             />
           </div>
@@ -1599,7 +1654,7 @@ function DeliveryRequestView({
                   showErrors && !termsAgreed ? 'text-red-500' : 'text-slate-800'
                 }`}
               >
-                {mode === 'estimate'
+                {isEstimate
                   ? '軽貨物TAKEが配送相談の窓口であること、確認・ご連絡のため個人情報を利用すること、案件に応じて協力ドライバーに必要最小限の情報を共有する場合があることに同意します'
                   : '軽貨物TAKEが依頼受付・紹介・調整の窓口であること、確認連絡のため個人情報を利用すること、案件に応じて協力ドライバーに必要最小限の情報を共有する場合があることに同意します'}
                 <Badge type="required" />
@@ -1801,14 +1856,32 @@ function DeliveryRequestView({
 }
 
 function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
-  const [formData, setFormData] = useState<DriverRegisterFormData>(
-    defaultDriverRegisterFormData()
+  const [formData, setFormData] = useState<DriverRegisterFormData>(() =>
+    loadLocalStorage(DRIVER_REGISTER_FORM_STORAGE_KEY, defaultDriverRegisterFormData())
   );
-  const [files, setFiles] = useState<DriverFiles>({});
+  const [files, setFiles] = useState<DriverFiles>(() =>
+    loadLocalStorage(DRIVER_REGISTER_FILES_STORAGE_KEY, {} as DriverFiles)
+  );
+  const [fileNames, setFileNames] = useState<DriverFileNames>(() =>
+    loadLocalStorage(DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY, {} as DriverFileNames)
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [receiptNo, setReceiptNo] = useState('');
   const isMobile = isMobileDevice();
+
+  useEffect(() => {
+    saveLocalStorage(DRIVER_REGISTER_FORM_STORAGE_KEY, formData);
+  }, [formData]);
+
+  useEffect(() => {
+    saveLocalStorage(DRIVER_REGISTER_FILES_STORAGE_KEY, files);
+  }, [files]);
+
+  useEffect(() => {
+    saveLocalStorage(DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY, fileNames);
+  }, [fileNames]);
 
   const fillTestData = () => {
     setFormData({
@@ -1827,13 +1900,19 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
     });
 
     const testFiles: DriverFiles = {};
+    const testFileNames: DriverFileNames = {};
     DRIVER_DOC_REQUIRED.forEach((d) => {
       testFiles[d.key] = TEST_IMAGE_DATA_URL;
+      testFileNames[d.key] = `${d.driveName}.png`;
     });
     setFiles(testFiles);
+    setFileNames(testFileNames);
+    setSubmitError('');
   };
 
   const requiredFilesOk = DRIVER_DOC_REQUIRED.every((d) => !!files[d.key]);
+  const uploadedRequiredCount = DRIVER_DOC_REQUIRED.filter((d) => !!files[d.key]).length;
+
   const isFormValid =
     formData.name.trim() &&
     formData.furigana.trim() &&
@@ -1862,9 +1941,11 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
 
     if (!isFormValid) {
-      alert('必須項目と必須ファイルを確認してください。');
+      setSubmitError('必須項目・必須ファイル・同意チェックを確認してください。');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -1891,12 +1972,20 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
       await submitToGas(payload);
       setReceiptNo(newReceiptNo);
       setSubmitSuccess(true);
+      setSubmitError('');
       setFormData(defaultDriverRegisterFormData());
       setFiles({});
+      setFileNames({});
+      clearLocalStorage(DRIVER_REGISTER_FORM_STORAGE_KEY);
+      clearLocalStorage(DRIVER_REGISTER_FILES_STORAGE_KEY);
+      clearLocalStorage(DRIVER_REGISTER_FILE_NAMES_STORAGE_KEY);
       window.scrollTo(0, 0);
     } catch (error) {
       console.error(error);
-      alert('送信に失敗しました。通信環境をご確認のうえ、再度お試しください。');
+      setSubmitError(
+        '送信に失敗しました。入力内容と選択済みファイル名は保持されています。通信環境をご確認のうえ、そのまま再送してください。'
+      );
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsSubmitting(false);
     }
@@ -1910,10 +1999,10 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
     >
       <button
         type="button"
-        onClick={() => setView('driver')}
+        onClick={() => setView('top')}
         className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm"
       >
-        <ArrowLeft size={16} /> 協力ドライバー登録に戻る
+        <ArrowLeft size={16} /> トップに戻る
       </button>
 
       <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
@@ -1933,7 +2022,42 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
         <p className="text-slate-600 text-sm">
           登録してもサイト上に個人を公開しません。審査のうえ、案件に応じて運営よりご連絡します。
         </p>
+
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+          <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-600">
+            必須書類 {uploadedRequiredCount} / {DRIVER_DOC_REQUIRED.length}
+          </span>
+          <span className="rounded-full bg-slate-100 px-3 py-1 font-bold text-slate-600">
+            入力内容は保持されます
+          </span>
+        </div>
       </div>
+
+      {submitError && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+          <div className="flex items-start gap-2">
+            <Info size={18} className="mt-0.5 shrink-0" />
+            <div>
+              <p className="font-bold mb-1">送信できませんでした</p>
+              <p>{submitError}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isSubmitting && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 h-5 w-5 shrink-0 rounded-full border-2 border-amber-500 border-t-transparent animate-spin" />
+            <div>
+              <p className="font-bold">画像をまとめて送信中です</p>
+              <p className="mt-1">
+                書類画像が多いため、30秒前後かかることがあります。画面を閉じず、そのままお待ちください。
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <form className="space-y-6" onSubmit={handleSubmit}>
         <SectionCard title="基本情報" icon={<User className="text-[#52a285]" size={22} />}>
@@ -2073,8 +2197,11 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
           title="書類アップロード"
           icon={<ShieldCheck className="text-[#52a285]" size={22} />}
         >
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-slate-600 mb-2">
             必須6種：免許証（表・裏）、車検証、任意保険、貨物軽自動車運送事業経営届出書、車両前面写真（黒ナンバー入り）
+          </p>
+          <p className="text-xs text-slate-400 mb-4">
+            選択したファイル名は保持されます。送信失敗時もそのまま再送しやすくしています。
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             {DRIVER_DOC_REQUIRED.map((d, i) => (
@@ -2082,7 +2209,12 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                 <FileUpload
                   label={d.label}
                   required
-                  onFileSelect={(base64) => setFiles((prev) => ({ ...prev, [d.key]: base64 }))}
+                  initialFileName={fileNames[d.key]}
+                  onFileSelect={(base64, name) => {
+                    setFiles((prev) => ({ ...prev, [d.key]: base64 }));
+                    setFileNames((prev) => ({ ...prev, [d.key]: name }));
+                    setSubmitError('');
+                  }}
                 />
               </React.Fragment>
             ))}
@@ -2091,7 +2223,12 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
                 <FileUpload
                   label={d.label}
                   required={false}
-                  onFileSelect={(base64) => setFiles((prev) => ({ ...prev, [d.key]: base64 }))}
+                  initialFileName={fileNames[d.key]}
+                  onFileSelect={(base64, name) => {
+                    setFiles((prev) => ({ ...prev, [d.key]: base64 }));
+                    setFileNames((prev) => ({ ...prev, [d.key]: name }));
+                    setSubmitError('');
+                  }}
                 />
               </React.Fragment>
             ))}
@@ -2135,7 +2272,7 @@ function RegisterView({ setView }: { setView: (view: ViewState) => void }) {
             }`}
           >
             <Send size={18} />
-            {isSubmitting ? '送信中...' : '送信する（登録）'}
+            {isSubmitting ? '画像を送信中…少しお待ちください' : '送信する（登録）'}
           </button>
         </SectionCard>
       </form>
@@ -2302,14 +2439,20 @@ function Modal({
 function FileUpload({
   label,
   required,
+  initialFileName = '',
   onFileSelect
 }: {
   label: string;
   required: boolean;
-  onFileSelect: (base64: string) => void;
+  initialFileName?: string;
+  onFileSelect: (base64: string, fileName: string) => void;
 }) {
-  const [fileName, setFileName] = useState('');
+  const [fileName, setFileName] = useState(initialFileName);
   const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    setFileName(initialFileName);
+  }, [initialFileName]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -2326,7 +2469,7 @@ function FileUpload({
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      onFileSelect(reader.result as string);
+      onFileSelect(reader.result as string, file.name);
     };
     reader.readAsDataURL(file);
   };
@@ -2347,6 +2490,10 @@ function FileUpload({
           {fileName || '選択されていません'}
         </span>
       </div>
+
+      {fileName && (
+        <p className="text-[11px] text-emerald-700 mt-2 font-bold">選択中: {fileName}</p>
+      )}
 
       {errorMsg && <p className="text-xs text-red-500 mt-2 font-bold">{errorMsg}</p>}
     </div>
