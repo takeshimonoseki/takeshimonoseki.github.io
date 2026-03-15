@@ -48,14 +48,14 @@ export function TopPage({ setView }: { setView: SetView }) {
                 </div>
               </div>
               <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.08] drop-shadow-sm">
-                <span className="block">下関市中心。</span>
-                <span className="block">配送相談も、</span>
-                <span className="block">ドライバー登録も。</span>
+                <span className="block">下関の軽貨物相談。</span>
+                <span className="block">協力ドライバー募集と</span>
+                <span className="block">黒ナンバー相談に対応。</span>
               </h1>
               <p className="text-base md:text-xl text-slate-700 max-w-xl leading-relaxed font-medium">
-                {SITE_NAME}は、配送相談の受付と協力ドライバー登録の窓口です。
+                {SITE_NAME}は、下関市中心の軽貨物配送相談と協力ドライバー募集の窓口です。
                 <br className="hidden md:block" />
-                登録しても個人は公開せず、案件に応じて運営よりご連絡します。
+                黒ナンバー未取得・開業前・書類準備中の方や、軽バン車両相談にも対応しています。
               </p>
               <div className="grid sm:grid-cols-3 gap-3 max-w-2xl">
                 {[
@@ -82,7 +82,7 @@ export function TopPage({ setView }: { setView: SetView }) {
                   className="bg-[#52a285] text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 flex items-center gap-3 group w-full sm:w-auto justify-center"
                 >
                   <Truck size={24} className="group-hover:scale-110 transition-transform" />
-                  配送の相談をする
+                  配送相談・見積依頼へ進む
                 </button>
                 <button
                   type="button"
@@ -90,7 +90,7 @@ export function TopPage({ setView }: { setView: SetView }) {
                   className="bg-slate-800 text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-slate-900 transition-all shadow-lg flex items-center gap-3 group w-full sm:w-auto justify-center"
                 >
                   <UserPlus size={24} className="group-hover:scale-110 transition-transform" />
-                  協力ドライバー登録
+                  協力ドライバー登録フォームへ進む
                 </button>
               </div>
             </div>
@@ -108,10 +108,10 @@ export function TopPage({ setView }: { setView: SetView }) {
           <div className="w-16 h-16 bg-[#e6f0ec] rounded-2xl flex items-center justify-center text-[#52a285] mb-6 group-hover:scale-110 transition-transform">
             <Truck size={32} />
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 mb-4">お客様向け</h3>
-          <p className="text-slate-600 mb-8">配送相談・見積依頼・正式依頼はこちらから。</p>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">下関の軽貨物配送を相談したい方へ</h2>
+          <p className="text-slate-600 mb-8">配送相談・見積依頼・正式依頼へ、このまま進めます。</p>
           <div className="bg-[#52a285] text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-[#3d7a64] transition-colors">
-            すぐ運賃計算へ進む
+            軽貨物の配送相談・見積依頼へ進む
           </div>
         </button>
         <button
@@ -122,10 +122,10 @@ export function TopPage({ setView }: { setView: SetView }) {
           <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-6 group-hover:scale-110 transition-transform">
             <UserPlus size={32} />
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 mb-4">ドライバー向け</h3>
-          <p className="text-slate-600 mb-8">協力ドライバー登録はこちらから。</p>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">協力ドライバー募集に応募したい方へ</h2>
+          <p className="text-slate-600 mb-8">協力ドライバー登録フォームへ、このまま進めます。</p>
           <div className="bg-slate-800 text-white px-6 py-3 rounded-xl font-bold w-full flex items-center justify-center gap-2 group-hover:bg-slate-900 transition-colors">
-            すぐ登録フォームへ進む
+            協力ドライバー登録フォームへ進む
           </div>
         </button>
       </div>
@@ -144,12 +144,12 @@ export function TopPage({ setView }: { setView: SetView }) {
             <span className="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded font-bold border border-slate-200">
               開業前・書類がまだの方
             </span>
-            <h3 className="text-xl font-bold text-slate-800 mt-3 mb-1">黒ナンバー未取得・開業前でも相談できます</h3>
+            <h2 className="text-xl font-bold text-slate-800 mt-3 mb-1">黒ナンバー未取得・開業前でも相談できます</h2>
             <p className="text-slate-600 text-sm">
-              登録前でも相談だけでもOK。黒ナンバー取得の流れ、開業届・必要書類、軽貨物向け車両選びなど、お気軽にどうぞ。
+              登録前でも相談だけでOK。黒ナンバー取得の流れ、開業届や必要書類、軽バン車両相談までまとめて受け付けています。
             </p>
             <span className="inline-block mt-3 text-[#52a285] font-bold text-sm group-hover:underline">
-              相談ページへ →
+              黒ナンバー・開業前の相談ページへ →
             </span>
           </div>
         </div>
@@ -166,10 +166,10 @@ export function TopPage({ setView }: { setView: SetView }) {
               車両購入 / 修理・整備 / 車検
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 mb-3">車両の相談</h3>
+          <h2 className="text-2xl font-bold text-slate-800 mb-3">軽バン車両の相談</h2>
           <p className="text-slate-600 leading-relaxed mb-6">
-            車両購入・修理整備・車検の相談も受けています。配送相談とドライバー登録がメインですが、
-            車まわりもまとめて相談したい方向けのページです。
+            車両購入・修理整備・車検の相談も受けています。配送相談と協力ドライバー募集が主軸ですが、
+            軽貨物向けの車両相談もまとめて進めたい方向けの導線です。
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             <button
@@ -177,7 +177,7 @@ export function TopPage({ setView }: { setView: SetView }) {
               onClick={() => setView('vehicle')}
               className="bg-white border border-slate-200 text-slate-800 px-6 py-4 rounded-2xl font-bold hover:border-[#52a285] hover:text-[#3d7a64] transition-colors"
             >
-              車両の相談ページへ
+              軽バン車両の相談ページへ
             </button>
             <a
               href={LINE_FRIEND_ADD_URL}

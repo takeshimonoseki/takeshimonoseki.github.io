@@ -96,7 +96,7 @@ export default function App() {
                 onClick={() => setCurrentView('simulator')}
                 className={`hover:text-[#52a285] transition-colors ${isDeliveryActive ? 'text-[#52a285]' : ''}`}
               >
-                配送相談
+                配送相談・見積依頼
               </button>
               <button
                 type="button"
@@ -105,7 +105,7 @@ export default function App() {
                   currentView === 'register' ? 'text-[#52a285]' : ''
                 }`}
               >
-                協力ドライバー登録
+                協力ドライバー募集・登録
               </button>
             </div>
 
