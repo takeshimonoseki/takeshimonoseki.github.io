@@ -44,7 +44,7 @@ export function TopPage({ setView }: { setView: SetView }) {
                 </div>
                 <div className="text-left">
                   <p className="text-[11px] font-black tracking-[0.24em] text-slate-500">SHIMONOSEKI TRANSPORT</p>
-                  <p className="text-sm font-bold text-slate-700">配送相談・協力ドライバー登録窓口</p>
+                  <p className="text-sm font-bold text-slate-700">軽貨物配送相談・協力ドライバー募集・黒ナンバー相談の窓口</p>
                 </div>
               </div>
               <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.08] drop-shadow-sm">
@@ -82,7 +82,7 @@ export function TopPage({ setView }: { setView: SetView }) {
                   className="bg-[#52a285] text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 flex items-center gap-3 group w-full sm:w-auto justify-center"
                 >
                   <Truck size={24} className="group-hover:scale-110 transition-transform" />
-                  配送相談・見積依頼へ進む
+                  配送相談・見積フォームへ進む
                 </button>
                 <button
                   type="button"
@@ -208,6 +208,63 @@ export function TopPage({ setView }: { setView: SetView }) {
           <p className="mt-3 text-[11px] text-slate-400 leading-relaxed">スマホはボタンから追加、PCはQR読み取りで使えます。</p>
         </div>
       </div>
+
+      {/* SEO本文セクション */}
+      <section className="bg-white rounded-[2rem] p-8 md:p-10 shadow-sm border border-slate-100 space-y-10">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-3">対応地域（下関市中心）</h2>
+          <p className="text-slate-600 leading-relaxed">
+            下関の軽貨物相談は、下関市を中心に受け付けています。長府・新下関・彦島・菊川・豊浦などを含む周辺エリアも、
+            内容に応じてご相談ください。
+          </p>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">相談の流れ</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">1. 内容確認</h3>
+              <p className="text-sm text-slate-600">配送相談・協力ドライバー募集・黒ナンバー相談の内容を確認します。</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">2. 必要に応じて連絡</h3>
+              <p className="text-sm text-slate-600">入力内容をもとに、必要な確認事項があれば運営からご連絡します。</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">3. 相談または登録案内</h3>
+              <p className="text-sm text-slate-600">目的に合わせて、配送相談の継続または登録案内へ進みます。</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">4. 条件が合えば次へ進む</h3>
+              <p className="text-sm text-slate-600">条件が合えば、見積依頼・依頼受付・協力ドライバー登録へ進みます。</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">よくある質問</h2>
+          <div className="space-y-4">
+            <div className="rounded-2xl border border-slate-200 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">配送相談はどこまで対応していますか？</h3>
+              <p className="text-sm text-slate-600">
+                下関市中心の軽貨物配送相談に対応しています。まずは見積フォームからご相談ください。
+              </p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">協力ドライバー募集は未経験でも応募できますか？</h3>
+              <p className="text-sm text-slate-600">
+                未経験の方でも応募可能です。現在の状況を確認し、条件に応じて登録案内を行います。
+              </p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">黒ナンバー未取得でも相談できますか？</h3>
+              <p className="text-sm text-slate-600">
+                可能です。黒ナンバー相談や軽貨物開業相談として、開業前の段階から受け付けています。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </motion.div>
   );
 }

@@ -147,14 +147,15 @@ export function RegisterPage({ setView }: { setView: SetView }) {
 
       <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
         <div className="flex items-center gap-2 mb-4">
-          <span className="bg-[#e6f0ec] text-[#3d7a64] text-xs px-2 py-1 rounded font-bold">協力ドライバー登録</span>
+          <span className="bg-[#e6f0ec] text-[#3d7a64] text-xs px-2 py-1 rounded font-bold">下関の協力ドライバー募集・登録</span>
           <span className="text-slate-500 text-xs flex items-center gap-1">
             <Info size={14} /> 送信に少し時間がかかる場合があります
           </span>
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">協力ドライバー登録フォーム</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-4">下関の協力ドライバー募集・登録フォーム</h1>
         <p className="text-slate-600 text-sm">
-          登録してもサイト上に個人を公開しません。審査のうえ、案件に応じて運営よりご連絡します。
+          下関中心の軽貨物案件に向けた協力ドライバー募集ページです。登録してもサイト上に個人を公開せず、
+          審査のうえ案件に応じて運営よりご連絡します。
         </p>
       </div>
 
@@ -341,7 +342,7 @@ export function RegisterPage({ setView }: { setView: SetView }) {
           </div>
         </SectionCard>
 
-        <SectionCard title="送信" icon={<Send className="text-[#52a285]" size={22} />}>
+        <SectionCard title="送信（協力ドライバー募集への応募）" icon={<Send className="text-[#52a285]" size={22} />}>
           <div className="bg-[#fcfaf2] border border-amber-200 rounded-xl p-6 text-sm text-slate-600 space-y-2 mb-6">
             <p>・登録は審査制です。サイト上に氏名・プロフィールは公開しません。</p>
             <p>・入力内容・書類は連絡・審査・案件マッチングのために利用します。案件に応じて必要最小限の情報をお客様側に共有する場合があります。</p>
@@ -369,10 +370,66 @@ export function RegisterPage({ setView }: { setView: SetView }) {
             }`}
           >
             <Send size={18} />
-            {isSubmitting ? '画像を送信中…少しお待ちください' : '送信する（登録）'}
+            {isSubmitting ? '画像を送信中…少しお待ちください' : '協力ドライバー募集に応募する'}
           </button>
         </SectionCard>
       </form>
+
+      <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 space-y-8">
+        <div>
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-3">対応地域（募集エリア）</h2>
+          <p className="text-sm text-slate-600 leading-relaxed">
+            協力ドライバー募集は、下関市を中心に長府・新下関・彦島・菊川・豊浦などの周辺エリアを想定しています。
+            稼働可能エリアは登録内容を確認したうえで調整します。
+          </p>
+        </div>
+
+        <div>
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-4">登録の流れ</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">1. 内容確認</h3>
+              <p className="text-sm text-slate-600">入力内容と提出書類を確認します。</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">2. 必要に応じて連絡</h3>
+              <p className="text-sm text-slate-600">確認事項がある場合のみ、運営からご連絡します。</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">3. 登録案内</h3>
+              <p className="text-sm text-slate-600">内容に応じて、協力ドライバー登録の進行案内を行います。</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">4. 条件が合えば次へ進む</h3>
+              <p className="text-sm text-slate-600">条件が合えば、案件連携に向けて次のステップへ進みます。</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-4">よくある質問</h2>
+          <div className="space-y-3">
+            <div className="rounded-xl border border-slate-200 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">登録条件はありますか？</h3>
+              <p className="text-sm text-slate-600">
+                必須項目の入力と必要書類の提出が必要です。内容確認後に連絡・案内を行います。
+              </p>
+            </div>
+            <div className="rounded-xl border border-slate-200 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">連絡はどのように届きますか？</h3>
+              <p className="text-sm text-slate-600">
+                登録内容を確認後、必要に応じてメールや電話でご連絡します。
+              </p>
+            </div>
+            <div className="rounded-xl border border-slate-200 p-4">
+              <h3 className="font-bold text-slate-800 mb-1">登録後にプロフィールは公開されますか？</h3>
+              <p className="text-sm text-slate-600">
+                公開しません。サイト上で個人情報を一覧表示する運用は行っていません。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {submitSuccess && (
         <Modal onClose={() => setView('top')}>
