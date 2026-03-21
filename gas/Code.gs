@@ -875,6 +875,21 @@ function buildJsonResponse_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+/**
+ * 受付番号がシートに存在するか（フロントの受付確認用）
+ */
+function findReceiptInSheet_(sheet, receiptNo) {
+  var target = String(receiptNo || '').trim();
+  if (!target) return false;
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return false;
+  var data = sheet.getRange(2, 1, lastRow, 2).getValues();
+  for (var i = 0; i < data.length; i++) {
+    if (String(data[i][1] || '').trim() === target) return true;
+  }
+  return false;
+}
+
 function doPost(e) {
   var debugId = Utilities.getUuid();
   var ss = null;
@@ -942,6 +957,38 @@ function doPost(e) {
 function doGet(e) {
   var params = (e && e.parameter) ? e.parameter : {};
   var type = safeStr_(params.type, 50);
+
+  if (type === 'verify') {
+    var receiptNo = safeStr_(params.receiptNo, 100);
+    if (!receiptNo) {
+      return buildJsonResponse_({
+        ok: false,
+        saved: false,
+        receipt_no: '',
+        message: 'receiptNo が必要です'
+      });
+    }
+    try {
+      var ss = getSpreadsheet_();
+      var isDriver = receiptNo.indexOf('D-') === 0;
+      var sheetName = isDriver ? getDriversSheetName_() : getRequestsSheetName_();
+      var headers = isDriver ? DRIVERS_HEADERS : REQUESTS_HEADERS;
+      var sh = ensureSheet_(ss, sheetName, headers);
+      var saved = findReceiptInSheet_(sh, receiptNo);
+      return buildJsonResponse_({
+        ok: true,
+        saved: saved,
+        receipt_no: receiptNo
+      });
+    } catch (eVerify) {
+      return buildJsonResponse_({
+        ok: false,
+        saved: false,
+        receipt_no: receiptNo,
+        message: String(eVerify)
+      });
+    }
+  }
 
   if (type === 'health') {
     var out = {

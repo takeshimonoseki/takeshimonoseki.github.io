@@ -147,18 +147,141 @@ export function calculateFare(input: SimulatorInput) {
 }
 
 // --- GAS 送信 ---
-// no-cors のためレスポンス本文は読めない。成功表示は「リクエスト送信完了」であり、GAS の保存成否とは一致しない場合がある（運営はログ・シートで確認）。
-export async function submitToGas(payload: unknown) {
-  await Promise.race([
-    fetch(GAS_URL, {
+/** GAS doPost の JSON 応答（Code.gs の buildJsonResponse_） */
+export type GasSubmitResult = {
+  result?: string;
+  receipt_no?: string;
+  saved?: boolean;
+  message?: string;
+  mail_sent?: boolean;
+  line_sent?: boolean;
+  debugId?: string;
+  ok?: boolean;
+};
+
+function getReceiptNoFromPayload(payload: unknown): string {
+  if (typeof payload === 'object' && payload !== null && 'receiptNo' in payload) {
+    return String((payload as { receiptNo: unknown }).receiptNo ?? '');
+  }
+  return '';
+}
+
+function isGasSuccess(data: GasSubmitResult): boolean {
+  return data.saved === true || data.result === 'OK';
+}
+
+function buildVerifyUrl(receiptNo: string): string {
+  const sep = GAS_URL.includes('?') ? '&' : '?';
+  return `${GAS_URL}${sep}type=verify&receiptNo=${encodeURIComponent(receiptNo)}`;
+}
+
+/** 受付番号がシートに現れるまで GET で確認（GAS の type=verify） */
+async function pollVerifyReceipt(receiptNo: string): Promise<void> {
+  for (let i = 0; i < 20; i++) {
+    if (i > 0) {
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+    try {
+      const res = await fetch(buildVerifyUrl(receiptNo), {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit'
+      });
+      const text = await res.text();
+      const data = JSON.parse(text) as { saved?: boolean };
+      if (data.saved === true) return;
+    } catch {
+      // 再試行
+    }
+  }
+  throw new Error(
+    '送信が完了したか確認できませんでした。スプレッドシートまたはメールをご確認ください。'
+  );
+}
+
+async function tryVerifyOnly(receiptNo: string): Promise<GasSubmitResult> {
+  await pollVerifyReceipt(receiptNo);
+  return {
+    result: 'OK',
+    receipt_no: receiptNo,
+    saved: true,
+    message: '受付を確認しました'
+  };
+}
+
+/** CORS で応答が読めない場合のフォールバック（no-cors POST → verify GET） */
+async function submitNoCorsThenVerify(payload: unknown, receiptNo: string): Promise<GasSubmitResult> {
+  await fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify(payload),
+    keepalive: true
+  });
+  await new Promise((r) => setTimeout(r, 2000));
+  await pollVerifyReceipt(receiptNo);
+  return {
+    result: 'OK',
+    receipt_no: receiptNo,
+    saved: true,
+    message: '受付を確認しました'
+  };
+}
+
+/**
+ * GAS に送信し、応答 JSON で成功/失敗を判定する。
+ * - 通常: mode=cors で POST、result / saved を解釈
+ * - タイムアウト: 受付番号で verify GET のみ試行（二重 POST しない）
+ * - CORS/ネットワーク失敗: no-cors POST 後に verify GET
+ */
+export async function submitToGas(payload: unknown): Promise<GasSubmitResult> {
+  const receiptNo = getReceiptNoFromPayload(payload);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 120000);
+
+  try {
+    const res = await fetch(GAS_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
+      mode: 'cors',
+      credentials: 'omit',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       body: JSON.stringify(payload),
-      keepalive: true
-    }),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 15000))
-  ]);
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    const text = await res.text();
+    let data: GasSubmitResult;
+    try {
+      data = JSON.parse(text) as GasSubmitResult;
+    } catch {
+      throw new Error('サーバーからの応答を読み取れませんでした。');
+    }
+
+    if (!isGasSuccess(data)) {
+      throw new Error(data.message || '送信に失敗しました');
+    }
+    return data;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    const e = err instanceof Error ? err : new Error(String(err));
+
+    if (e.name === 'AbortError' && receiptNo) {
+      try {
+        return await tryVerifyOnly(receiptNo);
+      } catch {
+        throw new Error(
+          '送信がタイムアウトしました。スプレッドシートに受付番号があれば受付済みです。ページを閉じず、必要なら再送をご検討ください。'
+        );
+      }
+    }
+
+    if (e instanceof TypeError && receiptNo) {
+      return submitNoCorsThenVerify(payload, receiptNo);
+    }
+
+    throw e;
+  }
 }
 
 // --- 車両相談ラベル ---

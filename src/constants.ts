@@ -20,9 +20,10 @@ export const VEHICLE_FORM_STORAGE_KEY = 'keikamotsu_take_vehicle_form_v1';
 export const VEHICLE_KIND_STORAGE_KEY = 'keikamotsu_take_vehicle_kind_v1';
 
 // 開発時、または ?test=1 のときのみテスト入力バーを表示
-const isTestQueryEnabled =
-  typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('test') === '1';
-export const ENABLE_TEST_FILL = import.meta.env.DEV || isTestQueryEnabled;
+export const ENABLE_TEST_FILL =
+  import.meta.env.DEV ||
+  (typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('test') === '1');
 
 // 開発用テスト画像（1x1 透過 PNG の Data URL）
 export const TEST_IMAGE_DATA_URL =
