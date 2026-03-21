@@ -110,7 +110,10 @@ export function DeliveryRequestPage({
     setShowErrors(true);
     if (!isValid) {
       const firstInvalid = document.querySelector('.invalid-field');
-      if (firstInvalid instanceof HTMLElement) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (firstInvalid instanceof HTMLElement) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.setTimeout(() => firstInvalid.focus(), 120);
+      }
       return;
     }
     setIsSubmitting(true);
@@ -297,6 +300,12 @@ export function DeliveryRequestPage({
               </>
             )}
           </button>
+          {showErrors && !isValid && (
+            <p className="text-xs text-red-500 font-bold flex items-center gap-1">
+              <Info size={12} />
+              未入力の必須項目があります。赤枠を埋めて、もう一度押してください。
+            </p>
+          )}
           <div className="flex items-center justify-center gap-2 text-slate-400">
             <ShieldCheck size={16} />
             <span className="text-xs font-bold">フォーム送信が正式受付です</span>

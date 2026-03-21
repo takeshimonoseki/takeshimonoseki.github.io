@@ -25,6 +25,7 @@ export function SimulatorPage({
   setSimulatorInput: React.Dispatch<React.SetStateAction<SimulatorInput>>;
 }) {
   const [isLocating, setIsLocating] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
 
   useEffect(() => {
     const checkWeather = async () => {
@@ -80,6 +81,27 @@ export function SimulatorPage({
     simulatorInput.distance.trim() &&
     simulatorInput.cargoDetail.trim() &&
     simulatorInput.preferredDate.trim();
+
+  const invalidOrigin = showErrors && !simulatorInput.origin.trim();
+  const invalidDestination = showErrors && !simulatorInput.destination.trim();
+  const invalidDistance = showErrors && !simulatorInput.distance.trim();
+  const invalidCargoDetail = showErrors && !simulatorInput.cargoDetail.trim();
+  const invalidPreferredDate = showErrors && !simulatorInput.preferredDate.trim();
+
+  const handleProceed = (nextView: ViewState) => {
+    setShowErrors(true);
+    if (!requiredOk) {
+      const firstInvalid = document.querySelector('.simulator-invalid-field');
+      if (firstInvalid instanceof HTMLElement) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if ('focus' in firstInvalid) {
+          window.setTimeout(() => firstInvalid.focus(), 120);
+        }
+      }
+      return;
+    }
+    setView(nextView);
+  };
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -143,14 +165,21 @@ export function SimulatorPage({
         <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-slate-800 mb-2">集荷先</label>
+              <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                集荷先
+                <span className="bg-red-50 text-red-500 text-[10px] px-2 py-0.5 rounded font-bold border border-red-100">必須</span>
+              </label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={simulatorInput.origin}
                   onChange={(e) => update({ origin: e.target.value })}
                   placeholder="例：山口県下関市〇〇"
-                  className="flex-1 p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none"
+                  className={`flex-1 p-3 rounded-xl border outline-none ${
+                    invalidOrigin
+                      ? 'border-red-500 bg-red-50/50 simulator-invalid-field'
+                      : 'border-slate-200 focus:border-[#52a285]'
+                  }`}
                 />
                 <button
                   type="button"
@@ -164,20 +193,30 @@ export function SimulatorPage({
               </div>
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-800 mb-2">納品先</label>
+              <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                納品先
+                <span className="bg-red-50 text-red-500 text-[10px] px-2 py-0.5 rounded font-bold border border-red-100">必須</span>
+              </label>
               <input
                 type="text"
                 value={simulatorInput.destination}
                 onChange={(e) => update({ destination: e.target.value })}
                 placeholder="例：福岡県福岡市〇〇"
-                className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none"
+                className={`w-full p-3 rounded-xl border outline-none ${
+                  invalidDestination
+                    ? 'border-red-500 bg-red-50/50 simulator-invalid-field'
+                    : 'border-slate-200 focus:border-[#52a285]'
+                }`}
               />
             </div>
           </div>
 
           <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-bold text-blue-900">走行距離（km）</label>
+              <label className="flex items-center gap-2 text-sm font-bold text-blue-900">
+                距離（km）
+                <span className="bg-red-50 text-red-500 text-[10px] px-2 py-0.5 rounded font-bold border border-red-100">必須</span>
+              </label>
               <a
                 href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
                   simulatorInput.origin
@@ -219,7 +258,11 @@ export function SimulatorPage({
                 value={simulatorInput.distance}
                 onChange={(e) => update({ distance: e.target.value })}
                 placeholder="例：15"
-                className="w-full p-3 rounded-xl border border-blue-200 focus:border-blue-500 outline-none bg-white font-mono text-lg"
+                className={`w-full p-3 rounded-xl border outline-none bg-white font-mono text-lg ${
+                  invalidDistance
+                    ? 'border-red-500 bg-red-50/50 simulator-invalid-field'
+                    : 'border-blue-200 focus:border-blue-500'
+                }`}
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 font-bold">km</div>
             </div>
@@ -239,24 +282,38 @@ export function SimulatorPage({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-800 mb-2">希望日時</label>
+              <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+                希望日時
+                <span className="bg-red-50 text-red-500 text-[10px] px-2 py-0.5 rounded font-bold border border-red-100">必須</span>
+              </label>
               <input
                 type="datetime-local"
                 value={simulatorInput.preferredDate}
                 onChange={(e) => update({ preferredDate: e.target.value })}
-                className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                className={`w-full p-3 rounded-xl border outline-none bg-white ${
+                  invalidPreferredDate
+                    ? 'border-red-500 bg-red-50/50 simulator-invalid-field'
+                    : 'border-slate-200 focus:border-[#52a285]'
+                }`}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-2">荷物内容</label>
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-800 mb-2">
+              荷物内容
+              <span className="bg-red-50 text-red-500 text-[10px] px-2 py-0.5 rounded font-bold border border-red-100">必須</span>
+            </label>
             <textarea
               rows={3}
               value={simulatorInput.cargoDetail}
               onChange={(e) => update({ cargoDetail: e.target.value })}
               placeholder="例：段ボール10箱、折りたたみ机1台、椅子2脚"
-              className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none resize-none"
+              className={`w-full p-3 rounded-xl border outline-none resize-none ${
+                invalidCargoDetail
+                  ? 'border-red-500 bg-red-50/50 simulator-invalid-field'
+                  : 'border-slate-200 focus:border-[#52a285]'
+              }`}
             />
           </div>
           <div>
@@ -365,37 +422,28 @@ export function SimulatorPage({
           <p className="text-[10px] text-slate-500">※実際の荷物量や現地状況により変動する場合があります</p>
         </div>
 
-        {!requiredOk && (
-          <p className="text-xs text-red-500 font-bold mt-4 flex items-center gap-1">
-            <Info size={12} />
-            集荷先・納品先・距離・荷物内容・希望日時を入れてください。
-          </p>
-        )}
-
         <div className="grid md:grid-cols-2 gap-4 mt-6">
           <button
             type="button"
-            onClick={() => {
-              if (!requiredOk) return;
-              setView('consult-delivery-estimate');
-            }}
-            disabled={!requiredOk}
-            className="w-full bg-slate-800 text-white font-black py-5 rounded-2xl hover:bg-slate-900 transition-all shadow-lg text-lg disabled:bg-slate-300 disabled:cursor-not-allowed"
+            onClick={() => handleProceed('consult-delivery-estimate')}
+            className="w-full bg-slate-800 text-white font-black py-5 rounded-2xl hover:bg-slate-900 transition-all shadow-lg text-lg"
           >
             この内容で見積依頼する
           </button>
           <button
             type="button"
-            onClick={() => {
-              if (!requiredOk) return;
-              setView('consult-delivery-order');
-            }}
-            disabled={!requiredOk}
-            className="w-full bg-[#52a285] text-white font-black py-5 rounded-2xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 text-lg disabled:bg-slate-300 disabled:cursor-not-allowed"
+            onClick={() => handleProceed('consult-delivery-order')}
+            className="w-full bg-[#52a285] text-white font-black py-5 rounded-2xl hover:bg-[#3d7a64] transition-all shadow-lg shadow-emerald-100 text-lg"
           >
             この内容で依頼する
           </button>
         </div>
+        {showErrors && !requiredOk && (
+          <p className="text-xs text-red-500 font-bold mt-4 flex items-center gap-1">
+            <Info size={12} />
+            未入力の必須項目があります。赤枠を埋めて、もう一度押してください。
+          </p>
+        )}
       </div>
     </motion.div>
   );

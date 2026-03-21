@@ -36,6 +36,7 @@ export function RegisterPage({ setView }: { setView: SetView }) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [receiptNo, setReceiptNo] = useState('');
   const [submitError, setSubmitError] = useState('');
+  const [showErrors, setShowErrors] = useState(false);
   const isMobile = isMobileDevice();
 
   const fillTestData = () => {
@@ -62,6 +63,7 @@ export function RegisterPage({ setView }: { setView: SetView }) {
     setFiles(testFiles);
     setFileNames(testNames);
     setSubmitError('');
+    setShowErrors(false);
   };
 
   const requiredFilesOk = DRIVER_DOC_REQUIRED.every((d) => !!files[d.key]);
@@ -91,9 +93,14 @@ export function RegisterPage({ setView }: { setView: SetView }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShowErrors(true);
     setSubmitError('');
     if (!isFormValid) {
-      setSubmitError('必須項目・必須ファイル・同意チェックを確認してください。');
+      const firstInvalid = document.querySelector('.invalid-field');
+      if (firstInvalid instanceof HTMLElement) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.setTimeout(() => firstInvalid.focus(), 120);
+      }
       return;
     }
     setIsSubmitting(true);
@@ -193,6 +200,8 @@ export function RegisterPage({ setView }: { setView: SetView }) {
               value={formData.name}
               onChange={(value) => setFormData((prev) => ({ ...prev, name: value }))}
               placeholder="例：山田 太郎"
+              invalid={showErrors && !formData.name.trim()}
+              errorText="氏名を入力してください"
             />
             <FormInput
               label="ふりがな"
@@ -200,6 +209,8 @@ export function RegisterPage({ setView }: { setView: SetView }) {
               value={formData.furigana}
               onChange={(value) => setFormData((prev) => ({ ...prev, furigana: value }))}
               placeholder="例：やまだ たろう"
+              invalid={showErrors && !formData.furigana.trim()}
+              errorText="ふりがなを入力してください"
             />
             <FormInput
               label="電話番号"
@@ -208,6 +219,8 @@ export function RegisterPage({ setView }: { setView: SetView }) {
               value={formData.phone}
               onChange={(value) => setFormData((prev) => ({ ...prev, phone: value }))}
               placeholder="例：09012345678"
+              invalid={showErrors && !formData.phone.trim()}
+              errorText="電話番号を入力してください"
             />
             <FormInput
               label="メールアドレス"
@@ -216,6 +229,8 @@ export function RegisterPage({ setView }: { setView: SetView }) {
               value={formData.email}
               onChange={(value) => setFormData((prev) => ({ ...prev, email: value }))}
               placeholder="例：example@mail.com"
+              invalid={showErrors && !formData.email.trim()}
+              errorText="メールアドレスを入力してください"
             />
             <FormInput
               label="郵便番号"
@@ -241,7 +256,11 @@ export function RegisterPage({ setView }: { setView: SetView }) {
               <select
                 value={formData.maker}
                 onChange={(e) => setFormData((prev) => ({ ...prev, maker: e.target.value, model: '' }))}
-                className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                className={`w-full p-3 rounded-xl border outline-none bg-white ${
+                  showErrors && !formData.maker.trim()
+                    ? 'border-red-500 bg-red-50/50 invalid-field'
+                    : 'border-slate-200 focus:border-[#52a285]'
+                }`}
               >
                 <option value="">選択してください</option>
                 {Object.keys(KEI_MAKERS).map((maker) => (
@@ -259,7 +278,11 @@ export function RegisterPage({ setView }: { setView: SetView }) {
                 value={formData.model}
                 onChange={(e) => setFormData((prev) => ({ ...prev, model: e.target.value }))}
                 disabled={!formData.maker}
-                className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white disabled:bg-slate-50 disabled:text-slate-400"
+                className={`w-full p-3 rounded-xl border outline-none bg-white disabled:bg-slate-50 disabled:text-slate-400 ${
+                  showErrors && !formData.model.trim()
+                    ? 'border-red-500 bg-red-50/50 invalid-field'
+                    : 'border-slate-200 focus:border-[#52a285]'
+                }`}
               >
                 <option value="">{formData.maker ? '選択してください' : 'メーカーを選択してください'}</option>
                 {formData.maker &&
@@ -277,7 +300,11 @@ export function RegisterPage({ setView }: { setView: SetView }) {
               <select
                 value={formData.experience}
                 onChange={(e) => setFormData((prev) => ({ ...prev, experience: e.target.value }))}
-                className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#52a285] outline-none bg-white"
+                className={`w-full p-3 rounded-xl border outline-none bg-white ${
+                  showErrors && !formData.experience.trim()
+                    ? 'border-red-500 bg-red-50/50 invalid-field'
+                    : 'border-slate-200 focus:border-[#52a285]'
+                }`}
               >
                 <option value="">選択してください</option>
                 <option value="未経験">未経験</option>
@@ -312,7 +339,12 @@ export function RegisterPage({ setView }: { setView: SetView }) {
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             {DRIVER_DOC_REQUIRED.map((d, i) => (
-              <React.Fragment key={`req-${i}`}>
+              <div
+                key={`req-${i}`}
+                className={`rounded-xl ${
+                  showErrors && !files[d.key] ? 'invalid-field outline outline-2 outline-red-500 outline-offset-2' : ''
+                }`}
+              >
                 <FileUpload
                   label={d.label}
                   required
@@ -323,7 +355,7 @@ export function RegisterPage({ setView }: { setView: SetView }) {
                     setSubmitError('');
                   }}
                 />
-              </React.Fragment>
+              </div>
             ))}
             {DRIVER_DOC_OPTIONAL.map((d, i) => (
               <React.Fragment key={`opt-${i}`}>
@@ -353,20 +385,27 @@ export function RegisterPage({ setView }: { setView: SetView }) {
               type="checkbox"
               checked={formData.agreed}
               onChange={(e) => setFormData((prev) => ({ ...prev, agreed: e.target.checked }))}
-              className="mt-1 w-5 h-5 text-[#52a285] rounded border-slate-300 focus:ring-[#52a285]"
+              className={`mt-1 w-5 h-5 rounded border-slate-300 focus:ring-[#52a285] ${
+                showErrors && !formData.agreed
+                  ? 'invalid-field outline outline-2 outline-red-500 outline-offset-2'
+                  : 'text-[#52a285]'
+              }`}
             />
             <span className="font-bold text-slate-800">
               上記および利用案内・協力ドライバー登録についての注意を確認し、同意して登録します
             </span>
           </label>
-          {!isFormValid && (
-            <p className="text-xs text-red-500 font-bold mb-4">※必須項目・必須ファイル・同意チェックを確認してください。</p>
+          {showErrors && !isFormValid && (
+            <p className="text-xs text-red-500 font-bold mb-4 flex items-center gap-1">
+              <Info size={12} />
+              未入力の必須項目があります。赤枠を埋めて、もう一度押してください。
+            </p>
           )}
           <button
             type="submit"
-            disabled={!isFormValid || isSubmitting}
+            disabled={isSubmitting}
             className={`w-full font-bold text-lg py-4 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 ${
-              isFormValid && !isSubmitting ? 'bg-[#3d7a64] text-white hover:bg-[#2d5a4a]' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              isSubmitting ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-[#3d7a64] text-white hover:bg-[#2d5a4a]'
             }`}
           >
             <Send size={18} />

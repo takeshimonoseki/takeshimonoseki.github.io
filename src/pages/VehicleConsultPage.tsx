@@ -126,6 +126,11 @@ export function VehicleConsultPage({ setView }: { setView: SetView }) {
     setSubmitError('');
     if (!isValid) {
       setSubmitError('名前・電話番号・メールアドレスを入力してください。');
+      const firstInvalid = document.querySelector('.invalid-field');
+      if (firstInvalid instanceof HTMLElement) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.setTimeout(() => firstInvalid.focus(), 120);
+      }
       return;
     }
     setIsSubmitting(true);
@@ -541,16 +546,22 @@ export function VehicleConsultPage({ setView }: { setView: SetView }) {
             )}
             <button
               type="submit"
-              disabled={!isValid || isSubmitting}
+              disabled={isSubmitting}
               className={`w-full font-bold text-lg py-4 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 ${
-                isValid && !isSubmitting
-                  ? 'bg-[#3d7a64] text-white hover:bg-[#2d5a4a]'
-                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                isSubmitting
+                  ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                  : 'bg-[#3d7a64] text-white hover:bg-[#2d5a4a]'
               }`}
             >
               <Send size={18} />
               {isSubmitting ? '送信中...' : `${getVehicleKindLabel(kind)}を送信する`}
             </button>
+            {showErrors && !isValid && (
+              <p className="text-xs text-red-500 font-bold mt-3 flex items-center gap-1">
+                <Info size={12} />
+                未入力の必須項目があります。赤枠を埋めて、もう一度押してください。
+              </p>
+            )}
           </SectionCard>
         </form>
 
