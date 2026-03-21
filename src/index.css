@@ -1,12 +1,33 @@
+/* path: src/index.css */
 @import "tailwindcss";
+@source "../index.html";
+@source "./**/*.{ts,tsx,js,jsx}";
 
 @theme {
+  --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
   --animate-shake: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-  
+
   @keyframes shake {
     10%, 90% { transform: translate3d(-1px, 0, 0); }
     20%, 80% { transform: translate3d(2px, 0, 0); }
     30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
     40%, 60% { transform: translate3d(4px, 0, 0); }
   }
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f4f7f6;
+  color: #1e293b;
+  font-family: var(--font-sans);
+}
+
+img {
+  max-width: 100%;
 }
