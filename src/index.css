@@ -1,7 +1,7 @@
 /* path: src/index.css */
 @import "tailwindcss";
 @source "../index.html";
-@source "./**/*.{ts,tsx,js,jsx}";
+@source "../src";
 
 @theme {
   --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
@@ -30,4 +30,5 @@ body {
 
 img {
   max-width: 100%;
+  display: block;
 }
