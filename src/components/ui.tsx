@@ -1,3 +1,4 @@
+
 // 共通UI：SectionCard, FormInput, Modal, Badge, DevTestBar など
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
@@ -190,8 +191,10 @@ export function DevTestBar({ onFill }: { onFill: () => void }) {
   return (
     <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
       <div>
-        <p className="text-sm font-bold text-amber-800">開発用テスト入力</p>
-        <p className="text-xs text-amber-700">公開版では表示されません。</p>
+        <p className="text-sm font-bold text-amber-800">テスト入力</p>
+        <p className="text-xs text-amber-700">
+          開発環境、または URL に ?test=1 を付けた時だけ表示されます。
+        </p>
       </div>
       <button
         type="button"
