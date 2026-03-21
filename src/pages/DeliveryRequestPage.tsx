@@ -98,7 +98,7 @@ export function DeliveryRequestPage({
         `概算見積: ¥${fare.toLocaleString()}`,
         simulatorInput.memo ? `備考: ${simulatorInput.memo}` : '',
         '',
-        '※フォーム送信で受付完了です。'
+        '※送信時の要約です（受付番号は見込み）。'
       ]
         .filter(Boolean)
         .join('\n'),
@@ -351,9 +351,11 @@ export function DeliveryRequestPage({
             <CheckCircle2 size={32} />
           </div>
           <h3 className="text-xl font-bold text-slate-800 mb-2">
-            {mode === 'estimate' ? '見積依頼を受け付けました' : '依頼を受け付けました'}
+            {mode === 'estimate' ? '見積依頼を送信しました' : '正式依頼を送信しました'}
           </h3>
-          <p className="text-slate-600 mb-4 text-sm">フォーム送信で受付完了です。ご連絡は原則メールで行います。LINEは補助です。</p>
+          <p className="text-slate-600 mb-4 text-sm">
+            受付番号は送信時の見込みです。受付の確定は受信メールまたは運営側の記録でご確認ください。ご連絡は原則メールです。LINEは補助です。
+          </p>
           <p className="text-slate-500 text-xs mb-4">
             受付番号: <span className="font-bold text-emerald-600">{receiptNo}</span>
           </p>

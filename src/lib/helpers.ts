@@ -58,7 +58,16 @@ export async function searchAddressByZip(zipcode: string) {
 
 // --- 受付番号・ID ---
 export function generateReceiptNo(prefix: 'T' | 'D' | 'V') {
-  const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(new Date());
+  const y = parts.find((p) => p.type === 'year')?.value ?? '';
+  const m = parts.find((p) => p.type === 'month')?.value ?? '';
+  const d = parts.find((p) => p.type === 'day')?.value ?? '';
+  const dateStr = `${y}${m}${d}`;
   const randomNum = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
   return `${prefix}-${dateStr}-${randomNum}`;
 }
@@ -138,13 +147,15 @@ export function calculateFare(input: SimulatorInput) {
 }
 
 // --- GAS 送信 ---
+// no-cors のためレスポンス本文は読めない。成功表示は「リクエスト送信完了」であり、GAS の保存成否とは一致しない場合がある（運営はログ・シートで確認）。
 export async function submitToGas(payload: unknown) {
   await Promise.race([
     fetch(GAS_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      keepalive: true
     }),
     new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 15000))
   ]);

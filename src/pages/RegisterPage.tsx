@@ -436,7 +436,10 @@ export function RegisterPage({ setView }: { setView: SetView }) {
           <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 size={32} />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">登録申請を受け付けました</h3>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">登録申請を送信しました</h3>
+          <p className="text-slate-600 mb-4 text-sm">
+            受付番号は送信時の見込みです。確定はメールまたは運営側の記録でご確認ください。
+          </p>
           <p className="text-slate-600 mb-4 text-sm">
             受付番号: <span className="font-bold text-emerald-600">{receiptNo}</span>
           </p>

@@ -2,6 +2,7 @@
 /**
  * 軽貨物TAKE GAS バックエンド
  * - type=customer: 配送相談（見積依頼 / 正式依頼）→ 「配送依頼」シート
+ * - type=vehicle: 車両相談 → 「配送依頼」シート（備考に要約、受信JSONに元payload）
  * - type=driver: 協力ドライバー登録 → 「ドライバー登録」シート
  * - 正本: スプレッドシート。payload → canonical に正規化し、全処理は canonical から生成
  * - 保存最優先。通知失敗でも保存成功なら受付成功。失敗はログへ
@@ -304,7 +305,63 @@ function normalizeType_(body) {
   var type = safeStr_(body.type, 50).toLowerCase();
   if (type === 'customer' || type === 'request' || type === 'delivery') return 'customer';
   if (type === 'driver' || type === 'register') return 'driver';
+  if (type === 'vehicle') return 'vehicle';
   return type;
+}
+
+/**
+ * 車両相談フロントの payload を配送依頼シート用に customer 形へ寄せる（受信JSON は元 payload を保持）
+ */
+function buildVehicleMemo_(body) {
+  var kind = safeStr_(body.vehicleCategory, 50);
+  var lines = [];
+  lines.push('【車両相談】');
+  if (body.vehicleCategoryLabel) {
+    lines.push('相談種別: ' + safeStr_(body.vehicleCategoryLabel, 200));
+  }
+  lines.push('メーカー: ' + safeStr_(body.maker, 200));
+  lines.push('車種: ' + safeStr_(body.model, 200));
+  if (kind === 'purchase') {
+    lines.push('予算: ' + safeStr_(body.purchaseBudget, 200));
+    lines.push('希望納期: ' + safeStr_(body.purchaseDelivery, 200));
+    lines.push('備考: ' + safeStr_(body.purchaseNotes, 3000));
+  } else if (kind === 'repair') {
+    lines.push('症状: ' + safeStr_(body.repairSymptom, 200));
+    lines.push('いつから: ' + safeStr_(body.repairSince, 200));
+    lines.push('走行可否: ' + safeStr_(body.repairDrivable, 200));
+    lines.push('備考: ' + safeStr_(body.repairNotes, 3000));
+  } else if (kind === 'inspection') {
+    lines.push('車検時期: ' + safeStr_(body.inspectionTiming, 200));
+    lines.push('希望: ' + safeStr_(body.inspectionPreference, 200));
+    lines.push('備考: ' + safeStr_(body.inspectionNotes, 3000));
+  } else {
+    lines.push('備考: ' + safeStr_(body.purchaseNotes || body.repairNotes || body.inspectionNotes, 3000));
+  }
+  return lines.join('\n');
+}
+
+function normalizeVehicleToCustomerBody_(body) {
+  return {
+    type: 'customer',
+    receptionType: '車両相談',
+    receiptNo: safeStr_(body.receiptNo, 100) || buildReceiptNo_('V'),
+    name: safeStr_(body.name, 200),
+    email: safeStr_(body.email, 200),
+    phone: safeStr_(body.phone, 100),
+    zipcode: '',
+    address: '',
+    origin: '',
+    destination: '',
+    distance: '',
+    cargoSize: '',
+    cargoDetail: '',
+    preferredDate: '',
+    memo: buildVehicleMemo_(body),
+    estimatedFare: '',
+    speedType: '',
+    options: '',
+    _vehicleRaw: body
+  };
 }
 
 /**
@@ -581,7 +638,7 @@ function handleCustomer_(body, debugId, ss) {
   var canon = normalizePayloadToCustomerCanonical_(body);
   result.receipt_no = canon.receiptNo;
 
-  var rawJson = safeJsonString_(body, 50000);
+  var rawJson = safeJsonString_(body._vehicleRaw || body, 50000);
   var sheet = ensureSheet_(ss, getRequestsSheetName_(), REQUESTS_HEADERS);
 
   var row = [
@@ -847,6 +904,10 @@ function doPost(e) {
 
     if (type === 'customer') {
       return buildJsonResponse_(handleCustomer_(body, debugId, ss));
+    }
+
+    if (type === 'vehicle') {
+      return buildJsonResponse_(handleCustomer_(normalizeVehicleToCustomerBody_(body), debugId, ss));
     }
 
     if (type === 'driver') {

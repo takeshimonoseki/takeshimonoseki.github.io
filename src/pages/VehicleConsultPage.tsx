@@ -615,9 +615,9 @@ export function VehicleConsultPage({ setView }: { setView: SetView }) {
           <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 size={32} />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">車両相談を受け付けました</h3>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">車両相談を送信しました</h3>
           <p className="text-slate-600 mb-4 text-sm">
-            フォーム送信で受付完了です。ご連絡は原則メールまたは電話で行います。
+            受付番号は送信時の見込みです。受付の確定はメールまたは運営側の記録でご確認ください。ご連絡は原則メールまたは電話です。
           </p>
           <p className="text-slate-500 text-xs mb-4">
             受付番号: <span className="font-bold text-emerald-600">{receiptNo}</span>
